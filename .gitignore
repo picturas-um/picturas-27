@@ -1,0 +1,10 @@
+# ficheiros do macOS
+.DS_Store
+
+# Node modules — nunca devem ir para o repo
+node_modules/
+
+# ficheiros gerados automaticamente
+package-lock.json
+
+backups/
