@@ -1,3 +1,7 @@
+# Fixed project name: container names are picturas-<service>-<n>, independent of the
+# directory this repository was cloned into. Override with `docker compose -p <name>`.
+name: picturas
+
 services:
   # elasticsearch:
   #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
@@ -49,7 +53,6 @@ services:
 
   minio:
     image: quay.io/minio/minio:RELEASE.2024-05-28T17-19-04Z
-    container_name: minio
     restart: on-failure
     command: server --console-address ":9090" /data
     ports:
@@ -71,7 +74,6 @@ services:
 
   img_storage:
     build: ./minio
-    container_name: picturas-image-storage-ms
     restart: on-failure
     depends_on:
       - minio
@@ -88,7 +90,6 @@ services:
   rabbitmq:
     build:
       context: ./rabbitMQ
-    container_name: rabbitmq
     restart: on-failure
     ports:
       - "5672:5672"
@@ -108,7 +109,6 @@ services:
 
   projects_mongoDB:
     image: mongo:4.4
-    container_name: projects_mongoDB
     restart: on-failure
     networks:
       - elk
@@ -125,7 +125,6 @@ services:
 
   projects:
     build: ./projects
-    container_name: picturas-projects-ms
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -147,7 +146,6 @@ services:
 
   users_mongoDB:
     image: mongo:4.4
-    container_name: users_mongoDB
     restart: on-failure
     command: mongod --port 27019
     ports:
@@ -164,7 +162,6 @@ services:
 
   users:
     build: ./users
-    container_name: picturas-users-ms
     depends_on:
       - users_mongoDB
     ports:
@@ -182,7 +179,6 @@ services:
 
   subscriptions_mongoDB:
     image: mongo:4.4
-    container_name: subscriptions_mongoDB
     restart: on-failure
     networks:
       - elk
@@ -196,7 +192,6 @@ services:
 
   subscriptions:
     build: ./subscriptions
-    container_name: picturas-subscriptions-ms
     depends_on:
       - subscriptions_mongoDB
       - users
@@ -213,7 +208,6 @@ services:
 
   api_gateway:
     build: ./apiGateway
-    container_name: picturas-api-gateway-ms
     depends_on:
       - projects
       - users
@@ -230,7 +224,6 @@ services:
     build:
       context: ./Tools
       dockerfile: bg_remove_ai/Dockerfile
-    container_name: picturas-bg-remove-ai-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -244,7 +237,6 @@ services:
     build:
       context: ./Tools
       dockerfile: binarization/Dockerfile
-    container_name: picturas-binarization-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -258,7 +250,6 @@ services:
     build:
       context: ./Tools
       dockerfile: border/Dockerfile
-    container_name: picturas-border-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -272,7 +263,6 @@ services:
     build:
       context: ./Tools
       dockerfile: brightness/Dockerfile
-    container_name: picturas-brightness-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -286,7 +276,6 @@ services:
     build:
       context: ./Tools
       dockerfile: contrast/Dockerfile
-    container_name: picturas-contrast-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -300,7 +289,6 @@ services:
     build:
       context: ./Tools
       dockerfile: cut/Dockerfile
-    container_name: picturas-cut-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -314,7 +302,6 @@ services:
     build:
       context: ./Tools
       dockerfile: cut_ai/Dockerfile
-    container_name: picturas-cut-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -328,7 +315,6 @@ services:
     build: 
       context: ./Tools
       dockerfile: people_ai/Dockerfile
-    container_name: picturas-people-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -342,7 +328,6 @@ services:
     build: 
       context: ./Tools
       dockerfile: obj_ai/Dockerfile
-    container_name: picturas-obj-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -356,7 +341,6 @@ services:
     build:
       context: ./Tools
       dockerfile: resize/Dockerfile
-    container_name: picturas-resize-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -370,7 +354,6 @@ services:
     build:
       context: ./Tools
       dockerfile: rotate/Dockerfile
-    container_name: picturas-rotate-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -384,7 +367,6 @@ services:
     build:
       context: ./Tools
       dockerfile: saturation/Dockerfile
-    container_name: picturas-saturation-tool-ms
     restart: on-failure
     networks:
       - elk
@@ -398,7 +380,6 @@ services:
     build:
       context: ./Tools
       dockerfile: text_ai/Dockerfile
-    container_name: picturas-text-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -412,7 +393,6 @@ services:
     build:
       context: ./Tools
       dockerfile: upgrade_ai/Dockerfile
-    container_name: picturas-upgrade-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -424,7 +404,6 @@ services:
 
   generative-mock:
     build: ./generative-mock
-    container_name: picturas-generative-mock
     ports:
       - "7860:7860"
     networks:
@@ -443,7 +422,6 @@ services:
     build:
       context: ./Tools
       dockerfile: expand_ai/Dockerfile
-    container_name: picturas-expand-ai-tool-ms
     networks:
       - elk
     depends_on:
@@ -463,7 +441,6 @@ services:
       
   watermark_tool_ms:
     image: prcsousa/picturas-watermark-tool-ms:latest
-    container_name: picturas-watermark-tool-ms
     restart: always
     environment:
       - RABBITMQ_REQUESTS_QUEUE_NAME=watermark_queue
@@ -510,7 +487,6 @@ services:
 
   mongo-backup:
     image: mongo:4.4
-    container_name: mongo-backup
     restart: on-failure
     depends_on:
       - users_mongoDB

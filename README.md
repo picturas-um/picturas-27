@@ -329,6 +329,10 @@ Named Docker volumes: `user_data`, `project_data`, `subscription_data`, `image_d
 - Watch queue depth in the RabbitMQ management UI (<http://localhost:15672>)
 - Tune per-container CPU/memory limits in `docker-compose.yaml` to match your machine
 
+Containers are named `picturas-<service>-<n>` (from `name: picturas` in `docker-compose.yaml`),
+independently of the directory you cloned into. Use `docker compose -p <other-name>` to run a
+second, separate stack.
+
 ### Enabling the ELK stack (optional)
 
 The Elasticsearch / Logstash / Kibana services are commented out at the top of
