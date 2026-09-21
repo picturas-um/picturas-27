@@ -66,37 +66,43 @@ are **not** published to the host unless noted otherwise — they talk to each o
 `elk` Docker bridge network.
 
 ```
-                         https://localhost:8080
-                                   │
-                          ┌────────▼────────┐
-                          │  Nginx (443/TLS)│
-                          └────────┬────────┘
-             ┌─────────────┬───────┴───────┬──────────────┐
-             │             │               │              │
-       /  (frontend)  /api-gateway/   /socket.io    /minio[-console]/
-             │             │               │              │
-        ┌────▼────┐   ┌────▼────┐    ┌─────▼─────┐   ┌────▼────┐
-        │ Next.js │   │   API   │    │    WS     │   │  MinIO  │
-        │  :3000  │   │ Gateway │    │  Gateway  │   │  :9000  │
-        └─────────┘   │  :8000  │    │   :4000   │   └─────────┘
-                      └────┬────┘    └─────▲─────┘
-           ┌───────────────┼───────────┐   │
-           │               │           │   │
-     ┌─────▼─────┐   ┌─────▼─────┐ ┌───▼───▼───┐
-     │   users   │   │ projects  │ │subscript. │
-     │  :10001   │   │   :9001   │ │  :11001   │
-     └─────┬─────┘   └─────┬─────┘ └─────┬─────┘
-           │               │             │
-      ┌────▼────┐     ┌────▼────┐   ┌────▼────┐
-      │ MongoDB │     │ MongoDB │   │ MongoDB │
-      │  :27019 │     │  :27018 │   │  :27017 │
-      └─────────┘     └────┬────┘   └─────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  RabbitMQ   │◄──── 16 tool microservices
-                    │   :5672     │      (one queue per tool)
-                    └─────────────┘
+                          https://localhost:8080
+                                    │
+                           ┌────────▼────────┐
+                           │ Nginx (443/TLS) │
+                           └────────┬────────┘
+              ┌─────────────┬───────┴───────┬────────────────┐
+              │             │               │                │
+        / (frontend)  /api-gateway/     /socket.io     /minio[-console]/
+              │             │               │                │
+         ┌────▼────┐   ┌────▼────┐     ┌────▼────┐      ┌─────▼─────┐
+         │ Next.js │   │   API   │     │   WS    │      │   MinIO   │
+         │  :3000  │   │ Gateway │     │ Gateway │      │   :9000   │
+         └─────────┘   │  :8000  │     │  :4000  │      └───────────┘
+                       └────┬────┘     └────▲────┘
+                            │               │ consumes ws_queue
+        ┌───────────┬───────┴───────┐       │
+        │           │               │       │
+  ┌─────▼─────┐ ┌───▼───────┐ ┌─────▼─────┐ │
+  │   users   │ │ projects  │ │ subscrip. │ │
+  │  :10001   │ │   :9001   │ │  :11001   │ │
+  └─────┬─────┘ └──┬─────┬──┘ └─────┬─────┘ │
+        │          │     │          │       │
+   ┌────▼───┐ ┌────▼───┐ │     ┌────▼───┐   │
+   │MongoDB │ │MongoDB │ │     │MongoDB │   │
+   │ :27019 │ │ :27018 │ │     │ :27017 │   │
+   └────────┘ └────────┘ │     └────────┘   │
+                         │                  │
+                    ┌────▼──────────────────┴────┐
+                    │      RabbitMQ  :5672       │◄─── 16 tool microservices
+                    │    exchange "picturas"     │     (one queue per tool)
+                    └────────────────────────────┘
 ```
+
+The **WS Gateway talks only to RabbitMQ**: it consumes `ws_queue` and pushes progress events to
+the browser over Socket.IO, authenticating the connection with the shared `JWT_SECRET_KEY`. It
+has no link to any other microservice. Note that **`subscriptions` means paid memberships**
+(plans, cards, billing status) — it is unrelated to WebSocket/event subscriptions.
 
 ### Frontend
 
