@@ -237,11 +237,6 @@ ports are published only for **development and debugging**.
 | `27018` | MongoDB (projects)   | `mongodb://localhost:27018`                     |
 | `27019` | MongoDB (users)      | `mongodb://localhost:27019`                     |
 
-> ⚠️ **Changed since the 2024/25 version of this README.** The **API Gateway (8000)** and the
-> **frontend (3000)** are **no longer published on the host** — reach them through Nginx. The
-> application URL changed from `http://localhost:8080` to **`https://localhost:8080`**.
-> The subscriptions MongoDB is internal only.
-
 Make sure the ports above are free before starting; see [Troubleshooting](#-troubleshooting).
 
 ---
