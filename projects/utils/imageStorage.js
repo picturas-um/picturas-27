@@ -14,15 +14,15 @@ const httpsAgent = new https.Agent({
 
 const img_storage_ms = "http://img_storage:11000";
 
-async function get_image_docker(user, project, type, img) {
+async function get_image_internal_url(user, project, type, img) {
   return await axios.get(
-    `${img_storage_ms}/image/docker/${user}/${project}/${type}/${img}` /* , { httpsAgent: httpsAgent } */,
+    `${img_storage_ms}/image/internal/${user}/${project}/${type}/${img}` /* , { httpsAgent: httpsAgent } */,
   );
 }
 
-async function get_image_host(user, project, type, img) {
+async function get_image_public_url(user, project, type, img) {
   return await axios.get(
-    `${img_storage_ms}/image/host/${user}/${project}/${type}/${img}` /* , { httpsAgent: httpsAgent } */,
+    `${img_storage_ms}/image/public/${user}/${project}/${type}/${img}` /* , { httpsAgent: httpsAgent } */,
   );
 }
 
@@ -47,4 +47,4 @@ async function copy_image(userId, projectId, fromStage, toStage, fileName) {
   );
 }
 
-module.exports = { get_image_docker, get_image_host, post_image, delete_image, copy_image };
+module.exports = { get_image_internal_url, get_image_public_url, post_image, delete_image, copy_image };

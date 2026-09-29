@@ -38,8 +38,8 @@ const PreviewCache = require("../controllers/previewCache");
 const { makePreviewCacheKey, makeToolsFingerprint } = require("../utils/cacheKey");
 
 const {
-  get_image_docker,
-  get_image_host,
+  get_image_internal_url,
+  get_image_public_url,
   post_image,
   delete_image,
   copy_image,
@@ -279,7 +279,7 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
 
     // Montar URLs atuais (assinadas) a partir das keys
     for (let p of previews) {
-      const url_resp = await get_image_host(
+      const url_resp = await get_image_public_url(
         process.user_id,
         process.project_id,
         "preview_cache",
@@ -664,7 +664,7 @@ router.get("/share/:shareId/project", requireAuth,async (req, res) => {
       // usar imagens editadas
       for (const r of imageResults) {
         try {
-          const resp = await get_image_host(
+          const resp = await get_image_public_url(
             r.user_id,
             r.project_id,
             "out",
@@ -686,7 +686,7 @@ router.get("/share/:shareId/project", requireAuth,async (req, res) => {
       // fallback: imagens originais
       for (const img of project.imgs) {
         try {
-          const resp = await get_image_host(
+          const resp = await get_image_public_url(
             project.user_id,
             project._id,
             "src",
@@ -820,7 +820,7 @@ router.get("/:user/:project", checkSharePermission, async (req, res, next) => {
 
       for (let img of project.imgs) {
         try {
-          const resp = await get_image_host(
+          const resp = await get_image_public_url(
             req.params.user,
             req.params.project,
             "src",
@@ -850,7 +850,7 @@ router.get("/:user/:project/img/:img", checkSharePermission, async (req, res, ne
     .then(async (project) => {
       try {
         const img = project.imgs.filter((i) => i._id == req.params.img)[0];
-        const resp = await get_image_host(
+        const resp = await get_image_public_url(
           req.params.user,
           req.params.project,
           "src",
@@ -877,7 +877,7 @@ router.get("/:user/:project/imgs", checkSharePermission, async (req, res, next) 
 
         for (let img of project.imgs) {
           try {
-            const resp = await get_image_host(
+            const resp = await get_image_public_url(
               req.params.user,
               req.params.project,
               "src",
@@ -920,7 +920,7 @@ router.get("/:user/:project/process", checkSharePermission, (req, res, next) => 
       for (let r of results) {
         const res_path = path.join(__dirname, result_path, r.file_name);
 
-        const resp = await get_image_docker(
+        const resp = await get_image_internal_url(
           r.user_id,
           r.project_id,
           "out",
@@ -973,7 +973,7 @@ router.get("/:user/:project/process/url", checkSharePermission, async (req, res)
 
     const ans = { imgs: [], texts: [] };
     for (const r of results) {
-      const resp = await get_image_host(r.user_id, r.project_id, "out", r.img_key);
+      const resp = await get_image_public_url(r.user_id, r.project_id, "out", r.img_key);
       const url = resp.data.url;
 
       if (r.type === "text") ans.texts.push({ og_img_id: r.img_id, name: r.file_name, url });
@@ -1055,11 +1055,11 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
         // gerar URLs atuais (assinadas) a partir das keys guardadas
         const urls = { imageUrl: "", textResults: [] };
         if (cached.image_key) {
-          const u = await get_image_host(ownerId, req.params.project, "preview_cache", cached.image_key);
+          const u = await get_image_public_url(ownerId, req.params.project, "preview_cache", cached.image_key);
           urls.imageUrl = u.data.url;
         }
         for (const tk of cached.text_keys || []) {
-          const u = await get_image_host(ownerId, req.params.project, "preview_cache", tk);
+          const u = await get_image_public_url(ownerId, req.params.project, "preview_cache", tk);
           urls.textResults.push(u.data.url);
         }
 
@@ -1112,7 +1112,7 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       const og_img_uri = img.og_uri;
       const img_id = img._id;
 
-      const resp = await get_image_docker(
+      const resp = await get_image_internal_url(
         ownerId,
         req.params.project,
         "src",
@@ -1440,7 +1440,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         for (let img of project.imgs) {
           let url = "";
           try {
-            const resp = await get_image_docker(
+            const resp = await get_image_internal_url(
               ownerId,
               req.params.project,
               "src",
@@ -2365,7 +2365,7 @@ async function uploadAssistantPreview(ownerId, projectId, outBuffer) {
   const keyParts = resp.data.data.imageKey.split("/");
   const img_key = keyParts[keyParts.length - 1];
 
-  const urlResp = await get_image_host(ownerId, projectId, "preview", img_key);
+  const urlResp = await get_image_public_url(ownerId, projectId, "preview", img_key);
   return { img_key, url: urlResp.data.url, file_name: fname };
 }
 
@@ -2397,7 +2397,7 @@ router.post(
         project.imgs[0];
 
       // 2) obter url do image storage e fazer download para buffer
-      const resp = await get_image_docker(ownerId, req.params.project, "src", img.og_img_key);
+      const resp = await get_image_internal_url(ownerId, req.params.project, "src", img.og_img_key);
       const url = resp.data.url;
 
       const imgResp = await axios.get(url, { responseType: "arraybuffer" });
