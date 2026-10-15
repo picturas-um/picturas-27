@@ -431,6 +431,14 @@ export const downloadProjectImages = async ({
   };
 };
 
+export type ProjectImageUploadFailure = { file: File; message: string };
+
+export type ProjectImageUploadResult = {
+  succeeded: File[];
+  failed: ProjectImageUploadFailure[];
+  latestVersion?: string;
+};
+
 export const addProjectImages = async ({
   uid,
   pid,
@@ -439,6 +447,7 @@ export const addProjectImages = async ({
   ownerId,
   shareId,
   projectVersion,
+  continueOnError = false,
 }: {
   uid: string;
   pid: string;
@@ -447,31 +456,60 @@ export const addProjectImages = async ({
   ownerId?: string;
   shareId?: string;
   projectVersion: number;
+  continueOnError?: boolean;
 }) => {
   const query = buildQuery({ ownerId, shareId });
 
   let lastVersion: string | undefined;
+  const succeeded: File[] = [];
+  const failed: ProjectImageUploadFailure[] = [];
 
   for (const image of images) {
     const formData = new FormData();
     formData.append("image", image);
 
-    const response = await api.post(`/projects/${uid}/${pid}/img${query}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-        "X-Project-Version": String(projectVersion),
-      },
-    });
+    try {
+      const response = await api.post(`/projects/${uid}/${pid}/img${query}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+          "X-Project-Version": String(projectVersion),
+        },
+      });
 
-    if (response.status < 200 || response.status >= 300)
-      throw new Error("Failed to upload image: " + image.name);
+      if (response.status < 200 || response.status >= 300)
+        throw new Error("O servidor não confirmou o carregamento.");
 
-    //  se backend devolver nova versão a cada upload
-    lastVersion = response.headers?.["x-project-version"];
-    if (lastVersion) projectVersion = Number(lastVersion);
+      succeeded.push(image);
+      lastVersion = response.headers?.["x-project-version"];
+      if (lastVersion) projectVersion = Number(lastVersion);
+    } catch (error) {
+      if (!continueOnError) throw error;
+
+      const rawResponseData: unknown = axios.isAxiosError(error) ? error.response?.data : undefined;
+      const responseData =
+        rawResponseData && typeof rawResponseData === "object"
+          ? (rawResponseData as { message?: unknown; serverVersion?: unknown })
+          : undefined;
+      const message =
+        typeof rawResponseData === "string"
+          ? rawResponseData
+          : typeof responseData?.message === "string"
+            ? responseData.message
+            : error instanceof Error
+              ? error.message
+              : "Não foi possível carregar este ficheiro.";
+      failed.push({ file: image, message });
+
+      // A API devolve a versão atual num conflito; use-a para que os ficheiros
+      // seguintes ainda possam ser carregados. O ficheiro em conflito fica para retry.
+      if (typeof responseData?.serverVersion === "number") {
+        projectVersion = responseData.serverVersion;
+        lastVersion = String(responseData.serverVersion);
+      }
+    }
   }
-    return lastVersion;
+  return { succeeded, failed, latestVersion: lastVersion } satisfies ProjectImageUploadResult;
 
 };
 

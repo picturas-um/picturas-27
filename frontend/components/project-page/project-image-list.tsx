@@ -27,8 +27,11 @@ import { ProjectImage } from "./project-image";
 import { VideoTrimPanel } from "@/components/toolbar/video-trim-tool";
 import { useQueryClient } from "@tanstack/react-query";
 import ProjectText from "./project-text";
-import { getAiErrorMessage } from "@/lib/error-messages"; 
+import { getAiErrorMessage, getErrorMessage } from "@/lib/error-messages";
 import { usePreview } from "@/providers/project-provider";
+import AppDropzone from "@/components/app-dropzone";
+import { useAddProjectImages } from "@/lib/mutations/projects";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function ProjectImageList({
   setCurrentImageId,
@@ -54,6 +57,7 @@ export function ProjectImageList({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewText, setPreviewText] = useState<string[] | null>(null);
+  const [mediaFilter, setMediaFilter] = useState("all");
 
   const project = useProjectInfo();
   const currentImage = useCurrentImage();
@@ -62,6 +66,13 @@ export function ProjectImageList({
   const session = useSession();
   const { toast } = useToast();
   const preview = usePreview();
+  const addProjectMedia = useAddProjectImages(
+    session.user._id,
+    project._id,
+    session.token,
+    owner ?? undefined,
+    share ?? undefined,
+  );
 
   const qc = useQueryClient();
   const socket = useGetSocket(session.token);
@@ -179,6 +190,135 @@ useEffect(() => {
     };
   }, [api, jumpTo, project.imgs, setCurrentImageId]);
 
+  const isVideo = (image: ProjectTypes.ProjectImage) =>
+    image.mediaMetadata?.format === "mp4" ||
+    image.mediaMetadata?.format === "webm" ||
+    /\.(mp4|webm|mov|m4v)$/i.test(image.name || image.url);
+  const videoImages = project.imgs.filter(isVideo);
+  const photoImages = project.imgs.filter((image) => !isVideo(image));
+  const gridImages =
+    mode === "results"
+      ? results.imgs
+      : mediaFilter === "videos"
+        ? videoImages
+        : mediaFilter === "images"
+          ? photoImages
+          : project.imgs;
+  const carouselImages = mode === "results" ? results.imgs : project.imgs;
+
+  const handleGridDrop = (files: File[]) => {
+    if (!canEdit || files.length === 0) return;
+    addProjectMedia.mutate(
+      { images: files, projectVersion: project.version },
+      {
+        onSuccess: (result) => {
+          const uploadedNames = result.succeeded.map((file) => file.name).join(", ") || "none";
+          const failureDetails = result.failed
+            .map(({ file, message }) => `${file.name}: ${message}`)
+            .join("; ");
+          toast({
+            title: result.failed.length > 0
+              ? `${result.succeeded.length} uploaded; ${result.failed.length} failed`
+              : "Media added successfully.",
+            description: result.failed.length > 0
+              ? `Uploaded: ${uploadedNames}. Failed: ${failureDetails}`
+              : uploadedNames,
+            variant: result.failed.length > 0 ? "destructive" : undefined,
+          });
+        },
+        onError: (error) => {
+          const { title, description } = getErrorMessage("project-upload", error);
+          toast({ title, description, variant: "destructive" });
+        },
+      },
+    );
+  };
+
+  const gridContent = (
+    <div className="size-full flex flex-col items-center">
+      {(mode === "edit" && project.imgs.length > 0) ||
+      (mode === "results" && (results.imgs.length > 0 || results.texts.length > 0)) ? (
+        <>
+          {mode !== "results" && (
+            <div className="relative pt-4 pb-2 text-gray-500 text-sm after:h-2 after:bg-gradient-to-b after:from-background after:to-background/10 after:w-full after:absolute after:bottom-0 after:translate-y-2 after:z-50 w-full text-center flex flex-col">
+              Select an image or video from the grid to view it. Drop media here to add it to the project.
+            </div>
+          )}
+          {mode === "edit" && project.imgs.length > 0 && (
+            <Tabs value={mediaFilter} onValueChange={setMediaFilter} className="w-full px-2 pt-3">
+              <TabsList>
+                <TabsTrigger value="all">All ({project.imgs.length})</TabsTrigger>
+                <TabsTrigger value="images">Images ({photoImages.length})</TabsTrigger>
+                <TabsTrigger value="videos">Videos ({videoImages.length})</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
+          {gridImages.length > 0 || (mode === "results" && results.texts.length > 0) ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 p-2 overflow-scroll overflow-x-hidden h-fit w-full">
+              {gridImages.map((image) => (
+                <button
+                  key={image._id}
+                  className="aspect-square"
+                  onClick={() => {
+                    setCurrentImageId(image);
+                    setJumpTo(carouselImages.findIndex((item) => item._id === image._id));
+
+                    const params = new URLSearchParams();
+                    params.set("mode", mode);
+                    params.set("view", "carousel");
+                    if (owner) params.set("owner", owner);
+                    if (share) params.set("share", share);
+
+                    router.push(`?${params.toString()}`);
+                    qc.invalidateQueries({ queryKey: ["socket"], refetchType: "all" });
+                  }}
+                >
+                  <ProjectImage image={image} />
+                </button>
+              ))}
+              {mode === "results" &&
+                results.texts.map((text, index) => (
+                  <button
+                    key={text._id + index}
+                    className="aspect-square"
+                    onClick={() => {
+                      setJumpTo(results.imgs.length + index);
+
+                      const params = new URLSearchParams();
+                      params.set("mode", mode);
+                      params.set("view", "carousel");
+                      if (owner) params.set("owner", owner);
+                      if (share) params.set("share", share);
+
+                      router.push(`?${params.toString()}`);
+                      qc.invalidateQueries({ queryKey: ["socket"], refetchType: "all" });
+                    }}
+                  >
+                    <ProjectText text={text.text} />
+                  </button>
+                ))}
+            </div>
+          ) : (
+            <div className="flex flex-1 items-center justify-center p-8 text-gray-500">
+              {mediaFilter === "videos" ? "No videos in this project yet." : "No images in this project yet."}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+          <p className="text-gray-500 text-xl">
+            {mode === "results"
+              ? "No results found. Apply your changes and try again."
+              : "Add images or videos to this project to get started."}
+          </p>
+          {mode === "edit" && canEdit && (
+            <p className="mt-2 text-sm text-muted-foreground">Drop an image or MP4/WebM video anywhere in this area, or choose Add Media.</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <Dialog
       open={previewOpen}
@@ -189,82 +329,17 @@ useEffect(() => {
     >
       <div className={showVideoTrim ? "h-full min-h-0 w-full overflow-y-auto flex flex-col" : "size-full"}>
         {view === "grid" || project.imgs.length <= 0 ? (
-          // Grid view
-          <div className="size-full flex flex-col items-center">
-            {(mode === "edit" && project.imgs.length > 0) ||
-            (mode === "results" &&
-              (results.imgs.length > 0 || results.texts.length > 0)) ? (
-              <>
-                {mode !== "results" && (
-                  <div className="relative pt-4 pb-2 text-gray-500 text-sm after:h-2 after:bg-gradient-to-b after:from-background after:to-background/10 after:w-full after:absolute after:bottom-0 after:translate-y-2 after:z-50 w-full text-center flex flex-col">
-                    To start editing, select an image from the grid.
-                  </div>
-                )}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 p-2 overflow-scroll overflow-x-hidden h-fit">
-                  {(mode === "results" ? results.imgs : project.imgs).map(
-                    (image, index) => (
-                      <button
-                        key={image._id}
-                        className="aspect-square"
-                        onClick={() => {
-                          setJumpTo(index);
-
-                          const params = new URLSearchParams();
-                          params.set("mode", mode);
-                          params.set("view", "carousel");
-                          if (owner) params.set("owner", owner); 
-                          if (share) params.set("share", share);   
-
-                          router.push(`?${params.toString()}`);
-                          qc.invalidateQueries({
-                            queryKey: ["socket"],
-                            refetchType: "all",
-                          });
-                        }}
-                      >
-                        <ProjectImage image={image} />
-                      </button>
-                    ),
-                  )}
-                  {mode === "results" &&
-                    results.texts.map((text, index) => (
-                      <button
-                        key={text._id + index}
-                        className="aspect-square"
-                        onClick={() => {
-                          setJumpTo(
-                            (mode === "results" ? results.imgs.length : project.imgs.length) +
-                              index,
-                          );
-
-                          const params = new URLSearchParams();
-                          params.set("mode", mode);
-                          params.set("view", "carousel");
-                          if (owner) params.set("owner", owner);
-                          if (share) params.set("share", share);   
-
-                          router.push(`?${params.toString()}`);
-                          qc.invalidateQueries({
-                            queryKey: ["socket"],
-                            refetchType: "all",
-                          });
-                        }}
-                      >
-                        <ProjectText text={text.text} />
-                      </button>
-                    ))}
-                </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full">
-                <p className="text-gray-500 text-xl">
-                  {mode === "results"
-                    ? "No results found. Apply your changes and try again."
-                    : "Add some images to start."}
-                </p>
-              </div>
-            )}
-          </div>
+          mode === "edit" && canEdit ? (
+            <AppDropzone
+              onDrop={handleGridDrop}
+              noClick
+              dropzoneClassName={project.imgs.length === 0 ? "min-h-[55vh]" : ""}
+            >
+              {gridContent}
+            </AppDropzone>
+          ) : (
+            gridContent
+          )
         ) : (
           // Carousel view
           <>

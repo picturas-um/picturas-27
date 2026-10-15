@@ -37,12 +37,13 @@ export function Toolbar() {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") ?? "grid";
   const mode = searchParams.get("mode") ?? "edit";
+  const currentImage = useCurrentImage();
 
-  // desativar ferramentas se estiver em grid OU em results
-  const disabled = view === "grid" || mode === "results";
+  // Only show editing controls for a selected item in the editable carousel.
+  const showTools = view !== "grid" && mode === "edit" && currentImage !== null;
+  const disabled = !showTools;
 
   const project = useProjectInfo();
-  const currentImage = useCurrentImage();
   const session = useSession();
 
   const isVideo = currentImage && /\.(mp4|webm)$/i.test(currentImage.name || currentImage.url);
@@ -61,65 +62,73 @@ export function Toolbar() {
 
   return (
     <div className="flex h-full w-24 flex-col justify-between items-stretch border-r bg-background p-2">
-      <div className="flex flex-col gap-2 items-center">
-        <span className="text-sm text-gray-500">{isVideo ? "Video Tools" : "Tools"}</span>
-        {isVideo ? (
-          <VideoTrimTool disabled={disabled} />
-        ) : (
-          <>
-            <BrightnessTool disabled={disabled} />
-            <ContrastTool disabled={disabled} />
-            <SaturationTool disabled={disabled} />
-            <BinarizationTool disabled={disabled} />
-            <RotateTool disabled={disabled} />
-            <CropTool disabled={disabled} />
-            <ResizeTool disabled={disabled} />
-            <BorderTool disabled={disabled} />
-            <WatermarkTool disabled={disabled} />
-            <BgRemovalAITool disabled={disabled} />
-            <CropAITool disabled={disabled} />
-            <ObjectAITool disabled={disabled} />
-            <PeopleAITool disabled={disabled} />
-            <TextAITool disabled={disabled} />
-            <ExpandAITool disabled={disabled} />
-            <UpgradeAITool disabled={disabled} />
-            <AppliedToolsList />
-          </>
-        )}
-      </div>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="text-red-400 size-8"
-            disabled={project.tools.length === 0}
-          >
-            <Eraser />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Clear Tools?</DialogTitle>
-            <DialogDescription>
-              This will remove <b>all</b> edits from the current project.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                clearTools.mutate({
-                  toolIds: project.tools.map((t) => t._id),
-                  projectVersion: project.version,
-                });
-                setOpen(false);
-              }}
-            >
-              Clear
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {!showTools ? (
+        <div className="flex h-full items-center justify-center text-center text-xs text-muted-foreground">
+          Select an image or video to see its tools.
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col gap-2 items-center">
+            <span className="text-sm text-gray-500">{isVideo ? "Video Tools" : "Tools"}</span>
+            {isVideo ? (
+              <VideoTrimTool disabled={disabled} />
+            ) : (
+              <>
+                <BrightnessTool disabled={disabled} />
+                <ContrastTool disabled={disabled} />
+                <SaturationTool disabled={disabled} />
+                <BinarizationTool disabled={disabled} />
+                <RotateTool disabled={disabled} />
+                <CropTool disabled={disabled} />
+                <ResizeTool disabled={disabled} />
+                <BorderTool disabled={disabled} />
+                <WatermarkTool disabled={disabled} />
+                <BgRemovalAITool disabled={disabled} />
+                <CropAITool disabled={disabled} />
+                <ObjectAITool disabled={disabled} />
+                <PeopleAITool disabled={disabled} />
+                <TextAITool disabled={disabled} />
+                <ExpandAITool disabled={disabled} />
+                <UpgradeAITool disabled={disabled} />
+                <AppliedToolsList />
+              </>
+            )}
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="text-red-400 size-8"
+                disabled={project.tools.length === 0}
+              >
+                <Eraser />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Clear Tools?</DialogTitle>
+                <DialogDescription>
+                  This will remove <b>all</b> edits from the current project.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    clearTools.mutate({
+                      toolIds: project.tools.map((t) => t._id),
+                      projectVersion: project.version,
+                    });
+                    setOpen(false);
+                  }}
+                >
+                  Clear
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </div>
   );
 }

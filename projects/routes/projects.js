@@ -1187,6 +1187,8 @@ router.post(
     if (!req.file) {
       return res.status(400).jsonp("No file found");
     }
+    let storedObjectKey = null;
+    let projectCommitted = false;
     try {
       const project = await Project.getOne(req.params.user, req.params.project);
       if (!project) return res.status(404).jsonp("Project not found");
@@ -1228,6 +1230,7 @@ router.post(
       });
       const resp = await post_image(req.params.user, req.params.project, "src", data);
       const og_key = resp.data.data.imageKey.split("/").pop();
+      storedObjectKey = og_key;
       const item = {
         og_uri: `./images/users/${req.params.user}/projects/${req.params.project}/src/${req.file.originalname}`,
         new_uri: `./images/users/${req.params.user}/projects/${req.params.project}/out/${req.file.originalname}`,
@@ -1243,18 +1246,23 @@ router.post(
       );
 
       if (!updated) {
-        await delete_image(req.params.user, req.params.project, "src", og_key).catch(() => {});
         const fresh = await Project.getOne(req.params.user, req.params.project);
         return res.status(409).jsonp({ message: "Project version conflict", serverVersion: fresh?.version ?? null });
       }
 
+      projectCommitted = true;
       res.set("X-Project-Version", String(updated.version));
       return res.sendStatus(204);
     } catch (error) {
       console.error("Project media upload failed:", error);
       return res.status(error.response?.status || 500).jsonp(error.response?.data || error.message || "Error uploading media");
     } finally {
-      require("fs").promises.unlink(req.file.path).catch(() => {});
+      await require("fs").promises.unlink(req.file.path).catch(() => {});
+      if (storedObjectKey && !projectCommitted) {
+        await delete_image(req.params.user, req.params.project, "src", storedObjectKey).catch((cleanupError) => {
+          console.error("Could not remove uncommitted project upload:", cleanupError.message);
+        });
+      }
     }
   }
 );

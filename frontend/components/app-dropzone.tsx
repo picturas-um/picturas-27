@@ -7,9 +7,16 @@ import Dropzone from "react-dropzone";
 interface CustomDropzoneProps {
   onDrop: (acceptedFiles: File[]) => void;
   children?: React.ReactNode;
+  noClick?: boolean;
+  dropzoneClassName?: string;
 }
 
-export default function AppDropzone({ onDrop, children }: CustomDropzoneProps) {
+export default function AppDropzone({
+  onDrop,
+  children,
+  noClick = false,
+  dropzoneClassName = "",
+}: CustomDropzoneProps) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const { toast } = useToast();
 
@@ -17,6 +24,7 @@ export default function AppDropzone({ onDrop, children }: CustomDropzoneProps) {
     <div className="h-full w-full flex flex-col">
       <Dropzone
         onDrop={onDrop}
+        noClick={noClick}
         onDragEnter={() => setIsDragging(true)}
         onDragLeave={() => setIsDragging(false)}
         onDropAccepted={() => setIsDragging(false)}
@@ -42,7 +50,7 @@ export default function AppDropzone({ onDrop, children }: CustomDropzoneProps) {
         {({ getRootProps, getInputProps }) => (
           <div
             {...getRootProps()}
-            className={`flex h-full w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed ${
+            className={`flex h-full w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed ${dropzoneClassName} ${
               isDragging
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-neutral-400 hover:bg-sidebar text-neutral-400"

@@ -24,6 +24,7 @@ export function AddImagesDialog() {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [fileErrors, setFileErrors] = useState<{ fileName: string; message: string }[]>([]);
   const { toast } = useToast();
 
   const { _id: pid, version} = useProjectInfo();
@@ -35,9 +36,10 @@ export function AddImagesDialog() {
     session.token,
   );
 
-  function onDrop(files: File[]) {
+  function onDrop(files: File[], source: "selection" | "sync" = "selection") {
     Promise.all(files.map((file) => createBlobUrlFromFile(file))).then(setImages);
     setImageFiles(files);
+    if (source === "selection") setFileErrors([]);
   }
 
   function handleAdd() {
@@ -47,12 +49,26 @@ export function AddImagesDialog() {
         projectVersion: version,
       },
       {
-        onSuccess: () => {
+        onSuccess: async (result) => {
+          if (result.failed.length > 0) {
+            setImageFiles(result.failed.map(({ file }) => file));
+            setImages(await Promise.all(result.failed.map(({ file }) => createBlobUrlFromFile(file))));
+            setFileErrors(result.failed.map(({ file, message }) => ({ fileName: file.name, message })));
+            toast({
+              title: `${result.succeeded.length} uploaded; ${result.failed.length} failed`,
+              description: `Uploaded: ${result.succeeded.map((file) => file.name).join(", ") || "none"}. Failed files remain selected so you can retry them.`,
+              variant: "destructive",
+            });
+            return;
+          }
+
           toast({
-            title: "Images added successfully.",
+            title: "Media added successfully.",
+            description: result.succeeded.map((file) => file.name).join(", "),
           });
           setImages([]);
           setImageFiles([]);
+          setFileErrors([]);
           setOpen(false);
         },
         onError: (error) => {
@@ -81,14 +97,26 @@ export function AddImagesDialog() {
             Add images or videos to your project.
           </DialogDescription>
         </DialogHeader>
-        <ImageSubmissionArea onDrop={onDrop} />
+        <ImageSubmissionArea onDrop={onDrop} receivedFiles={imageFiles} />
+        {fileErrors.length > 0 && (
+          <div className="max-h-28 overflow-y-auto rounded-md border border-destructive/40 p-2 text-sm" role="alert">
+            <p className="mb-1 font-medium">Some files could not be uploaded:</p>
+            <ul className="list-disc space-y-1 pl-5">
+              {fileErrors.map(({ fileName, message }) => (
+                <li key={`${fileName}:${message}`}>
+                  <span className="font-medium">{fileName}:</span> {message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <DialogFooter>
           <Button
             onClick={handleAdd}
-            disabled={images.length === 0}
+            disabled={images.length === 0 || addImages.isPending}
             className="inline-flex items-center gap-1"
           >
-            <span>Add</span>
+            <span>{fileErrors.length > 0 ? `Retry failed (${imageFiles.length})` : "Add"}</span>
             {addImages.isPending && (
               <LoaderCircle className="size-[1em] animate-spin" />
             )}

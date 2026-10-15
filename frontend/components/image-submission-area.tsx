@@ -13,7 +13,7 @@ export default function ImageSubmissionArea({
   onDrop,
 }: {
   receivedFiles?: File[];
-  onDrop: (files: File[]) => void;
+  onDrop: (files: File[], source?: "selection" | "sync") => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
 
@@ -65,7 +65,7 @@ export default function ImageSubmissionArea({
   useEffect(() => {
     if (receivedFiles.length > 0) {
       setFiles(receivedFiles);
-      onDrop(receivedFiles);
+      onDrop(receivedFiles, "sync");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receivedFiles]);

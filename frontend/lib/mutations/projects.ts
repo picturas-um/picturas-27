@@ -139,10 +139,11 @@ export const useAddProjectImages = (uid: string, pid: string, token: string, own
         ownerId,
         shareId,
         projectVersion: args.projectVersion,
+        continueOnError: true,
       }),
 
-    onSuccess: (newVersionHeader) => {
-      bumpProjectVersion(qc, projectKey, newVersionHeader);
+    onSuccess: (result) => {
+      bumpProjectVersion(qc, projectKey, result.latestVersion);
       qc.invalidateQueries({ queryKey: projectKey, refetchType: "all" });
       qc.invalidateQueries({ queryKey: ["projectImages", uid, pid, token, ownerId, shareId], refetchType: "all" });
     },
