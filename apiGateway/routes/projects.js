@@ -123,6 +123,58 @@ router.post("/:user/:project/share", auth.checkToken, (req, res) => {
 
 });
 
+// Upload a video to a project
+router.post(
+  "/:user/:project/video",
+  upload.single("video"),
+  auth.checkToken,
+  function (req, res) {
+    if (!req.file) {
+      return res.status(400).json({ error: "No video provided" });
+    }
+
+    if (req.file.mimetype !== "video/mp4") {
+      return res.status(400).json({ error: "Only MP4 videos are supported" });
+    }
+
+    const ownerId = req.query.owner || req.params.user;
+    const callerId = req.authUserId || req.params.user;
+
+    const data = new FormData();
+    data.append("video", req.file.buffer, {
+      filename: req.file.originalname,
+      contentType: req.file.mimetype,
+    });
+
+    axios
+      .post(
+        projectsURL + `${ownerId}/${req.params.project}/video`,
+        data,
+        {
+          headers: {
+            ...data.getHeaders(),
+            Authorization: req.headers["authorization"],
+            "X-Project-Version": req.headers["x-project-version"],
+            "X-Caller-Id": callerId,
+          },
+          httpsAgent,
+          params: req.query.share
+            ? { share: req.query.share }
+            : undefined,
+      }
+      )
+      .then((resp) => {
+        if (resp.headers?.["x-project-version"]) {
+          res.set("X-Project-Version", resp.headers["x-project-version"]);
+        }
+        return res.sendStatus(204);
+      })
+      .catch((err) =>
+        forwardAxiosError(res, err, "Error uploading video")
+      );
+  }
+);
+
 // resolver link de partilha (PÚBLICO – sem auth)
 // devolve { projectId, ownerId, permission }
 router.get("/share/:shareId", (req, res) => {

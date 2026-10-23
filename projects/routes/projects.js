@@ -1251,6 +1251,99 @@ router.post(
 );
 
 // Add new tool to a project
+
+/**
+ * Upload a trimmed MP4 video to a project
+ */
+router.post(
+  "/:user/:project/video",
+  checkSharePermission,
+  requireEditPermission,
+  enforcePresenceLimit,
+  requireProjectVersion,
+  upload.single("video"),
+  async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "No video provided" });
+    }
+
+    if (req.file.mimetype !== "video/mp4") {
+      return res.status(400).json({
+        error: "Only MP4 videos are supported",
+      });
+    }
+
+    try {
+      const project = await Project.getOne(
+        req.params.user,
+        req.params.project
+      );
+
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+
+      const existingVideos = project.videos || [];
+
+      if (existingVideos.some((video) => video.name === req.file.originalname)) {
+        return res.status(400).json({
+          error: "A video with this name already exists in the project",
+        });
+      }
+
+      const data = new FormData();
+
+      data.append("file", req.file.buffer, {
+        filename: req.file.originalname,
+        contentType: req.file.mimetype,
+      });
+
+      const response = await post_image(
+        req.params.user,
+        req.params.project,
+        "videos",
+        data
+      );
+
+      const storageKey = response.data.data.imageKey;
+
+      project.videos.push({
+        name: req.file.originalname,
+        storageKey: storageKey,
+        mimeType: req.file.mimetype,
+      });
+
+      const updated = await Project.updateIfVersion(
+        req.params.user,
+        req.params.project,
+        project,
+        req.expectedVersion
+      );
+
+      if (!updated) {
+        const fresh = await Project.getOne(
+          req.params.user,
+          req.params.project
+        );
+
+        return res.status(409).json({
+          message: "Project version conflict",
+          serverVersion: fresh?.version ?? null,
+        });
+      }
+
+      res.set("X-Project-Version", String(updated.version));
+      return res.sendStatus(204);
+
+    } catch (error) {
+      console.error("Error uploading project video:", error);
+      return res.status(500).json({
+        error: "Error storing video",
+      });
+    }
+  }
+);
+
 router.post("/:user/:project/tool", checkSharePermission, requireEditPermission, enforcePresenceLimit, requireProjectVersion, (req, res, next) => {
   // Reject posts to tools that don't fullfil the requirements
   if (!req.body.procedure || !req.body.params) {

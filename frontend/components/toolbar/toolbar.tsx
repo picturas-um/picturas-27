@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Scissors } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import BrightnessTool from "./brightness-tool";
 import ContrastTool from "./contrast-tool";
@@ -75,6 +77,21 @@ export function Toolbar() {
         <TextAITool disabled={disabled} />
         <ExpandAITool disabled={disabled} />
         <UpgradeAITool disabled={disabled} />
+        <Link
+  href={{
+    pathname: "/trim-video",
+    query: {
+      pid: project._id,
+      owner: ownerParam,
+      ...(shareId ? { share: shareId } : {}),
+    },
+  }}
+  title="Trim Video"
+  className="flex w-full flex-col items-center gap-1 rounded-md p-2 text-center text-xs hover:bg-accent"
+>
+  <Scissors className="h-5 w-5" />
+  <span>Trim Video</span>
+</Link>
         <AppliedToolsList />
       </div>
       <Dialog open={open} onOpenChange={setOpen}>

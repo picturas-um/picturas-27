@@ -1,1 +1,1 @@
-module.exports = ["src", "preview", "preview_cache", "out"];
+module.exports = ["src", "preview", "preview_cache", "out", "videos"];
