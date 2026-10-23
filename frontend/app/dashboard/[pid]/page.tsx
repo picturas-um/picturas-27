@@ -3,6 +3,7 @@
 import { Download, LoaderCircle, OctagonAlert, Play } from "lucide-react";
 import { fetchSharedProject, resolveShareLink } from "@/lib/projects";
 import { ProjectImageList } from "@/components/project-page/project-image-list";
+import { ProjectVideoList } from "@/components/project-page/project-video-list";
 import { ViewToggle } from "@/components/project-page/view-toggle";
 import { AddImagesDialog } from "@/components/project-page/add-images-dialog";
 import { Button } from "@/components/ui/button";
@@ -827,11 +828,23 @@ const handleCancel = () => {
         {/* Main Content */}
 
         <div className="h-full overflow-x-hidden flex">
-        <Toolbar />
-        <ProjectImageList
-          setCurrentImageId={setCurrentImage}
-          results={projectResults.data}
-        />
+  <Toolbar />
+
+  <div className="min-w-0 flex-1 overflow-y-auto">
+  <div className="h-[350px] min-h-0">
+    <ProjectImageList
+      setCurrentImageId={setCurrentImage}
+      results={projectResults.data}
+    />
+  </div>
+
+  <div className="border-t mt-4 pt-4">
+    <ProjectVideoList
+      videos={project.data?.videos ?? []}
+      onRefresh={() => project.refetch()}
+    />
+  </div>
+</div>
       </div>
       </div>
       <Transition

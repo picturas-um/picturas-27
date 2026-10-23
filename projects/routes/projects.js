@@ -815,6 +815,39 @@ router.get("/:user/:project", checkSharePermission, async (req, res, next) => {
         name: project.name,
         tools: project.tools,
         imgs: [],
+        videos: await Promise.all(
+  (project.videos || []).map(async (video) => {
+    const filename = video.storageKey.split("/").pop();
+
+    try {
+      const result = await get_image_public_url(
+        req.params.user,
+        req.params.project,
+        "videos",
+        filename
+      );
+
+      return {
+        _id: video._id,
+        name: video.name,
+        storageKey: video.storageKey,
+        mimeType: video.mimeType,
+        createdAt: video.createdAt,
+        url: result.data.url,
+      };
+    } catch (error) {
+      console.error("Error generating video URL:", error);
+      return {
+        _id: video._id,
+        name: video.name,
+        storageKey: video.storageKey,
+        mimeType: video.mimeType,
+        createdAt: video.createdAt,
+        url: null,
+      };
+    }
+  })
+),
         version: project.version,
       };
 

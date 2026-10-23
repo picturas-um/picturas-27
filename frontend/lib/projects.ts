@@ -31,6 +31,14 @@ export interface SingleProject {
   name: string;
   tools: ProjectToolResponse[];
   imgs: ProjectImage[];
+  videos?: {
+    _id?: string;
+    name: string;
+    storageKey: string;
+    mimeType: string;
+    createdAt?: string;
+    url?: string | null;
+  }[];
   version: number;
 
 }
@@ -204,13 +212,14 @@ export const fetchProject = async (
     throw new Error("Failed to fetch project");
 
   return {
-    _id: response.data._id,
-    user_id: response.data.user_id,
-    name: response.data.name,
-    imgs: response.data.imgs,
-    tools: response.data.tools,
-    version: response.data.version,
-  } as SingleProject;
+  _id: response.data._id,
+  user_id: response.data.user_id,
+  name: response.data.name,
+  imgs: response.data.imgs,
+  videos: response.data.videos ?? [],
+  tools: response.data.tools,
+  version: response.data.version,
+} as SingleProject;
 };
 
 export const addProject = async ({

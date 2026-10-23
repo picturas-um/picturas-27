@@ -1,4 +1,4 @@
-from node
+FROM node:22-bookworm
 workdir /app
 
 copy . .

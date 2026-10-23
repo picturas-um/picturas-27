@@ -17,6 +17,7 @@ export default function TrimVideo() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState("");
   const [duration, setDuration] = useState(0);
+  const [thumbnails, setThumbnails] = useState<string[]>([]); 
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(0);
   const [previewing, setPreviewing] = useState(false);
@@ -28,7 +29,63 @@ export default function TrimVideo() {
       if (videoUrl) URL.revokeObjectURL(videoUrl);
     };
   }, [videoUrl]);
+   async function generateThumbnails(url: string, count = 8) {
+  setThumbnails([]);
 
+  const video = document.createElement("video");
+  video.preload = "auto";
+  video.muted = true;
+  video.playsInline = true;
+  video.src = url;
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      video.onloadedmetadata = () => resolve();
+      video.onerror = () => reject(new Error("Video could not load"));
+    });
+
+    const length = video.duration;
+    if (!Number.isFinite(length) || length <= 0) return;
+
+    count =
+  length <= 10 ? 5 :
+  length <= 30 ? 8 :
+  length <= 60 ? 12 :
+  20;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 160;
+    canvas.height = 90;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const frames: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const timestamp = Math.min(
+        (i / count) * length,
+        Math.max(0, length - 0.1)
+      );
+
+      await new Promise<void>((resolve, reject) => {
+        video.onseeked = () => resolve();
+        video.onerror = () => reject(new Error("Unable to seek video"));
+        video.currentTime = timestamp;
+      });
+
+      context.drawImage(video, 0, 0, 160, 90);
+      frames.push(canvas.toDataURL("image/jpeg", 0.7));
+    }
+
+    setThumbnails(frames);
+  } catch (error) {
+    console.error("Thumbnail generation failed:", error);
+  } finally {
+    video.removeAttribute("src");
+    video.load();
+  }
+}
   function handleFile(file?: File) {
     if (!file) return;
 
@@ -38,8 +95,12 @@ export default function TrimVideo() {
     }
 
     setVideoFile(file);
-    setVideoUrl(URL.createObjectURL(file));
-    setDuration(0);
+
+const url = URL.createObjectURL(file);
+setVideoUrl(url);
+void generateThumbnails(url);
+
+setDuration(0);
     setStart(0);
     setEnd(0);
     setPreviewing(false);
@@ -85,13 +146,14 @@ async function saveVideoToProject(blob: Blob) {
 
   const formData = new FormData();
 
-  formData.append(
-    "video",
-    new File([blob], "trimmed-video.mp4", {
-      type: "video/mp4",
-    })
-  );
+  const videoFileName = `trimmed-video-${Date.now()}.mp4`;
 
+formData.append(
+  "video",
+  new File([blob], videoFileName, {
+    type: "video/mp4",
+  })
+);
   setProgress("Saving video to PictuRAS...");
 
   const query = new URLSearchParams();
@@ -244,35 +306,100 @@ async function saveVideoToProject(blob: Blob) {
           />
 
           <div className="space-y-3">
-            <label className="block">
-              Start: {start.toFixed(1)} seconds
-              <input
-                className="w-full"
-                type="range"
-                min={0}
-                max={duration}
-                step={0.1}
-                value={start}
-                onChange={(e) =>
-                  setStart(Math.min(Number(e.target.value), end))
-                }
-              />
-            </label>
+            <div className="space-y-3">
+  <div className="flex justify-between text-sm">
+    <span>Start: {start.toFixed(1)} seconds</span>
+    <span>End: {end.toFixed(1)} seconds</span>
+  </div>
 
-            <label className="block">
-              End: {end.toFixed(1)} seconds
-              <input
-                className="w-full"
-                type="range"
-                min={0}
-                max={duration}
-                step={0.1}
-                value={end}
-                onChange={(e) =>
-                  setEnd(Math.max(Number(e.target.value), start))
-                }
-              />
-            </label>
+  <div className="relative h-20 flex items-center">
+    {/* Video thumbnail strip */}
+<div className="absolute inset-0 flex overflow-hidden rounded-lg">
+  {thumbnails.map((thumbnail, index) => (
+    <div
+      key={index}
+      className="h-full min-w-0 flex-1 bg-gray-800 bg-cover bg-center"
+      style={{ backgroundImage: `url("${thumbnail}")` }}
+    />
+  ))}
+</div>
+    {/* Background track */}
+    <div className="absolute w-full h-2 rounded-full bg-gray-500" />
+    
+    {/* Dim frames before Start */}
+<div
+  className="pointer-events-none absolute inset-y-0 left-0 bg-black/60"
+  style={{
+    width: `${duration > 0 ? (start / duration) * 100 : 0}%`,
+  }}
+/>
+
+{/* Dim frames after End */}
+<div
+  className="pointer-events-none absolute inset-y-0 right-0 bg-black/60"
+  style={{
+    width: `${duration > 0 ? ((duration - end) / duration) * 100 : 0}%`,
+  }}
+/>
+    
+    {/* Selected video segment */}
+<div
+  className="pointer-events-none absolute inset-y-0 border-2 border-blue-400 bg-blue-400/20"
+  style={{
+    left: `${duration > 0 ? (start / duration) * 100 : 0}%`,
+    width: `${duration > 0 ? ((end - start) / duration) * 100 : 0}%`,
+  }}
+/>
+
+    {/* Start handle */}
+    <input
+      type="range"
+      min={0}
+      max={duration}
+      step={0.1}
+      value={start}
+      aria-label="Start time"
+      onChange={(e) =>
+        setStart(Math.min(Number(e.target.value), end))
+      }
+      className="absolute w-full appearance-none bg-transparent pointer-events-none
+        [&::-webkit-slider-thumb]:appearance-none
+        [&::-webkit-slider-thumb]:pointer-events-auto
+        [&::-webkit-slider-thumb]:h-20
+[&::-webkit-slider-thumb]:w-3
+[&::-webkit-slider-thumb]:border-2
+[&::-webkit-slider-thumb]:border-white
+[&::-webkit-slider-thumb]:shadow-lg
+        [&::-webkit-slider-thumb]:rounded
+        [&::-webkit-slider-thumb]:bg-blue-500
+        [&::-webkit-slider-thumb]:cursor-ew-resize"
+    />
+
+    {/* End handle */}
+    <input
+      type="range"
+      min={0}
+      max={duration}
+      step={0.1}
+      value={end}
+      aria-label="End time"
+      onChange={(e) =>
+        setEnd(Math.max(Number(e.target.value), start))
+      }
+      className="absolute w-full appearance-none bg-transparent pointer-events-none
+        [&::-webkit-slider-thumb]:appearance-none
+        [&::-webkit-slider-thumb]:pointer-events-auto
+       [&::-webkit-slider-thumb]:h-20
+        [&::-webkit-slider-thumb]:w-3   
+         [&::-webkit-slider-thumb]:border-2
+        [&::-webkit-slider-thumb]:border-white
+         [&::-webkit-slider-thumb]:shadow-lg
+        [&::-webkit-slider-thumb]:rounded
+        [&::-webkit-slider-thumb]:bg-purple-500
+        [&::-webkit-slider-thumb]:cursor-ew-resize"
+    />
+  </div>
+</div>
 
             <div className="grid grid-cols-2 gap-3">
               <label>
