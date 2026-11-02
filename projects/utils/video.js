@@ -1,0 +1,195 @@
+// Video support in the projects orchestrator (Phase 1, MVP).
+// Media type detection, reading the characteristics with ffprobe and
+// validation against the profile limits (UC-VID-001, RNG-01, RNG-02).
+const { execFile } = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+
+// RNG-01: accepted input containers and codecs
+const VIDEO_EXTENSIONS = [".mp4", ".mov", ".webm"];
+const VIDEO_MIMES = ["video/mp4", "video/quicktime", "video/webm"];
+const ALLOWED_VIDEO_CODECS = ["h264", "hevc", "vp8", "vp9", "av1", "mpeg4"];
+
+// Effects the video worker can apply (UC-VID-004/RN1)
+const VIDEO_TOOLS = [
+  "brightness", "contrast", "saturation", "rotate", "resize",
+  "binarization", "cut", "border", "trim", "speed",
+];
+// Effects that only exist for video (images ignore them)
+const VIDEO_ONLY_TOOLS = ["trim", "speed"];
+
+// Effects that belong to the video they were defined on (params.imgId),
+// because their values only make sense for that video (DA-09)
+const PER_VIDEO_TOOLS = ["trim", "speed"];
+
+const num = (name, def) => {
+  const v = parseFloat(process.env[name]);
+  return Number.isFinite(v) ? v : def;
+};
+
+// Per-profile limits (UC-VID-001/RN2), configurable through environment variables.
+// Anonymous users cannot edit video (UC-VID-001/RN3).
+const VIDEO_LIMITS = {
+  anonymous: null,
+  free: {
+    maxDurationS: num("VIDEO_FREE_MAX_DURATION_S", 60),
+    maxSizeMB: num("VIDEO_FREE_MAX_SIZE_MB", 100),
+    maxWidth: 1920,
+    maxHeight: 1080,
+  },
+  premium: {
+    maxDurationS: num("VIDEO_PREMIUM_MAX_DURATION_S", 600),
+    maxSizeMB: num("VIDEO_PREMIUM_MAX_SIZE_MB", 1024),
+    maxWidth: 3840,
+    maxHeight: 2160,
+  },
+};
+
+function isVideoFile(originalname, mimetype) {
+  const ext = path.extname(originalname || "").toLowerCase();
+  return VIDEO_EXTENSIONS.includes(ext) || (mimetype || "").startsWith("video/");
+}
+
+function isVideoMedia(img) {
+  return img && img.media_type === "video";
+}
+
+// Result name: edited video is always MP4 (RNG-01, DA-05)
+function videoOutputName(originalname) {
+  const base = path.basename(originalname, path.extname(originalname));
+  return `${base}.mp4`;
+}
+
+function ffprobe(filePath) {
+  return new Promise((resolve, reject) => {
+    execFile(
+      "ffprobe",
+      ["-v", "error", "-print_format", "json", "-show_format", "-show_streams", filePath],
+      { maxBuffer: 10 * 1024 * 1024 },
+      (err, stdout) => {
+        if (err) return reject(new Error("Unreadable or corrupted video file"));
+        try {
+          resolve(JSON.parse(stdout));
+        } catch (e) {
+          reject(new Error("Unreadable or corrupted video file"));
+        }
+      }
+    );
+  });
+}
+
+// Reads the characteristics of an in-memory video (REQ-VID-SUBMIT-005)
+async function probeVideoBuffer(buffer, originalname) {
+  const tmp = path.join(os.tmpdir(), `${uuidv4()}${path.extname(originalname || ".mp4")}`);
+  fs.writeFileSync(tmp, buffer);
+  try {
+    const data = await ffprobe(tmp);
+    const streams = data.streams || [];
+    const video = streams.find((s) => s.codec_type === "video");
+    const audio = streams.find((s) => s.codec_type === "audio");
+    if (!video) throw new Error("The file has no video stream");
+
+    const duration = parseFloat((data.format || {}).duration || video.duration || "0");
+    const [n, d] = String(video.avg_frame_rate || video.r_frame_rate || "0/1").split("/");
+    const fps = parseFloat(d) ? parseFloat(n) / parseFloat(d) : 0;
+
+    return {
+      duration,
+      width: video.width,
+      height: video.height,
+      fps: Math.round(fps * 100) / 100,
+      video_codec: video.codec_name,
+      audio_codec: audio ? audio.codec_name : null,
+      format_name: (data.format || {}).format_name,
+      size_bytes: buffer.length,
+    };
+  } finally {
+    fs.rmSync(tmp, { force: true });
+  }
+}
+
+// Validates a video against RNG-01 and the profile limits.
+// Returns null if accepted, or a message with the rejection reason.
+function validateVideo(meta, originalname, mimetype, userType) {
+  const ext = path.extname(originalname || "").toLowerCase();
+  if (!VIDEO_EXTENSIONS.includes(ext) && !VIDEO_MIMES.includes(mimetype)) {
+    return `Unsupported video format. Accepted formats: ${VIDEO_EXTENSIONS.join(", ")}`;
+  }
+  if (!ALLOWED_VIDEO_CODECS.includes(meta.video_codec)) {
+    return `Unsupported video codec '${meta.video_codec}'. Accepted codecs: ${ALLOWED_VIDEO_CODECS.join(", ")}`;
+  }
+  if (!(meta.duration > 0)) {
+    return "Could not determine the video duration";
+  }
+
+  const limits = VIDEO_LIMITS[userType];
+  if (!limits) {
+    return "Anonymous users cannot upload videos. Create an account to edit video.";
+  }
+  if (meta.duration > limits.maxDurationS) {
+    return `The video is ${meta.duration.toFixed(1)} s long and your profile limit is ${limits.maxDurationS} s`;
+  }
+  if (meta.size_bytes > limits.maxSizeMB * 1024 * 1024) {
+    return `The video is ${(meta.size_bytes / 1048576).toFixed(1)} MB and your profile limit is ${limits.maxSizeMB} MB`;
+  }
+  const longSide = Math.max(meta.width, meta.height);
+  const shortSide = Math.min(meta.width, meta.height);
+  if (longSide > limits.maxWidth || shortSide > limits.maxHeight) {
+    return `Resolution ${meta.width}x${meta.height} exceeds your profile limit (${limits.maxWidth}x${limits.maxHeight})`;
+  }
+  return null;
+}
+
+// Pipeline tools that apply to images (video-only tools are skipped)
+function imageTools(project) {
+  return [...(project.tools || [])]
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    .filter((t) => !VIDEO_ONLY_TOOLS.includes(t.procedure));
+}
+
+// Trim and speed belong to the video they were defined on (DA-09).
+// Every other effect applies to all media of the project.
+function appliesToVideo(tool, imgId) {
+  if (!PER_VIDEO_TOOLS.includes(tool.procedure)) return true;
+  const target = tool.params && tool.params.imgId;
+  return !target || String(target) === String(imgId);
+}
+
+// The ordered pipeline of one video, sent to the video worker in a single message
+function videoPipeline(project, imgId) {
+  return [...(project.tools || [])]
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    .filter((t) => appliesToVideo(t, imgId))
+    .map((t) => ({ procedure: t.procedure, params: t.params }));
+}
+
+// Pipeline effects that make no sense for video (UC-VID-004/RN1)
+function unsupportedVideoTools(project) {
+  return (project.tools || [])
+    .map((t) => t.procedure)
+    .filter((p) => !VIDEO_TOOLS.includes(p));
+}
+
+// RNG-02: one operation per applied effect, per video, regardless of duration
+function videoOps(project) {
+  return (project.imgs || [])
+    .filter(isVideoMedia)
+    .reduce((acc, img) => acc + videoPipeline(project, img._id).length, 0);
+}
+
+module.exports = {
+  VIDEO_LIMITS,
+  VIDEO_TOOLS,
+  VIDEO_ONLY_TOOLS,
+  isVideoFile,
+  isVideoMedia,
+  videoOutputName,
+  probeVideoBuffer,
+  validateVideo,
+  imageTools,
+  videoPipeline,
+  unsupportedVideoTools,
+  videoOps,
+};

@@ -52,6 +52,19 @@ const {
 
 const { requireProjectVersion } = require("../middleware/projectVersion");
 
+// Phase 1: video support
+const {
+  isVideoFile,
+  isVideoMedia,
+  videoOutputName,
+  probeVideoBuffer,
+  validateVideo,
+  imageTools,
+  videoPipeline,
+  unsupportedVideoTools,
+  videoOps,
+} = require("../utils/video");
+
 const storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -222,7 +235,15 @@ function process_msg() {
 
       const next_pos = process.cur_pos + 1;
 
-if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.length)) {
+      // Phase 1: images only go through the image tools (trim is video-only);
+      // a video is processed in one go by the video worker, so its reply is
+      // always the last one of the chain.
+      const imgTools = imageTools(project);
+      const isVideoOut = type === "video";
+      const chainEnd = isVideoOut || next_pos >= imgTools.length;
+      const isLast = type == "text" || chainEnd;
+
+if (/preview/.test(msg_id) && isLast) {
   const file_path = path.join(__dirname, `/../${output_file_uri}`);
   const file_name = path.basename(file_path);
   const fileStream = fs.createReadStream(file_path);
@@ -254,7 +275,7 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
   // considerar "preview final" quando:
   // - a tool devolveu texto (tipicamente o fim), ou quando
   // - chegámos ao fim do pipeline
-  if (type == "text" || next_pos >= project.tools.length) {
+  if (isLast) {
     const previews = await Preview.getAll(process.user_id, process.project_id);
 
     // 1) Copiar todos os previews do stage volátil (preview) para o stage persistente (preview_cache)
@@ -288,7 +309,10 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
 
       const url = url_resp.data.url;
 
-      if (p.type != "text") urls.imageUrl = url;
+      if (p.type != "text") {
+        urls.imageUrl = url;
+        if (p.type === "video") urls.mediaType = "video";
+      }
       else urls.textResults.push(url);
     }
 
@@ -335,7 +359,7 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
   }
 }
 
-      if(/preview/.test(msg_id) && next_pos >= project.tools.length) return;
+      if (/preview/.test(msg_id) && chainEnd) return;
 
       if (!/preview/.test(msg_id))
         send_msg_client(
@@ -344,7 +368,7 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
           runnerId
         );
 
-      if (!/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.length)) {
+      if (!/preview/.test(msg_id) && isLast) {
         const file_path = path.join(__dirname, `/../${output_file_uri}`);
         const file_name = path.basename(file_path);
         const fileStream = fs.createReadStream(file_path); // Use createReadStream for efficiency
@@ -381,7 +405,7 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
       }
 
       // Se esta imagem acabou o pipeline, pode ser que a execução tenha terminado
-      if (!/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.length)) {
+      if (!/preview/.test(msg_id) && isLast) {
 
         // Já eliminei este Process no início: await Process.delete(...)
         // Agora verifica se ainda há processos desta run
@@ -428,13 +452,13 @@ if (/preview/.test(msg_id) && (type == "text" || next_pos >= project.tools.lengt
         }
       }
 
-      if (next_pos >= project.tools.length) return;
+      if (chainEnd) return;
 
       const new_msg_id = /preview/.test(msg_id)
         ? `preview-${uuidv4()}`
         : `request-${uuidv4()}`;
 
-      const tool = project.tools.filter((t) => t.position == next_pos)[0];
+      const tool = imgTools[next_pos];
 
       const tool_name = tool.procedure;
       const params = tool.params;
@@ -697,6 +721,8 @@ router.get("/share/:shareId/project", requireAuth,async (req, res) => {
           response.imgs.push({
             _id: img._id,
             name: path.basename(img.og_uri),
+            media_type: img.media_type || "image",
+            video: img.video,
             url,
           });
         } catch (err) {
@@ -831,6 +857,8 @@ router.get("/:user/:project", checkSharePermission, async (req, res, next) => {
           response["imgs"].push({
             _id: img._id,
             name: path.basename(img.og_uri),
+            media_type: img.media_type || "image",
+            video: img.video,
             url: url,
           });
         } catch (_) {
@@ -859,6 +887,8 @@ router.get("/:user/:project/img/:img", checkSharePermission, async (req, res, ne
         res.status(200).jsonp({
           _id: img._id,
           name: path.basename(img.og_uri),
+            media_type: img.media_type || "image",
+            video: img.video,
           url: resp.data.url,
         });
       } catch (_) {
@@ -888,6 +918,8 @@ router.get("/:user/:project/imgs", checkSharePermission, async (req, res, next) 
             ans.push({
               _id: img._id,
               name: path.basename(img.og_uri),
+            media_type: img.media_type || "image",
+            video: img.video,
               url: url,
             });
           } catch (_) {
@@ -977,7 +1009,7 @@ router.get("/:user/:project/process/url", checkSharePermission, async (req, res)
       const url = resp.data.url;
 
       if (r.type === "text") ans.texts.push({ og_img_id: r.img_id, name: r.file_name, url });
-      else ans.imgs.push({ og_img_id: r.img_id, name: r.file_name, url });
+      else ans.imgs.push({ og_img_id: r.img_id, name: r.file_name, url, type: r.type });
     }
 
     return res.status(200).jsonp(ans);
@@ -1024,13 +1056,36 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
         return res.status(400).jsonp("No tools selected");
       }
 
-      const tool = project.tools.filter((t) => t.position == 0)[0];
+      const previewImg = project.imgs.filter((i) => i._id == req.params.img)[0];
+      if (!previewImg) {
+        return res.status(404).jsonp("No image with such id.");
+      }
+      const previewIsVideo = isVideoMedia(previewImg);
+
+      if (previewIsVideo) {
+        const bad = unsupportedVideoTools(project);
+        if (bad.length > 0) {
+          return res
+            .status(400)
+            .jsonp(`Effects not available for video: ${[...new Set(bad)].join(", ")}`);
+        }
+      }
+
+      // video: the whole pipeline goes in one message to the video worker,
+      // which only processes the initial excerpt (UC-VID-001/FA12, DA-04)
+      const tool = previewIsVideo ? { procedure: "video" } : imageTools(project)[0];
       if (!tool) {
         return res.status(400).jsonp("No tools selected");
       }
 
       const tool_name = tool.procedure;
-      const params = tool.params;
+      const params = previewIsVideo
+        ? {
+            tools: videoPipeline(project, req.params.img),
+            preview: true,
+            progress: { user: runnerUserId, projectId: req.params.project, imgId: req.params.img },
+          }
+        : tool.params;
 
       const source_path = `/../images/users/${ownerId}/projects/${req.params.project}/src`;
       const result_path = `/../images/users/${ownerId}/projects/${req.params.project}/preview`;
@@ -1054,6 +1109,7 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       if (cached) {
         // gerar URLs atuais (assinadas) a partir das keys guardadas
         const urls = { imageUrl: "", textResults: [] };
+        if (previewIsVideo) urls.mediaType = "video";
         if (cached.image_key) {
           const u = await get_image_public_url(ownerId, req.params.project, "preview_cache", cached.image_key);
           urls.imageUrl = u.data.url;
@@ -1164,17 +1220,28 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
           return res.status(500).jsonp("Error creating preview process request");
         });
     })
-    .catch(() => res.status(501).jsonp(`Error acquiring user's project`));
+    .catch((err) => {
+      console.error("[PREVIEW] error:", err);
+      res.status(501).jsonp(`Error acquiring user's project`);
+    });
 });
 
-// Add new image to a project
-router.post(
-  "/:user/:project/img", checkSharePermission, requireEditPermission, enforcePresenceLimit, requireProjectVersion, upload.single("image"),
-  async (req, res) => {
-    console.log("PROJECTS-MS /:user/:project/img HIT, file =", !!req.file);
+// Shared upload logic for project media (images and, in Phase 1, videos).
+// `kind` is "image" or "video"; each endpoint only accepts its own kind.
+function addProjectMedia(kind) {
+  return async (req, res) => {
+    console.log(`PROJECTS-MS /:user/:project/${kind === "video" ? "video" : "img"} HIT, file =`, !!req.file);
     if (!req.file) {
       res.status(400).jsonp("No file found");
       return;
+    }
+
+    const fileIsVideo = isVideoFile(req.file.originalname, req.file.mimetype);
+    if (kind === "image" && fileIsVideo) {
+      return res.status(400).jsonp("Videos must be uploaded through the /video endpoint.");
+    }
+    if (kind === "video" && !fileIsVideo) {
+      return res.status(400).jsonp("Only video files (.mp4, .mov, .webm) can be uploaded here.");
     }
 
     Project.getOne(req.params.user, req.params.project)
@@ -1186,8 +1253,30 @@ router.post(
         if (same_name_img.length > 0) {
           res
             .status(400)
-            .jsonp("This project already has an image with that name.");
+            .jsonp(`This project already has ${kind === "video" ? "a video" : "an image"} with that name.`);
           return;
+        }
+
+        // Phase 1: validate the video before storing it (UC-VID-001, step 2)
+        const isVideo = kind === "video";
+        let videoMeta = null;
+        if (isVideo) {
+          let userType = "anonymous";
+          try {
+            const r = await axios.get(users_ms + `${getCallerId(req)}/type`, { httpsAgent });
+            userType = r.data.type;
+          } catch (_) {}
+
+          try {
+            videoMeta = await probeVideoBuffer(req.file.buffer, req.file.originalname);
+          } catch (e) {
+            return res.status(400).jsonp(e.message);
+          }
+
+          const reason = validateVideo(videoMeta, req.file.originalname, req.file.mimetype, userType);
+          if (reason) {
+            return res.status(400).jsonp(reason);
+          }
         }
 
         try {
@@ -1208,7 +1297,9 @@ router.post(
 
           try {
             const og_uri = `./images/users/${req.params.user}/projects/${req.params.project}/src/${req.file.originalname}`;
-            const new_uri = `./images/users/${req.params.user}/projects/${req.params.project}/out/${req.file.originalname}`;
+            // the edited video is always MP4 (RNG-01)
+            const out_name = isVideo ? videoOutputName(req.file.originalname) : req.file.originalname;
+            const new_uri = `./images/users/${req.params.user}/projects/${req.params.project}/out/${out_name}`;
 
             const crypto = require("crypto");
             const sha = crypto.createHash("sha256").update(req.file.buffer).digest("hex");
@@ -1219,6 +1310,8 @@ router.post(
               new_uri: new_uri,
               og_img_key: og_key,
               og_sha256: sha,
+              media_type: isVideo ? "video" : "image",
+              video: videoMeta || undefined,
             });
 
             const updated = await Project.updateIfVersion(
@@ -1247,7 +1340,19 @@ router.post(
         }
       })
       .catch((_) => res.status(501).jsonp(`Error acquiring user's project`));
-  }
+  };
+}
+
+// Add new image to a project
+router.post(
+  "/:user/:project/img", checkSharePermission, requireEditPermission, enforcePresenceLimit, requireProjectVersion, upload.single("image"),
+  addProjectMedia("image")
+);
+
+// Phase 1: add new video to a project (UC-VID-001)
+router.post(
+  "/:user/:project/video", checkSharePermission, requireEditPermission, enforcePresenceLimit, requireProjectVersion, upload.single("video"),
+  addProjectMedia("video")
 );
 
 // Add new tool to a project
@@ -1400,6 +1505,23 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         return;
       }
 
+      // Phase 1: video
+      const hasVideos = project.imgs.some(isVideoMedia);
+      if (hasVideos) {
+        const bad = unsupportedVideoTools(project);
+        if (bad.length > 0) {
+          res
+            .status(400)
+            .jsonp(`Effects not available for video: ${[...new Set(bad)].join(", ")}`);
+          return;
+        }
+      } else if (imageTools(project).length === 0) {
+        res.status(400).jsonp("The pipeline only has video effects and the project has no videos");
+        return;
+      }
+      // RNG-02: each effect applied to a video counts as one operation
+      const vid_ops = videoOps(project);
+
       const { adv_ops, totalAdv, charged, newTools } = advanced_tool_num(project);
 
       console.log(
@@ -1466,10 +1588,22 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
 
           const og_img_uri = img.og_uri;
           const new_img_uri = img.new_uri;
-          const tool = project.tools.filter((t) => t.position === 0)[0];
-
-          const tool_name = tool.procedure;
-          const params = tool.params;
+          let tool_name;
+          let params;
+          if (isVideoMedia(img)) {
+            // video: the whole pipeline in a single message to the video worker (DA-01)
+            tool_name = "video";
+            params = {
+              tools: videoPipeline(project, img._id),
+              preview: false,
+              progress: { user: runnerUserId, projectId: req.params.project, imgId: String(img._id) },
+            };
+          } else {
+            const tool = imageTools(project)[0];
+            if (!tool) continue; // only video effects: images are left as they are
+            tool_name = tool.procedure;
+            params = tool.params;
+          }
 
           const process = {
             user_id: ownerId,
@@ -1510,7 +1644,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
       };
 
       // Caso 1: sem advanced tools -> não é preciso falar com users-ms
-      if (adv_ops === 0) {
+      if (adv_ops === 0 && vid_ops === 0) {
         try {
 
           // T-03 short-circuit: se nada mudou desde o último commit, não reprocessar
@@ -1583,7 +1717,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
       // Caso 2: com advanced tools -> verificar quota no users-ms
       const callerId = getCallerId(req);
       axios
-        .get(users_ms + `${callerId}/process/${adv_ops}`, { httpsAgent: httpsAgent })
+        .get(users_ms + `${callerId}/process/${adv_ops + vid_ops}`, { httpsAgent: httpsAgent })
         .then(async (resp) => {
           const can_process = resp.data;
 
@@ -1633,13 +1767,16 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
             message: err.message,
             status: err.response?.status,
             data: err.response?.data,
-            url: users_ms + `${callerId}/process/${adv_ops}`,
+            url: users_ms + `${callerId}/process/${adv_ops + vid_ops}`,
             callerId,
             adv_ops,
           });
 
           if (err.response) {
-            const status = err.response.status || 500;
+            // users-ms answers 701 when there are no operations left; 7xx is not a
+            // valid HTTP status and the proxy drops the message, so map it to 403
+            const raw = err.response.status || 500;
+            const status = raw >= 600 ? 403 : raw;
             const data = err.response.data || "Error checking if can process";
             return res.status(status).jsonp(data);
           }

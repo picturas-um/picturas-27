@@ -18,6 +18,7 @@ const queues = {
     'people_ai': 'people_ai_queue',
     'expand_ai': 'expand_ai_queue',
     'watermark': 'watermark_queue',
+    'video': 'video_queue',
     'project': 'project_queue',
     'ws': 'ws_queue'
 }
