@@ -581,9 +581,9 @@ Contributed video support as an MVP: video upload with validation and per-plan l
 `video_tool` ffmpeg worker, the video-only `trim` and `speed` tools, and the frontend for video
 upload, playback and editing:
 
-- **PG61468** — Nuno Campelo
-- **PG62409** — Martim Ribeiro
-- **PG63966** — Gonçalo Castro
+- **PG61468** — José Nuno Fernandes do Vale Taveira Campelo
+- **PG62409** — Martim Pereira Ribeiro
+- **PG63966** — Gonçalo José Vieira de Castro
 - **PG64019** — Pedro Miguel Cardoso Ribeiro
 
 ### Continuation — Group PL?-?, 2026/2027
