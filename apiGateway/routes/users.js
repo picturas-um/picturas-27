@@ -95,7 +95,14 @@ router.post("/:email/login", function (req, res, next) {
       httpsAgent: httpsAgent,
     })
     .then((resp) => res.status(201).jsonp(resp.data))
-    .catch((err) => res.status(500).jsonp("Error logging in"));
+    .catch((err) => {
+      // Pass client errors (e.g. 401 wrong credentials) through so the user
+      // sees why login failed; anything else stays a generic 500.
+      const status = err.response?.status;
+      if (status >= 400 && status < 500)
+        return res.status(status).jsonp(err.response.data);
+      res.status(500).jsonp("Error logging in");
+    });
 });
 
 /**
