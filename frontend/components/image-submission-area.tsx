@@ -11,9 +11,14 @@ import { extractZipImages } from "@/lib/utils";
 export default function ImageSubmissionArea({
   receivedFiles = [],
   onDrop,
+  onFilesChange,
 }: {
   receivedFiles?: File[];
-  onDrop: (files: File[]) => void;
+  // Called with only the files added by each drop (e.g. to upload them right away).
+  onDrop?: (files: File[]) => void;
+  // Called with the complete current list whenever it changes (drop, removal or
+  // receivedFiles), for callers that submit everything at the end.
+  onFilesChange?: (files: File[]) => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
 
@@ -52,14 +57,17 @@ export default function ImageSubmissionArea({
       return file;
     });
 
-    setFiles((prevFiles) => [...prevFiles, ...uniqueFiles]);
-    onDrop(uniqueFiles);
+    const nextFiles = [...files, ...uniqueFiles];
+    setFiles(nextFiles);
+    onDrop?.(uniqueFiles);
+    onFilesChange?.(nextFiles);
   };
 
   useEffect(() => {
     if (receivedFiles.length > 0) {
       setFiles(receivedFiles);
-      onDrop(receivedFiles);
+      onDrop?.(receivedFiles);
+      onFilesChange?.(receivedFiles);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receivedFiles]);
@@ -96,10 +104,9 @@ export default function ImageSubmissionArea({
                       </div>
                       <button
                         onClick={() => {
-                          setFiles((prevFiles) =>
-                            prevFiles.filter((_, i) => i !== index),
-                          );
-                          onDrop(files.filter((_, i) => i !== index));
+                          const nextFiles = files.filter((_, i) => i !== index);
+                          setFiles(nextFiles);
+                          onFilesChange?.(nextFiles);
                         }}
                         className="absolute top-0 right-0 text-foreground/50 hover:text-foreground p-1"
                       >

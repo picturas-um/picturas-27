@@ -93,7 +93,7 @@ export default function NewProjectDialog({
           onChange={(e) => setName(e.target.value)}
         />
         <ImageSubmissionArea
-          onDrop={(files) => setImageFiles(files)}
+          onFilesChange={setImageFiles}
           receivedFiles={files}
         />
         <DialogFooter>
