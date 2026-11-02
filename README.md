@@ -446,9 +446,17 @@ docker compose up -d --build border_tool
 
 ### Testing the video worker
 
+The tests run on the host, with no image to build. They only need Python 3.11+ and
+`ffmpeg`/`ffprobe` on the `PATH` (`brew install ffmpeg`, `apt install ffmpeg`, ...):
+
 ```bash
-docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"
+cd Tools/video
+python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt   # once
+.venv/bin/python -m pytest -q tests
 ```
+
+Without ffmpeg on the host, run them in the already-built worker image instead:
+`docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"`.
 
 For manual tests, `samples/video/` has a valid 10 s 720p MP4, a MOV, a 90 s video that the free
 plan must reject and a corrupted file — see its `README.md` for the expected result of each.

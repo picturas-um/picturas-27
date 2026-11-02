@@ -71,7 +71,13 @@ docker compose up -d --build <service>       # rebuild one service after a chang
 docker compose restart nginx                 # after rebuilding the frontend (avoids 502)
 docker compose logs -f <service>
 docker compose down [-v]                     # stop (-v also wipes all data)
-docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"
+```
+
+Video worker tests run on the host (needs ffmpeg/ffprobe on the PATH, no Docker):
+
+```bash
+cd Tools/video && python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pytest -q tests
 ```
 
 - Open `https://localhost:8080` (https, port 8080) and accept the self-signed certificate.
