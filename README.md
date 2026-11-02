@@ -575,6 +575,17 @@ integration, and assorted frontend and service improvements:
 - **PG61515** — Diogo Miguel Pinto
 - **PG61534** — Mariana Miguel Pinto
 
+### Video support — Group PL1-G4, 2026/2027
+
+Contributed video support as an MVP: video upload with validation and per-plan limits, the
+`video_tool` ffmpeg worker, the video-only `trim` and `speed` tools, and the frontend for video
+upload, playback and editing:
+
+- **PG61468** — Nuno Campelo
+- **PG62409** — Martim Ribeiro
+- **PG63966** — Gonçalo Castro
+- **PG64019** — Pedro Miguel Cardoso Ribeiro
+
 ### Continuation — Group PL?-?, 2026/2027
 
 That is you. Add your names here as you start working on the project:
