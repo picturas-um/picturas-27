@@ -29,6 +29,14 @@ module.exports.getOneEmail = async (email) => {
   return user ? user.toJSON() : null;
 };
 
+// Like getOneEmail, but keeps password_hash (which toJSON strips) so the
+// password can be checked on login. Never send the result to a client as is.
+module.exports.getOneEmailWithPassword = async (email) => {
+  const emailHash = hashEmail(email);
+  const user = await User.findOne({ email_hash: emailHash }).exec();
+  return user ? { ...user.toJSON(), password_hash: user.password_hash } : null;
+};
+
 
 module.exports.create = async (user) => {
   try {
