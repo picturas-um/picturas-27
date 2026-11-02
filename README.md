@@ -1,8 +1,8 @@
 # PictuRAS
 
-**Your personal, intuitive and powerful image editor.**
+**Your personal, intuitive and powerful image and video editor.**
 
-PictuRAS is a web-based image editing platform that combines traditional image processing with AI-powered tools. It is built as a **microservices architecture** orchestrated with Docker Compose, and it is the code base for the group project of the curricular unit _Requisitos e Arquitetura de Software_ (RAS), University of Minho.
+PictuRAS is a web-based image and video editing platform that combines traditional image processing with AI-powered tools. It is built as a **microservices architecture** orchestrated with Docker Compose, and it is the code base for the group project of the curricular unit _Requisitos e Arquitetura de Software_ (RAS), University of Minho.
 
 > **This repository is a starting point, not a finished product.**
 > It is the result of two previous academic years of student work (see [Authors](#-authors)). It contains working features, known limitations and technical debt — finding, documenting and improving those is part of your job this semester.
@@ -34,6 +34,17 @@ PictuRAS is a web-based image editing platform that combines traditional image p
 - **Geometric Operations**: resize, rotate, crop
 - **Filters and Effects**: binarization, borders, watermark
 - **Bulk Processing**: apply a pipeline of tools to multiple images
+
+### Video Editing
+
+- **Upload and playback**: MP4, MOV and WebM videos, validated on upload (container, codec,
+  duration, size, resolution) with per-plan limits — free 60 s / 100 MB, premium 600 s / 1 GB
+- **Video-only tools**: `trim` (start/end in seconds) and `speed` (factor 0.25–5)
+- **Shared effects**: brightness, contrast, saturation, binarization, border, resize, rotate and
+  crop also apply to every frame of a video
+- **Fast preview**: previews render only the first 3 s (`VIDEO_PREVIEW_SECONDS`)
+- **Export**: always MP4 (H.264 + AAC), keeping the original audio
+- AI tools, watermark and PDF export are image-only and hidden in projects that contain videos
 
 ### AI-Powered Tools
 
@@ -94,7 +105,7 @@ are **not** published to the host unless noted otherwise — they talk to each o
    └────────┘ └────────┘ │     └────────┘   │
                          │                  │
                     ┌────▼──────────────────┴────┐
-                    │      RabbitMQ  :5672       │◄─── 16 tool microservices
+                    │      RabbitMQ  :5672       │◄─── 16 image tools + video_tool
                     │    exchange "picturas"     │     (one queue per tool)
                     └────────────────────────────┘
 ```
@@ -116,7 +127,7 @@ has no link to any other microservice. Note that **`subscriptions` means paid me
 | ------------------------- | -------------- | ----------------------------------------------- |
 | **API Gateway**           | 8000           | Single entry point for the REST API, JWT checks |
 | **User Service**          | 10001          | Registration, authentication, user profile      |
-| **Project Service**       | 9001           | Projects, image pipelines, tool orchestration   |
+| **Project Service**       | 9001           | Projects, media pipelines, tool orchestration   |
 | **Subscription Service**  | 11001          | Plans, payments (mock), usage limits            |
 | **Image Storage Service** | 11000          | Upload/download façade in front of SeaweedFS    |
 | **WebSocket Gateway**     | 4000           | Real-time progress events to the browser        |
@@ -134,6 +145,14 @@ exchange:
 > The `watermark` tool runs from a pre-built public image
 > (`prcsousa/picturas-watermark-tool-ms`) instead of being built from this repository — it is a
 > deliberate example of integrating a third-party service.
+
+**Videos** are handled by a single worker, `video_tool` (`Tools/video/`), instead of the image
+tools. For each video, `projects` sends **one** message with the whole pipeline to
+`video_queue`; the worker probes the file with `ffprobe`, decodes it once, applies the frame
+effects (`Tools/video/effects.py`, the same PIL operations as the image tools), encodes once to
+MP4/H.264 + AAC and reports progress as `video-progress` events on `ws_queue`. It acknowledges
+the message only at the end and leaves no partial output on failure. `ffmpeg` is installed only
+inside this container.
 
 ### Infrastructure
 
@@ -211,7 +230,7 @@ OOM-killed.
 
 1. Open <https://localhost:8080> and accept the certificate.
 2. Register an account, or use the anonymous mode.
-3. Create a project and upload an image.
+3. Create a project and upload an image or a video (samples in `samples/video/`).
 4. Build a pipeline with the toolbar (filters, geometry, AI tools) and run it.
 5. Watch the progress arrive live over the WebSocket, then download the results.
 
@@ -331,6 +350,9 @@ All configuration currently lives as `environment:` entries in `docker-compose.y
 | `FRONTEND_URL`                                | `https://localhost:8080`      | img_storage            | CORS / redirect origin                       |
 | `NEXT_PUBLIC_API_BASE_URL`                    | `/api-gateway/`               | frontend               | Relative API base (keep it relative!)        |
 | `GEN_EXPAND_URL`                              | `http://generative-mock:7860` | expand_ai              | Generative image API endpoint                |
+| `VIDEO_FREE_MAX_DURATION_S` / `_MAX_SIZE_MB`  | `60` / `100`                  | projects               | Video upload limits for free accounts        |
+| `VIDEO_PREMIUM_MAX_DURATION_S` / `_SIZE_MB`   | `600` / `1024`                | projects               | Video upload limits for premium accounts     |
+| `VIDEO_PREVIEW_SECONDS`                       | `3`                           | video_tool             | Length of a video preview render             |
 
 ⚠️ If you change `JWT_SECRET_KEY`, change it in **all three** services (`users`, `api_gateway`,
 `ws_gateway`) or authentication silently breaks.
@@ -371,11 +393,13 @@ picturas-27/
 ├── imageStorageService/      # Image storage service: S3 façade in front of SeaweedFS
 ├── wsGateway/                # WebSocket gateway (Socket.IO)
 ├── generative-mock/          # Mock of the Stable Diffusion WebUI API (for expand_ai)
-├── Tools/                    # Image processing microservices
+├── Tools/                    # Image and video processing microservices
 │   ├── utils/                #   shared helpers (RabbitMQ, image I/O, messages)
 │   ├── models/               #   pre-downloaded ML weights (e.g. yolov5su.pt)
 │   ├── bg_remove_ai/  cut_ai/  expand_ai/  obj_ai/  people_ai/  text_ai/  upgrade_ai/
-│   └── binarization/  border/  brightness/  contrast/  cut/  resize/  rotate/  saturation/
+│   ├── binarization/  border/  brightness/  contrast/  cut/  resize/  rotate/  saturation/
+│   └── video/                #   video_tool: ffmpeg worker for whole video pipelines
+├── samples/video/            # Sample videos for manual tests (valid, MOV, too long, corrupted)
 ├── rabbitMQ/                 # Broker image with queue/exchange definitions
 ├── nginx/nginx.conf          # Reverse proxy, TLS, CORS, WebSocket routing
 ├── certs/                    # Self-signed TLS certificate for Nginx
@@ -419,6 +443,15 @@ Python tools have no bind mount — rebuild them after every change:
 ```bash
 docker compose up -d --build border_tool
 ```
+
+### Testing the video worker
+
+```bash
+docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"
+```
+
+For manual tests, `samples/video/` has a valid 10 s 720p MP4, a MOV, a 90 s video that the free
+plan must reject and a corrupted file — see its `README.md` for the expected result of each.
 
 ### Adding a new tool
 
@@ -470,6 +503,15 @@ Check `docker compose logs <tool>_tool`. The usual causes are RabbitMQ not being
 **AI tools are very slow the first time**
 Some models are downloaded or warmed up on first use. `Tools/models/yolov5su.pt` is committed,
 but other weights are fetched at runtime — the first request needs network access.
+
+**A video upload is rejected**
+The response gives the reason: check the plan limits (free 60 s / 100 MB) and that the file
+is a valid MP4, MOV or WebM. Videos must go to `POST /:user/:project/video`; the image
+endpoint rejects them.
+
+**A video stays at 0% or never finishes**
+There is a single `video_tool` with no replicas, so videos are processed one at a time. Check
+`docker compose logs -f video_tool` and the depth of `video_queue` in RabbitMQ.
 
 **`expand_ai` fails**
 It depends on `generative-mock` being healthy. Check <http://localhost:7860> and
