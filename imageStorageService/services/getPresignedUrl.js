@@ -1,11 +1,12 @@
 const s3 = require("./s3Client");
+const { BUCKET, objectKey } = require("./storage");
 
 // Presigned URL reachable only inside the Docker network (http://seaweedfs:9000/...),
 // for services that download the image themselves.
 async function getInternalUrl(userId, projectId, stage, imageName) {
   const params = {
-    Bucket: `user-${userId}`,
-    Key: `${projectId}/${stage}/${imageName}`,
+    Bucket: BUCKET,
+    Key: objectKey(userId, projectId, stage, imageName),
     Expires: 60 * 60,
   };
 

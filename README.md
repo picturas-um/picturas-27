@@ -324,6 +324,7 @@ All configuration currently lives as `environment:` entries in `docker-compose.y
 | `SECRET_KEY`                                  | `card_secret_key`             | subscriptions          | Payment-data encryption key                  |
 | `S3_ENDPOINT`                                 | `seaweedfs:9000`              | img_storage            | Object storage endpoint                      |
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY`             | `admin` / `admin123`          | seaweedfs, img_storage | Object storage credentials                   |
+| `S3_BUCKET`                                   | `picturas`                    | img_storage            | Shared bucket for all files (`users/<id>/…`) |
 | `S3_KEK_PASSPHRASE`                           | `picturas-kek-...`            | seaweedfs              | Protects the key used for encryption at rest |
 | `RABBITMQ_DEFAULT_USER` / `_PASS`             | `user` / `password`           | rabbitmq               | Broker credentials                           |
 | `RABBITMQ_HOST` / `_PORT` / `_USER` / `_PASS` | `rabbitmq` / `5672` / ...     | tools, projects, ws    | Broker connection                            |

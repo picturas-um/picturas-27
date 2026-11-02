@@ -1,15 +1,17 @@
 const s3 = require("./s3Client");
-const createBucket = require("./createBucket");
+const { BUCKET, objectKey, ensureBucket } = require("./storage");
 const { v4: uuidv4 } = require("uuid");
 
 async function uploadImage(userId, projectId, file, stage) {
-  const bucketName = `user-${userId}`;
-  await createBucket(bucketName);
+  await ensureBucket();
 
-  const imageKey = `${projectId}/${stage}/${uuidv4()}.${file.mimetype.split("/")[1]}`;
+  // imageKey is what callers store and send back (<projectId>/<stage>/<file>);
+  // the user prefix is added only for the object's key in the shared bucket.
+  const fileName = `${uuidv4()}.${file.mimetype.split("/")[1]}`;
+  const imageKey = `${projectId}/${stage}/${fileName}`;
   const params = {
-    Bucket: bucketName,
-    Key: imageKey,
+    Bucket: BUCKET,
+    Key: objectKey(userId, projectId, stage, fileName),
     Body: file.buffer,
     ContentType: file.mimetype,
   };
