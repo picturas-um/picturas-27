@@ -61,7 +61,17 @@ function process_msg() {
 
         console.log('Received msg:', JSON.stringify(msg_content));
 
-        if (/update-client-preview/.test(msg_id)) {
+        // Phase 1: video editing progress, as a percentage (REQ-VID-STATUS-002)
+        if (/update-client-video-progress/.test(msg_id)) {
+            io.to(user).emit("video-progress", {
+                projectId: msg_content.projectId,
+                imgId: msg_content.imgId,
+                preview: msg_content.preview,
+                percent: msg_content.percent,
+            });
+        }
+
+        else if (/update-client-preview/.test(msg_id)) {
             if (status == "error") {
                 const error_code = msg_content.errorCode;
                 const error_msg = msg_content.errorMsg;

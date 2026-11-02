@@ -433,7 +433,58 @@ router.post(
           },
           httpsAgent: httpsAgent,
           params: req.query.share ? { share: req.query.share } : undefined, 
-          
+          // Phase 1: videos can be hundreds of MB
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+        }
+      )
+      .then((resp) => {
+        if (resp.headers?.["x-project-version"]) {
+          res.set("X-Project-Version", resp.headers["x-project-version"]);
+        }
+        return res.sendStatus(204);
+      })
+    .catch((err) => forwardAxiosError(res, err, "mensagem fallback"))
+
+  }
+);
+
+/**
+ * Add video to project (Phase 1)
+ * @body Empty
+ * @file Video to be added (.mp4, .mov, .webm)
+ * @returns Post answer structure in case of success
+ */
+router.post(
+  "/:user/:project/video",
+  upload.single("video"),
+  auth.checkToken,
+  function (req, res, next) {
+    const ownerId = req.query.owner || req.params.user;
+    const callerId = req.authUserId || req.params.user;
+
+    const data = new FormData();
+    data.append("video", req.file.buffer, {
+      filename: req.file.originalname,
+      contentType: req.file.mimetype,
+    });
+
+    axios
+      .post(
+        projectsURL + `${ownerId}/${req.params.project}/video`,
+        data,
+        {
+          headers: {
+            ...data.getHeaders(),                     
+            Authorization: req.headers["authorization"], 
+            "X-Project-Version": req.headers["x-project-version"],
+            "X-Caller-Id": callerId,
+          },
+          httpsAgent: httpsAgent,
+          params: req.query.share ? { share: req.query.share } : undefined, 
+          // Phase 1: videos can be hundreds of MB
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
         }
       )
       .then((resp) => {
