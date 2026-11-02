@@ -3,8 +3,7 @@
 Each function mirrors exactly the PIL operation of the matching image
 microservice (Tools/<tool>/<tool>.py), so that the same effect produces the
 same result on an image and on every frame of a video. Parameter names are
-the same ones the frontend already sends to the image tools
-(REQ-VID-EDIT-001, REQ-VID-EDIT-013).
+the same ones the frontend already sends to the image tools.
 """
 from PIL import Image, ImageEnhance, ImageOps
 

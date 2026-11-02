@@ -33,7 +33,7 @@ export default function AppDropzone({ onDrop, children }: CustomDropzoneProps) {
           "image/jpeg": [".jpeg"],
           "image/jpg": [".jpg"],
           "application/zip": [".zip"],
-          // Phase 1: video (RNG-01)
+          // Video
           "video/mp4": [".mp4"],
           "video/quicktime": [".mov"],
           "video/webm": [".webm"],

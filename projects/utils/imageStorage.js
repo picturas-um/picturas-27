@@ -30,7 +30,7 @@ async function post_image(user, project, type, file) {
   return await axios.post(
     `${img_storage_ms}/upload/${user}/${project}/${type}`,
     file /* , { httpsAgent: httpsAgent } */,
-    // Phase 1: videos can be hundreds of MB
+    // Videos can be hundreds of MB
     { maxBodyLength: Infinity, maxContentLength: Infinity, headers: file.getHeaders ? file.getHeaders() : undefined },
   );
 }

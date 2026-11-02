@@ -5,10 +5,9 @@ user-facing documentation; this file is the short version an agent needs before 
 
 ## What the app is
 
-PictuRAS is a web editor for images and videos, built as Docker Compose microservices for the
-_Requisitos e Arquitetura de Software_ course (University of Minho). Users create **projects**,
-add media (images and videos), build an ordered **pipeline** of effects, and apply it to every
-media item of the project in one batch. The pipeline belongs to the project, not to each item.
+PictuRAS is a web editor for images and videos, built as Docker Compose microservices. Users
+create **projects**, add media (images and videos), build an ordered **pipeline** of effects,
+and apply it to every media item of the project in one batch. The pipeline belongs to the project, not to each item.
 
 Profiles: **anonymous** (images only, limited), **free** (`FREE_DAILY_OP` = 5 operations per day)
 and **premium** (unlimited). `subscriptions` means paid plans/billing, not event subscriptions.

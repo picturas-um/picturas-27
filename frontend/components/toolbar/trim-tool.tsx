@@ -1,7 +1,6 @@
-// Phase 1: trim tool (time cut), video only.
+// Trim tool (time cut), video only.
 // Unlike the other effects, a trim belongs to the video it was defined on
-// (DA-09): its times only make sense for that video's duration.
-// UC-VID-002, UC-VID-002/RN2 and RN5, REQ-VID-TRIM-001..004
+// because its times only make sense for that video's duration.
 import { ToolbarButton } from "./toolbar-button";
 import { Scissors } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -46,7 +45,7 @@ export default function TrimTool({ disabled }: { disabled: boolean }) {
     }
   }, [project.tools, open, maxDuration, matchTool]);
 
-  // RN8: end must be after start and within the video duration
+  // End must be after start and within the video duration
   const error =
     start < 0
       ? "Start cannot be negative."

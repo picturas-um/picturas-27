@@ -63,7 +63,7 @@ export function ProjectImage({ image, animation = true }: ImageItemProps) {
       <ContextMenu>
         <ContextMenuTrigger>
           <Card className="group relative overflow-hidden size-full">
-            {/* Phase 1: video (player in the carousel, animated thumbnail in the grid) */}
+            {/* Video (player in the carousel, animated thumbnail in the grid) */}
             {isVideo(image) ? (
               <div className="size-full relative bg-black flex items-center justify-center">
                 <video

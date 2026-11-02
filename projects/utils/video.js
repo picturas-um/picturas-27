@@ -1,18 +1,18 @@
-// Video support in the projects orchestrator (Phase 1, MVP).
+// Video support in the projects orchestrator.
 // Media type detection, reading the characteristics with ffprobe and
-// validation against the profile limits (UC-VID-001, RNG-01, RNG-02).
+// validation against the profile limits.
 const { execFile } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
-// RNG-01: accepted input containers and codecs
+// Accepted input containers and codecs
 const VIDEO_EXTENSIONS = [".mp4", ".mov", ".webm"];
 const VIDEO_MIMES = ["video/mp4", "video/quicktime", "video/webm"];
 const ALLOWED_VIDEO_CODECS = ["h264", "hevc", "vp8", "vp9", "av1", "mpeg4"];
 
-// Effects the video worker can apply (UC-VID-004/RN1)
+// Effects the video worker can apply
 const VIDEO_TOOLS = [
   "brightness", "contrast", "saturation", "rotate", "resize",
   "binarization", "cut", "border", "trim", "speed",
@@ -21,7 +21,7 @@ const VIDEO_TOOLS = [
 const VIDEO_ONLY_TOOLS = ["trim", "speed"];
 
 // Effects that belong to the video they were defined on (params.imgId),
-// because their values only make sense for that video (DA-09)
+// because their values only make sense for that video
 const PER_VIDEO_TOOLS = ["trim", "speed"];
 
 const num = (name, def) => {
@@ -29,8 +29,8 @@ const num = (name, def) => {
   return Number.isFinite(v) ? v : def;
 };
 
-// Per-profile limits (UC-VID-001/RN2), configurable through environment variables.
-// Anonymous users cannot edit video (UC-VID-001/RN3).
+// Per-profile limits, configurable through environment variables.
+// Anonymous users cannot edit video.
 const VIDEO_LIMITS = {
   anonymous: null,
   free: {
@@ -56,7 +56,7 @@ function isVideoMedia(img) {
   return img && img.media_type === "video";
 }
 
-// Result name: edited video is always MP4 (RNG-01, DA-05)
+// Result name: edited video is always MP4
 function videoOutputName(originalname) {
   const base = path.basename(originalname, path.extname(originalname));
   return `${base}.mp4`;
@@ -80,7 +80,7 @@ function ffprobe(filePath) {
   });
 }
 
-// Reads the characteristics of an in-memory video (REQ-VID-SUBMIT-005)
+// Reads the characteristics of an in-memory video
 async function probeVideoBuffer(buffer, originalname) {
   const tmp = path.join(os.tmpdir(), `${uuidv4()}${path.extname(originalname || ".mp4")}`);
   fs.writeFileSync(tmp, buffer);
@@ -110,7 +110,7 @@ async function probeVideoBuffer(buffer, originalname) {
   }
 }
 
-// Validates a video against RNG-01 and the profile limits.
+// Validates a video against the accepted formats and the profile limits.
 // Returns null if accepted, or a message with the rejection reason.
 function validateVideo(meta, originalname, mimetype, userType) {
   const ext = path.extname(originalname || "").toLowerCase();
@@ -149,7 +149,7 @@ function imageTools(project) {
     .filter((t) => !VIDEO_ONLY_TOOLS.includes(t.procedure));
 }
 
-// Trim and speed belong to the video they were defined on (DA-09).
+// Trim and speed belong to the video they were defined on.
 // Every other effect applies to all media of the project.
 function appliesToVideo(tool, imgId) {
   if (!PER_VIDEO_TOOLS.includes(tool.procedure)) return true;
@@ -165,14 +165,14 @@ function videoPipeline(project, imgId) {
     .map((t) => ({ procedure: t.procedure, params: t.params }));
 }
 
-// Pipeline effects that make no sense for video (UC-VID-004/RN1)
+// Pipeline effects that make no sense for video
 function unsupportedVideoTools(project) {
   return (project.tools || [])
     .map((t) => t.procedure)
     .filter((p) => !VIDEO_TOOLS.includes(p));
 }
 
-// RNG-02: one operation per applied effect, per video, regardless of duration
+// One operation per applied effect, per video, regardless of duration
 function videoOps(project) {
   return (project.imgs || [])
     .filter(isVideoMedia)

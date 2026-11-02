@@ -1,5 +1,5 @@
 from node
-# ffprobe to validate videos on upload (REQ-VID-SUBMIT-002..005)
+# ffprobe to validate videos on upload
 run apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 workdir /app
 

@@ -433,7 +433,7 @@ router.post(
           },
           httpsAgent: httpsAgent,
           params: req.query.share ? { share: req.query.share } : undefined, 
-          // Phase 1: videos can be hundreds of MB
+          // Videos can be hundreds of MB
           maxBodyLength: Infinity,
           maxContentLength: Infinity,
         }
@@ -450,7 +450,7 @@ router.post(
 );
 
 /**
- * Add video to project (Phase 1)
+ * Add video to project
  * @body Empty
  * @file Video to be added (.mp4, .mov, .webm)
  * @returns Post answer structure in case of success
@@ -482,7 +482,7 @@ router.post(
           },
           httpsAgent: httpsAgent,
           params: req.query.share ? { share: req.query.share } : undefined, 
-          // Phase 1: videos can be hundreds of MB
+          // Videos can be hundreds of MB
           maxBodyLength: Infinity,
           maxContentLength: Infinity,
         }

@@ -1,5 +1,5 @@
-// Phase 1: playback speed tool (0.25x to 5x), video only.
-// Like trim, a speed change belongs to the video it was defined on (DA-09).
+// Playback speed tool (0.25x to 5x), video only.
+// Like trim, a speed change belongs to the video it was defined on.
 import { ToolbarButton } from "./toolbar-button";
 import { Gauge } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";

@@ -11,9 +11,9 @@ const imgSchema = new mongoose.Schema({
   new_uri: { type: String, required: true },
   og_img_key: { type: String, required: true },
   og_sha256: { type: String, required: true }, 
-  // Phase 1 (video): a project media item can be an image or a video (REQ-VID-PROJ-004)
+  // A project media item can be an image or a video
   media_type: { type: String, enum: ["image", "video"], default: "image" },
-  // video characteristics read on upload (REQ-VID-SUBMIT-005)
+  // video characteristics read on upload
   video: {
     type: {
       duration: Number,

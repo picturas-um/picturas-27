@@ -33,18 +33,18 @@ export interface RotateToolParams {
   degrees: number; // 0 - 360
 }
 
-// Phase 1: trim (time cut, video only), in seconds
+// Trim (time cut, video only), in seconds
 export interface TrimToolParams {
   start: number;
   end: number;
-  // the video this trim belongs to (DA-09): trim times only make sense per video
+  // the video this trim belongs to: trim times only make sense per video
   imgId: string;
 }
 
-// Phase 1: playback speed (video only), from 0.25x to 5x
+// Playback speed (video only), from 0.25x to 5x
 export interface SpeedToolParams {
   factor: number;
-  // the video this speed change belongs to (DA-09)
+  // the video this speed change belongs to
   imgId: string;
 }
 

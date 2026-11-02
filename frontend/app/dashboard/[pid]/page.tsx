@@ -89,7 +89,7 @@ export default function Project({
   const [processing, setProcessing] = useState<boolean>(false);
   const [processingProgress, setProcessingProgress] = useState<number>(0);
   const [processingSteps, setProcessingSteps] = useState<number>(1);
-  // Phase 1: progress of each video being edited, as a percentage (REQ-VID-STATUS-002)
+  // Progress of each video being edited, as a percentage
   const [videoProgress, setVideoProgress] = useState<Record<string, number>>({});
   const [waitingForPreview, setWaitingForPreview] = useState<string>("");
   const [canEdit, setCanEdit] = useState(true);
@@ -106,7 +106,7 @@ export default function Project({
   // se um processamento envolve ferramentas de IA ou não
   const processIsAiRef = useRef<boolean>(false);
 
-  // Phase 1: each image goes through each image tool (trim is video-only);
+  // Each image goes through each image tool (trim is video-only);
   // each video is processed in one go by the video worker (a single step).
   const projectImgs = project.data?.imgs ?? [];
   const projectVideos = projectImgs.filter((i) => isVideo(i));
@@ -117,7 +117,7 @@ export default function Project({
     imageToolCount * (projectImgs.length - projectVideos.length) + projectVideos.length;
   const hasVideos = projectVideos.length > 0;
 
-  // Phase 1: a single progress bar that combines the image steps with the real
+  // A single progress bar that combines the image steps with the real
   // progress of each video (a video only counts as one step when it finishes)
   const videosDone = projectVideos.filter((v) => (videoProgress[v._id] ?? 0) >= 100).length;
   const imageStepsDone = Math.max(0, processingSteps - 1 - videosDone);
@@ -817,7 +817,7 @@ const handleCancel = () => {
                             : "Download results (ZIP)"}
                         </DropdownMenuItem>
 
-                          {/* Phase 1: a PDF only makes sense for images, so it is hidden for projects with videos */}
+                          {/* A PDF only makes sense for images, so it is hidden for projects with videos */}
                           {!hasVideos && (
                           <DropdownMenuItem
                             onClick={() => {

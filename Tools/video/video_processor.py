@@ -1,12 +1,12 @@
-"""PictuRAS video processing (Phase 1, MVP).
+"""PictuRAS video processing.
 
 Decodes the video once with ffmpeg, applies the effect pipeline to every
 frame with the same PIL operations as the image tools, and encodes once to
-MP4/H.264 + AAC, keeping the audio (DA-01, DA-05).
+MP4/H.264 + AAC, keeping the audio.
 
 Trim (time cut) is resolved before decoding: only the [start, end] window is
 read, and the audio is cut on the same window so it stays in sync with the
-picture (REQ-VID-TRIM-001..004).
+picture.
 
 Speed changes the playback rate (0.25x to 5x): frame timestamps are rescaled
 while decoding and the audio tempo is changed by the same factor, so both stay
@@ -22,7 +22,7 @@ from PIL import Image
 
 from effects import SUPPORTED, UnsupportedEffect, apply_frame_effects
 
-# Preview: only the first seconds (UC-VID-001/RN13, DA-04)
+# Preview: only the first seconds
 PREVIEW_SECONDS = float(os.getenv("VIDEO_PREVIEW_SECONDS", "3"))
 
 # Allowed playback speed factors
@@ -47,7 +47,7 @@ class ProcessingError(Exception):
 
 
 def probe(path: str) -> dict:
-    """Reads the video characteristics with ffprobe (REQ-VID-SUBMIT-005)."""
+    """Reads the video characteristics with ffprobe."""
     cmd = [
         "ffprobe", "-v", "error", "-print_format", "json",
         "-show_format", "-show_streams", path,
@@ -159,8 +159,8 @@ def process_video(input_path: str, output_path: str, tools: list,
     """Applies `tools` (ordered) to the video at `input_path` and writes MP4 to `output_path`.
 
     `progress_cb(percent: int)` is called as frames are processed.
-    On failure no partial file is left at `output_path` (REQ-VID-FAIL-001).
-    The original is never modified (REQ-VID-EDIT-003).
+    On failure no partial file is left at `output_path`.
+    The original is never modified.
     """
     validate_tools(tools)
     speed = resolve_speed(tools)

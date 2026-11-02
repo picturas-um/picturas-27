@@ -42,7 +42,7 @@ interface ToolbarButtonProps {
   children?: React.ReactNode;
   noParams?: boolean;
   onDefault?: () => void;
-  // Phase 1: how to find this tool in the pipeline (default: by procedure).
+  // How to find this tool in the pipeline (default: by procedure).
   // Trim uses it to match the trim of the selected video only.
   matchTool?: (t: ProjectToolResponse) => boolean;
 }

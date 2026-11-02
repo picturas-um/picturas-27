@@ -52,7 +52,7 @@ const {
 
 const { requireProjectVersion } = require("../middleware/projectVersion");
 
-// Phase 1: video support
+// Video support
 const {
   isVideoFile,
   isVideoMedia,
@@ -235,7 +235,7 @@ function process_msg() {
 
       const next_pos = process.cur_pos + 1;
 
-      // Phase 1: images only go through the image tools (trim is video-only);
+      // Images only go through the image tools (trim is video-only);
       // a video is processed in one go by the video worker, so its reply is
       // always the last one of the chain.
       const imgTools = imageTools(project);
@@ -1072,7 +1072,7 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       }
 
       // video: the whole pipeline goes in one message to the video worker,
-      // which only processes the initial excerpt (UC-VID-001/FA12, DA-04)
+      // which only processes the initial excerpt
       const tool = previewIsVideo ? { procedure: "video" } : imageTools(project)[0];
       if (!tool) {
         return res.status(400).jsonp("No tools selected");
@@ -1226,7 +1226,7 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
     });
 });
 
-// Shared upload logic for project media (images and, in Phase 1, videos).
+// Shared upload logic for project media (images and videos).
 // `kind` is "image" or "video"; each endpoint only accepts its own kind.
 function addProjectMedia(kind) {
   return async (req, res) => {
@@ -1257,7 +1257,7 @@ function addProjectMedia(kind) {
           return;
         }
 
-        // Phase 1: validate the video before storing it (UC-VID-001, step 2)
+        // Validate the video before storing it
         const isVideo = kind === "video";
         let videoMeta = null;
         if (isVideo) {
@@ -1297,7 +1297,7 @@ function addProjectMedia(kind) {
 
           try {
             const og_uri = `./images/users/${req.params.user}/projects/${req.params.project}/src/${req.file.originalname}`;
-            // the edited video is always MP4 (RNG-01)
+            // the edited video is always MP4
             const out_name = isVideo ? videoOutputName(req.file.originalname) : req.file.originalname;
             const new_uri = `./images/users/${req.params.user}/projects/${req.params.project}/out/${out_name}`;
 
@@ -1349,7 +1349,7 @@ router.post(
   addProjectMedia("image")
 );
 
-// Phase 1: add new video to a project (UC-VID-001)
+// Add new video to a project
 router.post(
   "/:user/:project/video", checkSharePermission, requireEditPermission, enforcePresenceLimit, requireProjectVersion, upload.single("video"),
   addProjectMedia("video")
@@ -1505,7 +1505,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         return;
       }
 
-      // Phase 1: video
+      // Video
       const hasVideos = project.imgs.some(isVideoMedia);
       if (hasVideos) {
         const bad = unsupportedVideoTools(project);
@@ -1519,7 +1519,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         res.status(400).jsonp("The pipeline only has video effects and the project has no videos");
         return;
       }
-      // RNG-02: each effect applied to a video counts as one operation
+      // Each effect applied to a video counts as one operation
       const vid_ops = videoOps(project);
 
       const { adv_ops, totalAdv, charged, newTools } = advanced_tool_num(project);
@@ -1591,7 +1591,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
           let tool_name;
           let params;
           if (isVideoMedia(img)) {
-            // video: the whole pipeline in a single message to the video worker (DA-01)
+            // video: the whole pipeline in a single message to the video worker
             tool_name = "video";
             params = {
               tools: videoPipeline(project, img._id),

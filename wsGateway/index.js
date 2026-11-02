@@ -61,7 +61,7 @@ function process_msg() {
 
         console.log('Received msg:', JSON.stringify(msg_content));
 
-        // Phase 1: video editing progress, as a percentage (REQ-VID-STATUS-002)
+        // Video editing progress, as a percentage
         if (/update-client-video-progress/.test(msg_id)) {
             io.to(user).emit("video-progress", {
                 projectId: msg_content.projectId,

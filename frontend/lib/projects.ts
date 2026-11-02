@@ -48,7 +48,7 @@ export interface ProjectImage {
   _id: string;
   name: string;
   url: string;
-  // Phase 1: a project media item can be an image or a video
+  // A project media item can be an image or a video
   media_type?: "image" | "video";
   video?: VideoInfo;
 }
@@ -465,7 +465,7 @@ export const addProjectImages = async ({
   let lastVersion: string | undefined;
 
   for (const image of images) {
-    // Phase 1: videos go to their own endpoint
+    // Videos go to their own endpoint
     const video = isVideo({ name: image.name }) || image.type.startsWith("video/");
     const formData = new FormData();
     formData.append(video ? "video" : "image", image);

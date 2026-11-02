@@ -46,7 +46,7 @@ export function Toolbar() {
   const project = useProjectInfo();
   const session = useSession();
 
-  // Phase 1: projects with videos only show the effects the video worker supports
+  // Projects with videos only show the effects the video worker supports
   // (AI tools and watermark are image-only) and only when a media item is selected
   const hasVideos = project.imgs.some((i) => isVideo(i));
 
@@ -76,7 +76,7 @@ export function Toolbar() {
         <CropTool disabled={disabled} />
         <ResizeTool disabled={disabled} />
         <BorderTool disabled={disabled} />
-        {/* Phase 1: only shown when the project has videos */}
+        {/* Only shown when the project has videos */}
         <TrimTool disabled={disabled} />
         <SpeedTool disabled={disabled} />
         {!hasVideos && (

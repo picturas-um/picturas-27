@@ -1,12 +1,12 @@
 """PictuRAS video microservice (RabbitMQ worker).
 
-Receives the video and the whole effect pipeline in a single message (DA-01),
+Receives the video and the whole effect pipeline in a single message,
 processes it with video_processor and replies to the projects orchestrator on
 project_queue. Progress is sent straight to the WebSocket gateway (ws_queue),
-as a percentage (REQ-VID-STATUS-002).
+as a percentage.
 
 Unlike the image tools, the message is only acknowledged after the job ends:
-if the worker dies midway, RabbitMQ redelivers it (DA-03, REQ-VID-FAIL-004).
+if the worker dies midway, RabbitMQ redelivers it.
 """
 import datetime
 import json
@@ -59,7 +59,7 @@ class VideoWorker:
         params = pika.ConnectionParameters(
             env.RABBITMQ_HOST, int(env.RABBITMQ_PORT), "/", credentials,
             # processing a video blocks this thread for minutes; without a
-            # heartbeat the broker does not drop the connection midway (MVP, DA-08)
+            # heartbeat the broker does not drop the connection midway
             heartbeat=0,
         )
         for attempt in range(30):
@@ -162,7 +162,7 @@ class VideoWorker:
             except Exception as e:  # noqa: BLE001 - any other failure is reported
                 self._reply_error(msg_id, started, CODES["error_processing"], str(e), input_uri)
 
-        # manual ack only at the end (DA-03)
+        # manual ack only at the end
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     def run(self):
