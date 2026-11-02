@@ -140,6 +140,11 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: user
       RABBITMQ_PASS: password
+      # Phase 1: per-profile video limits (UC-VID-001/RN2)
+      VIDEO_FREE_MAX_DURATION_S: 60
+      VIDEO_FREE_MAX_SIZE_MB: 100
+      VIDEO_PREMIUM_MAX_DURATION_S: 600
+      VIDEO_PREMIUM_MAX_SIZE_MB: 1024
     networks:
       - elk
     volumes:
@@ -239,6 +244,22 @@ services:
       context: ./Tools
       dockerfile: binarization/Dockerfile
     restart: on-failure
+    networks:
+      - elk
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - image_data:/app/images
+
+  # Phase 1: video worker (ffmpeg isolated in the container, DA-01)
+  video_tool:
+    build:
+      context: ./Tools
+      dockerfile: video/Dockerfile
+    restart: on-failure
+    environment:
+      VIDEO_PREVIEW_SECONDS: 3
     networks:
       - elk
     depends_on:
