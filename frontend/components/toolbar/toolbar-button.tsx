@@ -42,6 +42,9 @@ interface ToolbarButtonProps {
   children?: React.ReactNode;
   noParams?: boolean;
   onDefault?: () => void;
+  // Phase 1: how to find this tool in the pipeline (default: by procedure).
+  // Trim uses it to match the trim of the selected video only.
+  matchTool?: (t: ProjectToolResponse) => boolean;
 }
 
 export function ToolbarButton({
@@ -57,7 +60,11 @@ export function ToolbarButton({
   children,
   noParams = false,
   onDefault = () => {},
+  matchTool,
 }: ToolbarButtonProps) {
+  const isThisTool = (t: ProjectToolResponse) =>
+    matchTool ? matchTool(t) : t.procedure === tool.procedure;
+
   const router = useRouter();
   const session = useSession();
   const project = useProjectInfo();
@@ -98,7 +105,7 @@ export function ToolbarButton({
   };
 
   const variant =
-    project.tools.find((t) => t.procedure === tool.procedure) !== undefined
+    project.tools.find(isThisTool) !== undefined
       ? "default"
       : "outline";
 
@@ -269,8 +276,9 @@ export function ToolbarButton({
   }, [socket.data, preview]);
 
   useEffect(() => {
-    setPrevTool(project.tools.find((t) => t.procedure === tool.procedure));
-  }, [project.tools, tool.procedure]);
+    setPrevTool(project.tools.find(isThisTool));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project.tools, tool.procedure, matchTool]);
 
   const locked = !canEdit;
 

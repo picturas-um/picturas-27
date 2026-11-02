@@ -32,7 +32,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"; // shadcn / radix menu
 import { useToast } from "@/hooks/use-toast";
-import { ProjectImage } from "@/lib/projects";
+import { ProjectImage, isVideo } from "@/lib/projects";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Transition } from "@headlessui/react";
@@ -89,6 +89,8 @@ export default function Project({
   const [processing, setProcessing] = useState<boolean>(false);
   const [processingProgress, setProcessingProgress] = useState<number>(0);
   const [processingSteps, setProcessingSteps] = useState<number>(1);
+  // Phase 1: progress of each video being edited, as a percentage (REQ-VID-STATUS-002)
+  const [videoProgress, setVideoProgress] = useState<Record<string, number>>({});
   const [waitingForPreview, setWaitingForPreview] = useState<string>("");
   const [canEdit, setCanEdit] = useState(true);
 
@@ -104,8 +106,30 @@ export default function Project({
   // se um processamento envolve ferramentas de IA ou não
   const processIsAiRef = useRef<boolean>(false);
 
+  // Phase 1: each image goes through each image tool (trim is video-only);
+  // each video is processed in one go by the video worker (a single step).
+  const projectImgs = project.data?.imgs ?? [];
+  const projectVideos = projectImgs.filter((i) => isVideo(i));
+  const imageToolCount = (project.data?.tools ?? []).filter(
+    (t) => t.procedure !== "trim" && t.procedure !== "speed",
+  ).length;
   const totalProcessingSteps =
-    (project.data?.tools.length ?? 0) * (project.data?.imgs.length ?? 0);
+    imageToolCount * (projectImgs.length - projectVideos.length) + projectVideos.length;
+  const hasVideos = projectVideos.length > 0;
+
+  // Phase 1: a single progress bar that combines the image steps with the real
+  // progress of each video (a video only counts as one step when it finishes)
+  const videosDone = projectVideos.filter((v) => (videoProgress[v._id] ?? 0) >= 100).length;
+  const imageStepsDone = Math.max(0, processingSteps - 1 - videosDone);
+  const videoFraction = projectVideos.reduce(
+    (acc, v) => acc + (videoProgress[v._id] ?? 0) / 100,
+    0,
+  );
+  const displayedProgress = !hasVideos
+    ? processingProgress
+    : totalProcessingSteps > 0
+      ? Math.min(100, Math.round(((imageStepsDone + videoFraction) * 100) / totalProcessingSteps))
+      : 0;
   const projectResults = useGetProjectResults(
     session.user._id,
     pid,
@@ -311,6 +335,7 @@ useEffect(() => {
             if (!isMobile) sidebar.setOpen(true);
             setProcessingProgress(0);
             setProcessingSteps(1);
+    setVideoProgress({});
 
             // avisar o ProjectProvider que o Apply terminou
             setWaitingForPreview("__APPLY_DONE__");
@@ -351,7 +376,7 @@ useEffect(() => {
                 ? AI_THRESHOLD_MS
                 : NORMAL_THRESHOLD_MS;
 
-              if (durationMs > threshold) {
+              if (durationMs > threshold && !hasVideos) {
                 toast({
                   title: isAiProcess
                     ? "Processamento de IA demorado"
@@ -392,6 +417,7 @@ useEffect(() => {
     setProcessing(false);
     setProcessingProgress(0);
     setProcessingSteps(1);
+    setVideoProgress({});
     toast({
       title: "Falha no processamento",
       description:
@@ -401,11 +427,17 @@ useEffect(() => {
     });
   }
 
+  function onVideoProgress(payload: { imgId: string; percent: number; preview?: boolean }) {
+    if (ignoreUpdatesRef.current || !processing || payload?.preview) return;
+    setVideoProgress((prev) => ({ ...prev, [payload.imgId]: payload.percent }));
+  }
+
   let active = true;
 
   if (active && socket.data) {
     socket.data.on("process-update", onProcessUpdate);
     socket.data.on("process-error", onProcessError);
+    socket.data.on("video-progress", onVideoProgress);
   }
 
   return () => {
@@ -413,6 +445,7 @@ useEffect(() => {
     if (socket.data) {
       socket.data.off("process-update", onProcessUpdate);
       socket.data.off("process-error", onProcessError);
+      socket.data.off("video-progress", onVideoProgress);
     }
   };
 }, [
@@ -428,6 +461,7 @@ useEffect(() => {
   projectResults,
   toast,
   processing,
+  hasVideos,
 ]);
 
 if (project.isError) {
@@ -542,6 +576,7 @@ const handleCancel = () => {
   setProcessing(false);
   setProcessingProgress(0);
   setProcessingSteps(1);
+    setVideoProgress({});
 
   // reabrir a sidebar em desktop 
   if (!isMobile) {
@@ -635,8 +670,7 @@ const handleCancel = () => {
                     onClick={() => {
                       // começa a contar o tempo
                       processStartTimeRef.current = performance.now();
-                      setProcessing(true);        
-                      sidebar.setOpen(false);
+                      setProcessing(true);
                       
                       const aiProcedures = [
                         "bg_remove_ai",
@@ -660,7 +694,6 @@ const handleCancel = () => {
                           onSuccess: () => {
                             ignoreUpdatesRef.current = false;
                             setProcessing(true);
-                            sidebar.setOpen(false);
 
                             updateSession.mutate({
                               userId: session.user._id,
@@ -780,10 +813,12 @@ const handleCancel = () => {
                           }
                         >
                           {mode === "edit"
-                            ? "Download images (ZIP)"
+                            ? "Download media (ZIP)"
                             : "Download results (ZIP)"}
                         </DropdownMenuItem>
 
+                          {/* Phase 1: a PDF only makes sense for images, so it is hidden for projects with videos */}
+                          {!hasVideos && (
                           <DropdownMenuItem
                             onClick={() => {
                               downloadProjectPdf.mutate(
@@ -814,6 +849,7 @@ const handleCancel = () => {
                               ? "Download results (PDF)"
                               : "Download images (PDF)"}
                         </DropdownMenuItem>
+                          )}
                       </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -849,7 +885,10 @@ const handleCancel = () => {
               <h1>Processing</h1>
               <LoaderCircle className="size-[1em] animate-spin" />
             </div>
-            <Progress value={processingProgress} className="w-96" />
+            <Progress value={displayedProgress} className="w-96" />
+            {hasVideos && (
+              <span className="text-xs text-muted-foreground">{displayedProgress}%</span>
+            )}
 
             <Button
               variant="outline"

@@ -31,6 +31,9 @@ import {
 import { Eraser } from "lucide-react";
 import { useState } from "react";
 import ExpandAITool from "./expand-ai-tool";
+import TrimTool from "./trim-tool";
+import SpeedTool from "./speed-tool";
+import { isVideo } from "@/lib/projects";
 
 export function Toolbar() {
   const searchParams = useSearchParams();
@@ -42,6 +45,10 @@ export function Toolbar() {
 
   const project = useProjectInfo();
   const session = useSession();
+
+  // Phase 1: projects with videos only show the effects the video worker supports
+  // (AI tools and watermark are image-only) and only when a media item is selected
+  const hasVideos = project.imgs.some((i) => isVideo(i));
 
   const [open, setOpen] = useState<boolean>(false);
   const ownerParam = searchParams.get("owner") ?? session.user._id;
@@ -55,6 +62,8 @@ export function Toolbar() {
     shareId,
   );
 
+  if (hasVideos && view === "grid") return null;
+
   return (
     <div className="flex h-full w-24 flex-col justify-between items-stretch border-r bg-background p-2">
       <div className="flex flex-col gap-2 items-center">
@@ -67,14 +76,21 @@ export function Toolbar() {
         <CropTool disabled={disabled} />
         <ResizeTool disabled={disabled} />
         <BorderTool disabled={disabled} />
-        <WatermarkTool disabled={disabled} />
-        <BgRemovalAITool disabled={disabled} />
-        <CropAITool disabled={disabled} />
-        <ObjectAITool disabled={disabled} />
-        <PeopleAITool disabled={disabled} />
-        <TextAITool disabled={disabled} />
-        <ExpandAITool disabled={disabled} />
-        <UpgradeAITool disabled={disabled} />
+        {/* Phase 1: only shown when the project has videos */}
+        <TrimTool disabled={disabled} />
+        <SpeedTool disabled={disabled} />
+        {!hasVideos && (
+          <>
+            <WatermarkTool disabled={disabled} />
+            <BgRemovalAITool disabled={disabled} />
+            <CropAITool disabled={disabled} />
+            <ObjectAITool disabled={disabled} />
+            <PeopleAITool disabled={disabled} />
+            <TextAITool disabled={disabled} />
+            <ExpandAITool disabled={disabled} />
+            <UpgradeAITool disabled={disabled} />
+          </>
+        )}
         <AppliedToolsList />
       </div>
       <Dialog open={open} onOpenChange={setOpen}>

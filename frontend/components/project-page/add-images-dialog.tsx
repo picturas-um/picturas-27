@@ -18,6 +18,7 @@ import { createBlobUrlFromFile } from "@/lib/utils";
 import { useProjectInfo } from "@/providers/project-provider";
 import { useSession } from "@/providers/session-provider";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
 import { getErrorMessage } from "@/lib/error-messages";
 
 export function AddImagesDialog() {
@@ -29,10 +30,18 @@ export function AddImagesDialog() {
   const { _id: pid, version} = useProjectInfo();
   const session = useSession();
 
+  // use the same owner/share as the project query, otherwise the cache key
+  // differs and the new media only shows up after a page refresh
+  const searchParams = useSearchParams();
+  const ownerId = searchParams.get("owner") ?? session.user._id;
+  const shareId = searchParams.get("share") ?? undefined;
+
   const addImages = useAddProjectImages(
     session.user._id,
     pid as string,
     session.token,
+    ownerId,
+    shareId,
   );
 
   function onDrop(files: File[]) {
@@ -52,7 +61,7 @@ export function AddImagesDialog() {
       {
         onSuccess: () => {
           toast({
-            title: "Images added successfully.",
+            title: "Media added successfully.",
           });
           setOpen(false);
         },
@@ -72,14 +81,14 @@ export function AddImagesDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="inline-flex" variant="outline">
-          <Plus /> Add Images
+          <Plus /> Import
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Images</DialogTitle>
+          <DialogTitle>Import</DialogTitle>
           <DialogDescription>
-            Add more images to your project.
+            Add images or videos to your project.
           </DialogDescription>
         </DialogHeader>
         <ImageSubmissionArea onDrop={onDrop} />

@@ -53,6 +53,7 @@ export function ProjectImageList({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewText, setPreviewText] = useState<string[] | null>(null);
+  const [previewIsVideo, setPreviewIsVideo] = useState<boolean>(false);
 
   const project = useProjectInfo();
   const session = useSession();
@@ -110,9 +111,16 @@ useEffect(() => {
           const msg_content = JSON.parse(msg) as {
             imageUrl: string;
             textResults: string[];
+            mediaType?: "video";
           };
           const url = msg_content.imageUrl;
           const textResults = msg_content.textResults;
+          // fall back to the file extension (signed URLs carry a query string)
+          const path = (url ?? "").split("?")[0].toLowerCase();
+          setPreviewIsVideo(
+            msg_content.mediaType === "video" ||
+              [".mp4", ".mov", ".webm"].some((ext) => path.endsWith(ext)),
+          );
           setPreviewImage(url);
           setPreviewText(textResults);
           setPreviewOpen(true);
@@ -291,10 +299,22 @@ useEffect(() => {
       </div>
       <DialogContent className="max-w-[80%] mt-4 overflow-y-scroll overflow-x-hidden">
         <DialogHeader>
-          <DialogTitle>Image Preview</DialogTitle>
+          <DialogTitle>
+            {previewIsVideo ? "Video Preview (first seconds)" : "Image Preview"}
+          </DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-center">
-          {previewImage && (
+          {previewImage && previewIsVideo && (
+            <video
+              src={previewImage}
+              controls
+              autoPlay
+              loop
+              playsInline
+              className="rounded-md w-full max-h-[80vh] bg-black"
+            />
+          )}
+          {previewImage && !previewIsVideo && (
             <Image
               src={previewImage}
               width={500}

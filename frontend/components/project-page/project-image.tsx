@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { Download, Trash } from "lucide-react";
+import { Download, Film, Trash } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import {
 import { useProjectInfo } from "@/providers/project-provider";
 import { useSession } from "@/providers/session-provider";
 import { useToast } from "@/hooks/use-toast";
-import type { ProjectImage } from "@/lib/projects";
+import { isVideo, type ProjectImage } from "@/lib/projects";
 import { useSearchParams } from "next/navigation";
 import { getErrorMessage } from "@/lib/error-messages";
 
@@ -63,7 +63,30 @@ export function ProjectImage({ image, animation = true }: ImageItemProps) {
       <ContextMenu>
         <ContextMenuTrigger>
           <Card className="group relative overflow-hidden size-full">
-            {/* Image */}
+            {/* Phase 1: video (player in the carousel, animated thumbnail in the grid) */}
+            {isVideo(image) ? (
+              <div className="size-full relative bg-black flex items-center justify-center">
+                <video
+                  src={image.url}
+                  controls={!animation}
+                  muted={animation}
+                  loop={animation}
+                  autoPlay={animation}
+                  playsInline
+                  preload="metadata"
+                  className="size-full object-contain"
+                  onLoadedData={() => setLoaded(true)}
+                />
+                <div className="absolute top-2 left-2 flex items-center gap-1 rounded bg-black/60 px-2 py-0.5 text-xs text-white">
+                  <Film className="size-3" />
+                  <span>
+                    Video
+                    {image.video?.duration ? ` · ${image.video.duration.toFixed(1)} s` : ""}
+                  </span>
+                </div>
+                {!loaded && <Skeleton className="absolute inset-0" />}
+              </div>
+            ) : (
             <div className="size-full relative grid z-0 grid-cols-1 grid-rows-1">
               <Image
                 src={image.url}
@@ -94,6 +117,7 @@ export function ProjectImage({ image, animation = true }: ImageItemProps) {
                 </>
               )}
             </div>
+            )}
           </Card>
         </ContextMenuTrigger>
         <ContextMenuContent>
@@ -120,7 +144,7 @@ export function ProjectImage({ image, animation = true }: ImageItemProps) {
                 {
                   onSuccess: () => {
                     toast({
-                      title: `Image ${image.name} downloaded.`,
+                      title: `${isVideo(image) ? "Video" : "Image"} ${image.name} downloaded.`,
                     });
                   },
                   onError: (error) => {

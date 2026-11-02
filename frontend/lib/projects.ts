@@ -34,11 +34,31 @@ export interface SingleProject {
   version: number;
 
 }
+export interface VideoInfo {
+  duration: number;
+  width: number;
+  height: number;
+  fps: number;
+  video_codec: string;
+  audio_codec: string | null;
+  size_bytes: number;
+}
+
 export interface ProjectImage {
   _id: string;
   name: string;
   url: string;
+  // Phase 1: a project media item can be an image or a video
+  media_type?: "image" | "video";
+  video?: VideoInfo;
 }
+
+export const VIDEO_EXTENSIONS = [".mp4", ".mov", ".webm"];
+
+export const isVideo = (img?: Pick<ProjectImage, "name" | "media_type">) =>
+  !!img &&
+  (img.media_type === "video" ||
+    VIDEO_EXTENSIONS.some((ext) => img.name?.toLowerCase().endsWith(ext)));
 
 export interface ProjectImageText {
   _id: string;
@@ -376,8 +396,11 @@ export const downloadProjectImage = async ({
   if (response.status !== 200 || !response.data)
     throw new Error("Failed to download project image");
 
-  const blob = new Blob([response.data], { type: "image/png" });
-  const file = new File([blob], imageName, { type: "image/png" });
+  const contentType =
+    (response.headers?.["content-type"] as string | undefined) ??
+    (VIDEO_EXTENSIONS.some((e) => imageName.toLowerCase().endsWith(e)) ? "video/mp4" : "image/png");
+  const blob = new Blob([response.data], { type: contentType });
+  const file = new File([blob], imageName, { type: contentType });
 
   return {
     name: imageName,
@@ -442,10 +465,12 @@ export const addProjectImages = async ({
   let lastVersion: string | undefined;
 
   for (const image of images) {
+    // Phase 1: videos go to their own endpoint
+    const video = isVideo({ name: image.name }) || image.type.startsWith("video/");
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append(video ? "video" : "image", image);
 
-    const response = await api.post(`/projects/${uid}/${pid}/img${query}`, formData, {
+    const response = await api.post(`/projects/${uid}/${pid}/${video ? "video" : "img"}${query}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -825,6 +850,7 @@ export const fetchProjectResults = async (
       og_img_id: string;
       name: string;
       url: string;
+      type?: string;
     }[];
     texts: {
       og_img_id: string;
@@ -863,6 +889,7 @@ export const fetchProjectResults = async (
           _id: img.og_img_id,
           name: img.name,
           url: img.url,
+          media_type: img.type === "video" ? "video" : "image",
         }) as ProjectImage,
     ),
     texts: texts,

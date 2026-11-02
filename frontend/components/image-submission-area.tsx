@@ -23,6 +23,9 @@ export default function ImageSubmissionArea({
       "image/jpeg",
       "image/jpg",
       "application/zip",
+      "video/mp4",
+      "video/quicktime",
+      "video/webm",
     ];
 
     // Extract images from zip files and filter out incompatible files
@@ -72,7 +75,7 @@ export default function ImageSubmissionArea({
             <div className="flex flex-col gap-4 items-center justify-center max-w-[20rem]">
               <ImagePlus size={64} />
               <p className="font-medium text-lg">
-                Drag and drop images or a .zip
+                Drag and drop images, videos or a .zip
               </p>
             </div>
           </AppDropzone>
