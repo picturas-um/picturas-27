@@ -18,6 +18,7 @@ PictuRAS is a web-based image and video editing platform that combines tradition
 - [HTTPS and Certificates](#-https-and-certificates)
 - [Configuration](#-configuration)
 - [Project Structure](#-project-structure)
+- [Video Tools](#-video-tools)
 - [Development Workflow](#-development-workflow)
 - [Troubleshooting](#-troubleshooting)
 - [Authors](#-authors)
@@ -40,6 +41,10 @@ PictuRAS is a web-based image and video editing platform that combines tradition
 - **Upload and playback**: MP4, MOV and WebM videos, validated on upload (container, codec,
   duration, size, resolution) with per-plan limits — free 60 s / 100 MB, premium 600 s / 1 GB
 - **Video-only tools**: `trim` (start/end in seconds) and `speed` (factor 0.25–5)
+- **Automatic subtitles**: local speech recognition (Faster-Whisper), captions burned into the
+  video in the spoken language — see [Video Tools](#-video-tools)
+- **Extract frames**: turn every video into up to 100 PNG/JPEG stills, by count or interval,
+  as the last pipeline step
 - **Shared effects**: brightness, contrast, saturation, binarization, border, resize, rotate and
   crop also apply to every frame of a video
 - **Fast preview**: previews render only the first 3 s (`VIDEO_PREVIEW_SECONDS`)
@@ -152,7 +157,8 @@ tools. For each video, `projects` sends **one** message with the whole pipeline 
 effects (`Tools/video/effects.py`, the same PIL operations as the image tools), encodes once to
 MP4/H.264 + AAC and reports progress as `video-progress` events on `ws_queue`. It acknowledges
 the message only at the end and leaves no partial output on failure. `ffmpeg` is installed only
-inside this container.
+inside this container. Automatic subtitles and frame extraction run as ordered stages of the
+same worker (`Tools/video/subtitles.py`, `Tools/video/frame_extraction.py`).
 
 ### Infrastructure
 
@@ -353,6 +359,9 @@ All configuration currently lives as `environment:` entries in `docker-compose.y
 | `VIDEO_FREE_MAX_DURATION_S` / `_MAX_SIZE_MB`  | `60` / `100`                  | projects               | Video upload limits for free accounts        |
 | `VIDEO_PREMIUM_MAX_DURATION_S` / `_SIZE_MB`   | `600` / `1024`                | projects               | Video upload limits for premium accounts     |
 | `VIDEO_PREVIEW_SECONDS`                       | `3`                           | video_tool             | Length of a video preview render             |
+| `WHISPER_MODEL`                               | `small`                       | video_tool             | Faster-Whisper model for automatic subtitles |
+| `WHISPER_CACHE_DIR`                           | `/models/whisper`             | video_tool             | Model cache (the `whisper_models` volume)    |
+| `WHISPER_CPU_THREADS`                         | `2`                           | video_tool             | CPU threads for speech recognition           |
 
 ⚠️ If you change `JWT_SECRET_KEY`, change it in **all three** services (`users`, `api_gateway`,
 `ws_gateway`) or authentication silently breaks.
@@ -360,8 +369,8 @@ All configuration currently lives as `environment:` entries in `docker-compose.y
 ### Persistent data
 
 Named Docker volumes: `user_data`, `project_data`, `subscription_data`, `image_data`,
-`seaweedfs_data`, `rabbitmq_data`. Database dumps are written to the host at `./backups/mongo`
-(git-ignored). `docker compose down -v` deletes every volume — the dumps survive.
+`seaweedfs_data`, `rabbitmq_data`, `whisper_models` (speech model weights). Database dumps are
+written to the host at `./backups/mongo` (git-ignored). `docker compose down -v` deletes every volume — the dumps survive.
 
 ### Scaling
 
@@ -411,69 +420,58 @@ picturas-27/
 
 ---
 
-### Extract video frames
+## 🎬 Video Tools
 
-In a project with videos, choose **Extract frames**, select a frame count (1–100)
-or an interval in seconds, choose PNG or JPEG, and **Save**. **Apply** extracts
-images from every video in the project. Original images skip this tool.
+Besides `trim` and `speed`, projects with videos have two project-wide, video-only tools. Both
+run inside the existing `video_tool` worker; images in the same project skip them.
 
-Extraction is the final pipeline step. New effects are inserted before it, and
-invalid reorderings are rejected. Trim, speed, captions and other preceding edits
-are reflected in the extracted images. Sampling starts at zero on the edited
-video timeline and excludes its endpoint. Interval mode rejects requests exceeding
-100 frames per video instead of silently dropping frames.
+### Automatic subtitles
 
-**Preview** shows a contact sheet of up to six samples across the complete edited
-video. **Results** contains individual images instead of a processed video, with
-unique names for separate downloads or the project ZIP. Original uploads remain
-available. A failed batch does not replace the previous completed results.
+Choose **Automatic subtitles** in the toolbar and **Save**. **Apply** burns captions into every
+video of the project, in the detected spoken language (no translation). Videos without audio or
+without detected speech are left unchanged by this step, and original uploads are never
+overwritten.
 
-This adapts the frame extraction idea from PL2-G5 and PL5-G6 to the existing video
-worker, with no additional service or dependency. Rebuild `video_tool` and
-`projects`, plus the frontend when using production mode. Validate with the video
-suite below and `node --test tests/*.test.js` inside `projects`.
+- Recognition runs locally with [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper)
+  `small` on CPU/int8 — no external API or key. The first use downloads the model weights into
+  the `whisper_models` volume; later runs reuse them.
+- Order matters: tools placed after subtitles also change the captioned video, so put subtitles
+  after `trim`/`speed` and other edits.
+- Preview shows the first 3 s of the final timeline. Subtitle previews may take up to ten
+  minutes on first use (model download, queued CPU work).
+- Transcription can contain errors. Captions are not editable and there is no SRT export.
+- Configured with `WHISPER_MODEL`, `WHISPER_CACHE_DIR` and `WHISPER_CPU_THREADS` (see
+  [Configuration](#-configuration)). The worker image ships Noto fonts for multilingual captions.
 
-Videos play only when explicitly started, stop when leaving their carousel slide,
-and stop when the preview closes.
+Adapted from the Phase 1 submission of group **PL2-G5** (see [Authors](#-authors)), which
+exported text tracks instead of burning captions into the video.
 
-### Automatic video subtitles
+### Extract frames
 
-In a project containing videos, select a media item, choose **Automatic subtitles**
-in the toolbar and **Save**. The tool appears in **Applied**. **Apply** processes
-every video in the project; images skip this tool. Captions are burned into the
-exported video, in the detected spoken language (not translated). No audio or no
-detected speech leaves the video unchanged by this stage. Original uploads are
-never overwritten. Recognition is automatic and can make transcription errors.
+Choose **Extract frames**, pick either a number of evenly spaced frames (1–100) or one frame
+every _N_ seconds, choose PNG or JPEG, and **Save**. **Apply** turns every video of the project
+into still images.
 
-Order matters: tools after subtitles affect the captioned video too. Prefer placing
-subtitles after trim/speed and other edits. Preview uses only the first three
-seconds of the final timeline. If trim or speed comes after subtitles, recognition
-may need to read more of the source before the preview can be shortened. This
-version does not provide editable text tracks or SRT export.
+- Extraction is always the **last** step and appears at most once; new effects are inserted
+  before it and invalid reorderings are rejected. Trim, speed, subtitles and other preceding
+  edits are reflected in the frames.
+- Sampling starts at 0 s on the edited timeline and excludes its end. At most 100 frames per
+  video: an interval that would produce more is rejected rather than silently truncated.
+- **Preview** shows a contact sheet of up to six samples across the whole edited video (which
+  can be slow when there are preceding effects). **Results** lists each frame as a separate
+  image with a unique name, for individual download or in the project ZIP.
+- With no preceding effects, frames are read directly from the original, without re-encoding.
 
-The existing `video_tool` performs recognition locally, with Faster-Whisper `small`
-on CPU/int8, inspired by the PL2-G5 submission. No external transcription API or
-API key is needed. The first use downloads model weights; later runs reuse the
-`whisper_models` Docker volume. `WHISPER_MODEL`, `WHISPER_CACHE_DIR`, and
-`WHISPER_CPU_THREADS` configure the worker. Rebuild `video_tool` and `projects`,
-and rebuild the frontend if using production mode. The worker includes Noto fonts
-for multilingual captions. Subtitle previews allow up to ten minutes for model
-downloads and queued CPU work; a timeout does not cancel an already queued job.
+Adapted from the Phase 1 submissions of groups **PL2-G5** (interval sampling, bounded output)
+and **PL5-G6** (count-based PNG/JPEG extraction, frame manifest with timestamps) — see
+[Authors](#-authors).
 
-Validation:
+### Playback
 
-```bash
-docker compose run --rm --no-deps video_tool sh -c "pip install -q -r requirements-dev.txt && python -m pytest -q tests"
-docker compose run --rm --no-deps projects node --test tests/video-pipeline.test.js
-```
+Videos never autoplay or loop: they play only when started, and pause when you leave their
+carousel slide or close the preview.
 
-The media tests use real FFmpeg with simulated speech recognition. Separately,
-local end-to-end testing covered English and Portuguese speech with the real
-`small` model, silent/no-audio videos, downstream trim/speed previews, batch Apply
-on two videos plus an image, downloadable results, and an unchanged source image.
-Regression tests also cover model/encoder failures without publishing partial
-output, invalid caption timestamps, and markup removal. Repeated Apply on an
-unchanged image pipeline completes immediately using the existing results.
+---
 
 ## 💻 Development Workflow
 
@@ -521,6 +519,13 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt   # once
 
 Without ffmpeg on the host, run them in the already-built worker image instead:
 `docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"`.
+
+The media tests use real FFmpeg; speech recognition is simulated, so no model is downloaded.
+The orchestration tests for the video pipeline and frame extraction run inside `projects`:
+
+```bash
+docker compose run --rm --no-deps projects sh -c "node --test tests/*.test.js"
+```
 
 For manual tests, `samples/video/` has a valid 10 s 720p MP4, a MOV, a 90 s video that the free
 plan must reject and a corrupted file — see its `README.md` for the expected result of each.
@@ -649,6 +654,27 @@ upload, playback and editing:
 - **PG62409** — Martim Pereira Ribeiro
 - **PG63966** — Gonçalo José Vieira de Castro
 - **PG64019** — Pedro Miguel Cardoso Ribeiro
+
+### Phase 1 ideas — Groups PL2-G5 and PL5-G6, 2026/2027
+
+Automatic subtitles and frame extraction were adapted by the lecturers from these groups'
+Phase 1 submissions (see [Video Tools](#-video-tools)); they are not wholesale imports.
+
+**PL2-G5** — automatic subtitles with local Faster-Whisper, speech/no-audio handling, and
+interval-based frame sampling with bounded output:
+
+- **PG63933** — Cláudio Rafael Oliveira Ferreira
+- **PG63948** — Diogo Linhares Campos
+- **PG64003** — Marco António Ferreira Abreu
+- **PG64010** — Nelson Daniel Araújo Sousa
+
+**PL5-G6** — count-based PNG/JPEG frame extraction, frame manifests with timestamps and atomic
+output:
+
+- **PG64011** — Nuno Daniel Abreu da Silva
+- **PG64042** — Vicente Alexandre Fernandes da Silva
+- **PG64044** — Vítor Hugo Inácio Mina
+- **PG65418** — João Pedro Belece Bernardo
 
 ### Continuation — Group PL?-?, 2026/2027
 
