@@ -5,7 +5,7 @@
 PictuRAS is a web-based image and video editing platform that combines traditional image processing with AI-powered tools. It is built as a **microservices architecture** orchestrated with Docker Compose, and it is the code base for the group project of the curricular unit _Requisitos e Arquitetura de Software_ (RAS), University of Minho.
 
 > **This repository is a starting point, not a finished product.**
-> It is the result of two previous academic years of student work (see [Authors](#-authors)). It contains working features, known limitations and technical debt — finding, documenting and improving those is part of your job this semester.
+> It is the result of two previous academic years of student work (see [AUTHORS.md](AUTHORS.md)). It contains working features, known limitations and technical debt — finding, documenting and improving those is part of your job this semester.
 
 ---
 
@@ -443,7 +443,7 @@ overwritten.
 - Configured with `WHISPER_MODEL`, `WHISPER_CACHE_DIR` and `WHISPER_CPU_THREADS` (see
   [Configuration](#-configuration)). The worker image ships Noto fonts for multilingual captions.
 
-Adapted from the Phase 1 submission of group **PL2-G5** (see [Authors](#-authors)), which
+Adapted from the Phase 1 submission of group **PL2-G5** (see [AUTHORS.md](AUTHORS.md)), which
 exported text tracks instead of burning captions into the video.
 
 ### Extract frames
@@ -464,7 +464,7 @@ into still images.
 
 Adapted from the Phase 1 submissions of groups **PL2-G5** (interval sampling, bounded output)
 and **PL5-G6** (count-based PNG/JPEG extraction, frame manifest with timestamps) — see
-[Authors](#-authors).
+[AUTHORS.md](AUTHORS.md).
 
 ### Playback
 
@@ -615,34 +615,11 @@ local data**, so use it deliberately.
 ## 👥 Authors
 
 PictuRAS is a cumulative effort of several generations of students of _Requisitos e Arquitetura
-de Software_ at the **University of Minho**. Please keep this section growing rather than
-replacing it.
+de Software_ at the **University of Minho**, from the original 2024/2025 implementation to the
+current year. The full history — who contributed what, and when — is in
+[AUTHORS.md](AUTHORS.md). Add your group there as you start working on the project.
 
-### Original authors — Group A, 2024/2025
-
-The initial design and implementation:
-
-- **PG55926** — Carlos Alberto Ribeiro
-- **PG55932** — Diogo Cardoso Ferreira
-- **PG55934** — Diogo Gomes Matos
-- **PG55946** — Guilherme João Fernandes Barbosa
-- **PG57558** — João Henrique Costa Ferreira
-- **PG55958** — João Manuel Matos Fernandes
-- **PG55969** — José Filipe Ribeiro Rodrigues
-- **PG55973** — Juciano Gomes Farias Junior
-- **PG55989** — Nuno Ricardo Silva Gomes
-
-### Evolution — Group PL3-G, 2025/2026
-
-Contributed HTTPS/TLS termination, encryption at rest and field-level encryption, automated
-database backups, the generative expand tool with its local mock, third-party watermark tool
-integration, and assorted frontend and service improvements:
-
-- **PG60259** — Gabriel Veloso Antunes
-- **PG60263** — Guilherme Pinto Pinho
-- **PG60284** — Miguel Freixo Machado
-- **PG61515** — Diogo Miguel Pinto
-- **PG61534** — Mariana Miguel Pinto
+The latest contributions, from 2026/2027 (Phase 1), are:
 
 ### Video support — Group PL1-G4, 2026/2027
 
@@ -675,14 +652,6 @@ output:
 - **PG64042** — Vicente Alexandre Fernandes da Silva
 - **PG64044** — Vítor Hugo Inácio Mina
 - **PG65418** — João Pedro Belece Bernardo
-
-### Continuation — Group PL?-?, 2026/2027
-
-That is you. Add your names here as you start working on the project:
-
-- **PG?????** — _name_
-
-_Note: minor improvements and adjustments have also been introduced by the course lecturers._
 
 ---
 
