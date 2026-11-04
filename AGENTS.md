@@ -82,6 +82,10 @@ docker compose logs -f <service>
 docker compose down [-v]                     # stop (-v also wipes all data)
 ```
 
+Replacing an older (e.g. Phase 1) checkout: it shares the Compose project name `picturas` and
+its volumes, whose S3 layout (one bucket per user) is incompatible. Run
+`docker compose down -v --remove-orphans` once before the first `up`.
+
 Video worker tests run on the host (needs ffmpeg/ffprobe on the PATH, no Docker):
 
 ```bash

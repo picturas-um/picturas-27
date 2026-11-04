@@ -194,6 +194,21 @@ same worker (`Tools/video/subtitles.py`, `Tools/video/frame_extraction.py`).
 On Docker Desktop, raise the memory limit in **Settings → Resources** if the AI tools get
 OOM-killed.
 
+> ⚠️ **Replacing your own Phase 1 version with this one?** Wipe your old Docker data first.
+> Both versions use the same Compose project name (`picturas`), so this stack would reuse your
+> old volumes — and the object storage layout changed (all files now live in one shared bucket,
+> `users/<id>/…`, instead of one bucket per user). Old data is **not migrated**: with stale
+> volumes, uploads and existing projects break in confusing ways.
+>
+> In the directory of your **old** checkout, before starting this one:
+>
+> ```bash
+> docker compose down -v --remove-orphans   # deletes your old accounts, projects and files
+> ```
+>
+> Then follow the installation below. This is needed only once. If you want to keep anything
+> from your old instance, export it before running the command.
+
 ### Installation
 
 1. **Clone the repository**
