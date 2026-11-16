@@ -202,6 +202,19 @@ function insertPipelineTool(tools, tool) {
   return ordered.map((item, position) => ({ ...(item.toObject ? item.toObject() : item), position }));
 }
 
+// Resolves the specialized video worker tool based on the pipeline procedures
+function resolveVideoWorkerTool(tools) {
+  if (!tools || tools.length === 0) return "video_effects";
+  const procedures = tools.map((t) => t.procedure);
+  if (procedures.includes("extract_frames")) {
+    return "video_frames";
+  }
+  if (procedures.includes("subtitles")) {
+    return "video_subtitles";
+  }
+  return "video_effects";
+}
+
 // One operation per applied effect, per video, regardless of duration
 function videoOps(project) {
   return (project.imgs || [])
@@ -224,4 +237,5 @@ module.exports = {
   videoOps,
   validateFrameExtraction,
   insertPipelineTool,
+  resolveVideoWorkerTool,
 };

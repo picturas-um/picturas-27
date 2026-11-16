@@ -1,6 +1,8 @@
-"""Bounded still-frame extraction and a small preview contact sheet."""
+"""Bounded still-frame extraction and preview contact sheet for video_frames microservice."""
+import json
 import math
 import os
+from fractions import Fraction
 from pathlib import Path
 import subprocess
 import tempfile
@@ -9,6 +11,10 @@ import uuid
 from PIL import Image, ImageDraw
 
 MAX_FRAMES = 100
+
+
+class InvalidVideo(Exception):
+    """File is not a readable video (corrupted, no video stream, ...)."""
 
 
 class InvalidExtraction(ValueError):
@@ -37,14 +43,56 @@ def sampling_times(params, duration, fps):
     if mode == "count":
         times = [i * duration / int(value) for i in range(int(value))]
     else:
-        # Avoid allocating huge lists for very small, otherwise valid intervals.
         times = [i * value for i in range(MAX_FRAMES + 1) if i * value < duration]
         if len(times) > MAX_FRAMES:
             raise InvalidExtraction("Interval would produce more than 100 frames; increase it")
-    # CFR-normalized videos may contain fewer frames than the requested count.
-    # Repeating the final frame is preferable to seeking beyond its last timestamp.
     last_frame = max(0, duration - 1 / fps)
     return [min(t, last_frame) for t in times], fmt
+
+
+def probe(path: str, prefer_video_duration: bool = False) -> dict:
+    """Reads video characteristics with ffprobe."""
+    cmd = [
+        "ffprobe", "-v", "error", "-print_format", "json",
+        "-show_format", "-show_streams", path,
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        raise InvalidVideo(f"Unreadable video file: {res.stderr.strip()[:200]}")
+
+    data = json.loads(res.stdout or "{}")
+    streams = data.get("streams", [])
+    video = next((s for s in streams if s.get("codec_type") == "video"), None)
+    audio = next((s for s in streams if s.get("codec_type") == "audio"), None)
+    if video is None:
+        raise InvalidVideo("The file has no video stream")
+
+    fmt = data.get("format", {})
+    duration = float(
+        (video.get("duration") if prefer_video_duration else None)
+        or fmt.get("duration") or video.get("duration") or 0
+    )
+    if duration <= 0:
+        raise InvalidVideo("Could not determine the video duration")
+
+    fps_str = video.get("avg_frame_rate") or video.get("r_frame_rate") or "25/1"
+    try:
+        fps = float(Fraction(fps_str))
+    except (ZeroDivisionError, ValueError):
+        fps = 25.0
+
+    return {
+        "duration": duration,
+        "width": int(video["width"]),
+        "height": int(video["height"]),
+        "fps": fps,
+        "fps_str": fps_str,
+        "video_codec": video.get("codec_name"),
+        "audio_codec": audio.get("codec_name") if audio else None,
+        "has_audio": audio is not None,
+        "format_name": fmt.get("format_name"),
+        "size_bytes": int(fmt.get("size") or os.path.getsize(path)),
+    }
 
 
 def extract_frames(input_path, output_path, info, params, progress, preview=False):
@@ -53,8 +101,6 @@ def extract_frames(input_path, output_path, info, params, progress, preview=Fals
         times = [times[round(i * (len(times) - 1) / 5)] for i in range(6)]
     parent = Path(output_path).resolve().parent
     parent.mkdir(parents=True, exist_ok=True)
-    # Every successful render gets its own directory. A failed retry cannot
-    # overwrite a previous generation that the storage service still needs.
     destination = parent / f"{Path(output_path).stem}-frames-{uuid.uuid4().hex}"
     with tempfile.TemporaryDirectory(prefix="extract-", dir=parent) as work:
         work = Path(work)
@@ -95,3 +141,15 @@ def extract_frames(input_path, output_path, info, params, progress, preview=Fals
                       "width": info["width"], "height": info["height"]}
     progress(100)
     return {**info, **output}
+
+
+def process_video(input_path: str, output_path: str, tools: list,
+                  progress_cb=None, preview: bool = False) -> dict:
+    extractors = [i for i, tool in enumerate(tools or []) if tool.get("procedure") == "extract_frames"]
+    if not extractors or extractors != [len(tools) - 1]:
+        raise InvalidExtraction("Frame extraction must appear once, at the end of the pipeline")
+    params = tools[-1].get("params", {})
+    validate_params(params)
+    info = probe(input_path, prefer_video_duration=True)
+    return extract_frames(input_path, output_path, info, params,
+                          progress_cb or (lambda _: None), preview=preview)

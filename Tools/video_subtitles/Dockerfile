@@ -7,9 +7,9 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY ./video .
+COPY ./video_subtitles .
 COPY ./utils ./utils
 RUN pip install --no-cache-dir -r ./utils/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "-u", "video.py" ]
+CMD [ "python", "-u", "video_subtitles.py" ]

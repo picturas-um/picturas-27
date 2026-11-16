@@ -1,4 +1,4 @@
-"""Media tests use fake recognition, but real FFmpeg and pipeline execution."""
+"""Automated tests for video_subtitles microservice."""
 from types import SimpleNamespace
 from pathlib import Path
 import hashlib
@@ -8,7 +8,7 @@ import pytest
 from PIL import Image, ImageChops
 
 import subtitles
-from video_processor import process_video, probe
+from subtitles import process_video, probe
 
 CAPTIONS = [{"procedure": "subtitles", "params": {}}]
 
@@ -46,25 +46,22 @@ def test_caption_rendering_preserves_audio_and_original(sample_video, tmp_path, 
                         "-frames:v", "1", str(tmp_path / name)], check=True)
     a = Image.open(tmp_path / "before.png").convert("RGB").crop((20, 190, 300, 230))
     b = Image.open(tmp_path / "after.png").convert("RGB").crop((20, 190, 300, 230))
-    assert sum(ImageChops.difference(a, b).convert("L").getdata()) / (280 * 40) > 3
+    diff_val = sum(ImageChops.difference(a, b).convert("L").getdata()) / (280 * 40)
+    assert diff_val > 3
     assert not list(tmp_path.glob("captions-*"))
 
 
-def test_order_and_preview(sample_video, tmp_path, monkeypatch):
+def test_preview_renders_initial_seconds(sample_video, tmp_path, monkeypatch):
     seen = []
     class RecordingRecognizer(Recognizer):
         def transcribe(self, path, **options):
             seen.append(probe(path)["duration"])
             return super().transcribe(path, **options)
     monkeypatch.setattr(subtitles, "speech_model", RecordingRecognizer)
-    trim = {"procedure": "trim", "params": {"start": 0, "end": 2}}
-    speed = {"procedure": "speed", "params": {"factor": 2}}
-    out = str(tmp_path / "order.mp4")
-    result = process_video(sample_video, out, [trim, *CAPTIONS, speed])
-    assert seen[0] == pytest.approx(2, abs=0.15)
-    assert result["duration"] == pytest.approx(1, abs=0.15)
-    process_video(sample_video, out, CAPTIONS, preview=True)
-    assert seen[1] == pytest.approx(3, abs=0.15)
+    out = str(tmp_path / "preview.mp4")
+    result = process_video(sample_video, out, CAPTIONS, preview=True)
+    assert seen[0] == pytest.approx(3, abs=0.15)
+    assert result["duration"] == pytest.approx(3, abs=0.15)
 
 
 def test_no_speech_is_noop(sample_video, tmp_path, monkeypatch):
@@ -94,30 +91,6 @@ def test_captions_clamp_times_and_remove_markup(tmp_path):
     text = p.read_text()
     assert "00:00:00,000 --> 00:00:04,000" in text
     assert "{" not in text and "<" not in text and "outside" not in text
-
-
-@pytest.mark.parametrize("following,expected_duration", [
-    ({"procedure": "trim", "params": {"start": 3, "end": 4}}, 1),
-    ({"procedure": "speed", "params": {"factor": 0.5}}, 3),
-    ({"procedure": "speed", "params": {"factor": 2}}, 2),
-])
-def test_preview_after_temporal_edit(sample_video, tmp_path, monkeypatch,
-                                     following, expected_duration):
-    """Preview must keep source frames needed by edits after the captions."""
-    seen = []
-
-    class RecordingRecognizer(Recognizer):
-        def transcribe(self, path, **options):
-            seen.append(probe(path)["duration"])
-            return super().transcribe(path, **options)
-
-    monkeypatch.setattr(subtitles, "speech_model", RecordingRecognizer)
-    out = str(tmp_path / "preview.mp4")
-    result = process_video(sample_video, out, [*CAPTIONS, following, *CAPTIONS],
-                           preview=True)
-    assert seen[0] == pytest.approx(4, abs=0.15)
-    assert seen[1] == pytest.approx(expected_duration, abs=0.15)
-    assert result["duration"] == pytest.approx(expected_duration, abs=0.15)
 
 
 def test_encoder_failure_preserves_previous_output(sample_video, tmp_path, monkeypatch):

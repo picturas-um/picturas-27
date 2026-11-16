@@ -1,3 +1,0 @@
-# Only what the tests need (no RabbitMQ). Also needs ffmpeg/ffprobe on the PATH.
-pillow>=11
-pytest>=8

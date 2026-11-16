@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { imageTools, videoPipeline, videoOps, unsupportedVideoTools } = require('../utils/video');
+const { imageTools, videoPipeline, videoOps, unsupportedVideoTools, resolveVideoWorkerTool } = require('../utils/video');
 
 test('captions apply to all videos, while images skip them and trim stays targeted', () => {
   const project = {
@@ -19,4 +19,11 @@ test('captions apply to all videos, while images skip them and trim stays target
   project.tools = [project.tools[0]];
   assert.deepEqual(imageTools(project), []);
   assert.equal(videoOps(project), 2);
+});
+
+test('routes video tools to specialized workers (effects, subtitles, frames)', () => {
+  assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'trim' }]), 'video_effects');
+  assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'subtitles' }]), 'video_subtitles');
+  assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'extract_frames' }]), 'video_frames');
+  assert.equal(resolveVideoWorkerTool([]), 'video_effects');
 });

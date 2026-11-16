@@ -65,6 +65,7 @@ const {
   videoOps,
   validateFrameExtraction,
   insertPipelineTool,
+  resolveVideoWorkerTool,
 } = require("../utils/video");
 const { persistFrameResults } = require("../utils/frameResults");
 const { dispatchProcessBatch } = require("../utils/processBatch");
@@ -1107,9 +1108,9 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
         }
       }
 
-      // video: the whole pipeline goes in one message to the video worker,
-      // which only processes the initial excerpt
-      const tool = previewIsVideo ? { procedure: "video" } : imageTools(project)[0];
+      // video: routed to the specialized video worker (effects, subtitles, frames)
+      const vtools = previewIsVideo ? videoPipeline(project, req.params.img) : null;
+      const tool = previewIsVideo ? { procedure: resolveVideoWorkerTool(vtools) } : imageTools(project)[0];
       if (!tool) {
         return res.status(400).jsonp("No tools selected");
       }
@@ -1117,7 +1118,7 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       const tool_name = tool.procedure;
       const params = previewIsVideo
         ? {
-            tools: videoPipeline(project, req.params.img),
+            tools: vtools,
             preview: true,
             progress: { user: runnerUserId, projectId: req.params.project, imgId: req.params.img },
           }
@@ -1632,10 +1633,11 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
           let tool_name;
           let params;
           if (isVideoMedia(img)) {
-            // video: the whole pipeline in a single message to the video worker
-            tool_name = "video";
+            // video: routed to specialized video worker (effects, subtitles, frames)
+            const vtools = videoPipeline(project, img._id);
+            tool_name = resolveVideoWorkerTool(vtools);
             params = {
-              tools: videoPipeline(project, img._id),
+              tools: vtools,
               preview: false,
               progress: { user: runnerUserId, projectId: req.params.project, imgId: String(img._id) },
             };

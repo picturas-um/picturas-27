@@ -252,11 +252,26 @@ services:
     volumes:
       - image_data:/app/images
 
-  # Video worker (ffmpeg isolated in the container)
-  video_tool:
+  # Video workers (specialized microservices)
+  video_effects_tool:
     build:
       context: ./Tools
-      dockerfile: video/Dockerfile
+      dockerfile: video_effects/Dockerfile
+    restart: on-failure
+    environment:
+      VIDEO_PREVIEW_SECONDS: 3
+    networks:
+      - elk
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - image_data:/app/images
+
+  video_subtitles_tool:
+    build:
+      context: ./Tools
+      dockerfile: video_subtitles/Dockerfile
     restart: on-failure
     environment:
       VIDEO_PREVIEW_SECONDS: 3
@@ -271,6 +286,36 @@ services:
     volumes:
       - image_data:/app/images
       - whisper_models:/models/whisper
+
+  video_frames_tool:
+    build:
+      context: ./Tools
+      dockerfile: video_frames/Dockerfile
+    restart: on-failure
+    networks:
+      - elk
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - image_data:/app/images
+
+  # Backward compatibility worker for legacy video_queue
+  video_tool:
+    build:
+      context: ./Tools
+      dockerfile: video_effects/Dockerfile
+    restart: on-failure
+    environment:
+      VIDEO_QUEUE: video_queue
+      VIDEO_PREVIEW_SECONDS: 3
+    networks:
+      - elk
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - image_data:/app/images
 
   border_tool:
     build:
