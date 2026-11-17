@@ -435,8 +435,9 @@ export const useCancelProjectProcess = (
   const projectKey = ["project", uid, pid, token, ownerId, shareId];
 
   return useMutation({
-    mutationFn: (args: { projectVersion: number }) =>
-      cancelProjectProcess({ uid, pid, token, ownerId, shareId, projectVersion: args.projectVersion }),
+    mutationFn: (args: { projectVersion: number; processToken?: number }) =>
+      cancelProjectProcess({ uid, pid, token, ownerId, shareId,
+        projectVersion: args.projectVersion, processToken: args.processToken }),
 
     onSuccess: (newVersionHeader) => {
       bumpProjectVersion(qc, projectKey, newVersionHeader);

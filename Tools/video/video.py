@@ -2,8 +2,8 @@
 
 Receives the video and the whole effect pipeline in a single message,
 processes it with video_processor and replies to the projects orchestrator on
-project_queue. Progress is sent straight to the WebSocket gateway (ws_queue),
-as a percentage.
+project_queue. Progress is sent to the orchestrator for persistence and to the
+WebSocket gateway (ws_queue), as a percentage.
 
 Unlike the image tools, the message is only acknowledged after the job ends:
 if the worker dies midway, RabbitMQ redelivers it.
@@ -109,9 +109,13 @@ class VideoWorker:
             },
         })
 
-    def _progress(self, progress, preview, percent):
+    def _progress(self, progress, preview, percent, msg_id=None):
         if not progress or not progress.get("user"):
             return
+        if not preview and msg_id:
+            self._publish(PROJECT_QUEUE, {
+                "type": "video-progress", "correlationId": msg_id, "percent": percent,
+            })
         self._publish(WS_QUEUE, {
             "messageId": f"update-client-video-progress-{uuid.uuid4()}",
             "timestamp": now().isoformat(),
@@ -150,7 +154,7 @@ class VideoWorker:
             try:
                 result = process_video(
                     input_uri, output_uri, tools, preview=preview,
-                    progress_cb=lambda pct: self._progress(progress, preview, pct),
+                    progress_cb=lambda pct: self._progress(progress, preview, pct, msg_id),
                 )
                 self._reply_success(msg_id, started, output_uri, result)
                 print(f"[video] msg={msg_id} ok frames={result['frames']} "

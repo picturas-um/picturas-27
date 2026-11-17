@@ -996,6 +996,27 @@ export const processProject = async ({
     return response.headers?.["x-project-version"];
 };
 
+export interface ProcessingStatus {
+  token: number | null;
+  status: "idle" | "processing" | "completed" | "failed" | "cancelled";
+  progress: number;
+  canCancel: boolean;
+  projectVersion: number;
+  startedAt?: string;
+  updatedAt?: string;
+  error?: string | null;
+}
+
+export const fetchProcessingStatus = async (
+  uid: string, pid: string, token: string, ownerId?: string, shareId?: string,
+): Promise<ProcessingStatus> => {
+  const response = await api.get<ProcessingStatus>(
+    `/projects/${uid}/${pid}/process/status${buildQuery({ ownerId, shareId })}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return response.data;
+};
+
 export const cancelProjectProcess = async ({
   uid,
   pid,
@@ -1003,6 +1024,7 @@ export const cancelProjectProcess = async ({
   ownerId,
   shareId,
   projectVersion,
+  processToken,
 }: {
   uid: string;
   pid: string;
@@ -1010,6 +1032,7 @@ export const cancelProjectProcess = async ({
   ownerId?: string;
   shareId?: string;
   projectVersion: number;
+  processToken?: number;
 }) => {
   const query = buildQuery({ ownerId, shareId });
 
@@ -1019,6 +1042,7 @@ export const cancelProjectProcess = async ({
       headers: {
         Authorization: `Bearer ${token}`,
         "X-Project-Version": String(projectVersion),
+        "X-Process-Token": processToken,
       },
     },
   );

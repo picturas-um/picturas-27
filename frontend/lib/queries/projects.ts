@@ -5,6 +5,7 @@ import {
   getProjectImages,
   ProjectImage,
   fetchProjectResults,
+  fetchProcessingStatus,
 } from "../projects";
 import io from "socket.io-client";
 import { listProjectShareLinks, fetchSharedProject } from "../projects";
@@ -85,6 +86,18 @@ export const useGetProjectResults = (
     queryFn: () => fetchProjectResults(uid, pid, token, ownerId, shareId),
   });
 };
+
+export const useGetProcessingStatus = (
+  uid: string, pid: string, token: string, ownerId?: string, shareId?: string,
+) => useQuery({
+  queryKey: ["processingStatus", uid, pid, token, ownerId, shareId],
+  queryFn: () => fetchProcessingStatus(uid, pid, token, ownerId, shareId),
+  enabled: !!uid && !!pid && !!token,
+  staleTime: 0,
+  refetchOnMount: "always",
+  refetchInterval: 2000,
+  retry: 1,
+});
 
 export const useGetSharedProject = (shareId: string, token: string) => {
   return useQuery({

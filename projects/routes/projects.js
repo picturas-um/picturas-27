@@ -68,6 +68,16 @@ const {
 } = require("../utils/video");
 const { persistFrameResults } = require("../utils/frameResults");
 const { dispatchProcessBatch } = require("../utils/processBatch");
+const { createProcessingState, createStatusHandler } = require("../utils/processingStatus");
+
+function initialProcessingState(project, runnerId) {
+  const videos = project.imgs.filter(isVideoMedia);
+  return createProcessingState({
+    token: project.activeToken, runnerId,
+    totalSteps: imageTools(project).length * (project.imgs.length - videos.length) + videos.length,
+    videoIds: videos.map(video => video._id),
+  });
+}
 
 const storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
@@ -175,15 +185,32 @@ function process_msg() {
     // variáveis “seguras” para usar no catch
     let runnerIdSafe = null;
     let ownerIdSafe = null;
+    let projectIdSafe = null;
+    let runTokenSafe = null;
 
     try {
       const msg_content = JSON.parse(msg.content.toString());
-      const msg_id = msg_content.correlationId;
-
-      const process = await Process.getOneByMsgId(msg_id);
+      let msg_id = msg_content.correlationId;
+      let process = await Process.getOneByMsgId(msg_id);
+      // Legacy image workers reverse the IDs on error replies.
+      if (!process && msg_content.status === "error") {
+        msg_id = msg_content.messageId;
+        process = await Process.getOneByMsgId(msg_id);
+      }
       if (!process) return;
 
+      if (msg_content.type === "video-progress") {
+        if (!/preview/.test(msg_id)) {
+          await Project.recordProcessingProgress(process.user_id, process.project_id, process.token, {
+            videoId: String(process.img_id), percent: msg_content.percent,
+          });
+        }
+        return;
+      }
+
       ownerIdSafe = process.user_id;
+      projectIdSafe = process.project_id;
+      runTokenSafe = /preview/.test(msg_id) ? null : process.token;
       runnerIdSafe = process.runner_id || process.user_id;
 
        console.log(
@@ -202,10 +229,9 @@ function process_msg() {
       
       const project = await Project.getOne(process.user_id, process.project_id);
       const sourceIsVideo = project.imgs.some((img) => String(img._id) === String(img_id) && isVideoMedia(img));
-      // In extraction runs keep every source job visible until its output is
-      // persisted, including ordinary images in mixed projects. Failed jobs stay
-      // as barriers so another source cannot commit a partial run.
-      const holdsRunCommit = project.tools.some((tool) => tool.procedure === "extract_frames") && !/preview/.test(msg_id);
+      // Keep full-run jobs visible until their output is persisted or their
+      // successor is registered. Recovery must not report a partial run as done.
+      const holdsRunCommit = !/preview/.test(msg_id);
       if (!holdsRunCommit) await Process.delete(process.user_id, process.project_id, process._id);
       
       if (msg_content.status === "error") {
@@ -215,6 +241,8 @@ function process_msg() {
         }
         
         else {
+          await Project.failProcessing(process.user_id, process.project_id, process.token,
+            msg_content.error?.msg || msg_content.error?.message || "Processing failed");
           send_msg_client_error(
             user_msg_id,
             timestamp,
@@ -243,6 +271,10 @@ function process_msg() {
         return;
       }
 
+      if (!/preview/.test(msg_id)) {
+        await Project.recordProcessingProgress(process.user_id, process.project_id, process.token,
+          sourceIsVideo ? { videoId: String(img_id), percent: 100 } : { messageId: msg_id });
+      }
       const next_pos = process.cur_pos + 1;
 
       // Images only go through the image tools (trim is video-only);
@@ -422,7 +454,7 @@ if (/preview/.test(msg_id) && isLast) {
       }
 
       // Se esta imagem acabou o pipeline, pode ser que a execução tenha terminado
-      if (!/preview/.test(msg_id) && isLast) {
+      if (!/preview/.test(msg_id) && isLast && chainEnd) {
 
         if (holdsRunCommit && chainEnd) await Process.delete(process.user_id, process.project_id, process._id);
         // A terminal source has all outputs stored; intermediate text results
@@ -453,7 +485,8 @@ if (/preview/.test(msg_id) && isLast) {
               }));
 
             const committed = await Project.commitRunIfActive(
-              process.user_id, process.project_id, process.token || 0, toolsSnapshot
+              process.user_id, process.project_id, process.token || 0, toolsSnapshot,
+              freshProject.processingState?.token != null
             );
             if (!committed) return;
 
@@ -525,6 +558,10 @@ if (/preview/.test(msg_id) && isLast) {
     } catch (err) {
 
       console.error("[process_msg] error:", err);
+      if (projectIdSafe && runTokenSafe != null) {
+        await Project.failProcessing(ownerIdSafe, projectIdSafe, runTokenSafe,
+          "Unable to finish processing").catch(console.error);
+      }
 
       const target = runnerIdSafe || ownerIdSafe;
 
@@ -967,6 +1004,9 @@ router.get("/:user/:project/imgs", checkSharePermission, async (req, res, next) 
     })
     .catch((_) => res.status(501).jsonp(`Error acquiring user's project`));
 });
+
+// Recover the current run independently of the page or WebSocket connection.
+router.get("/:user/:project/process/status", checkSharePermission, createStatusHandler(Project, getCallerId));
 
 // Get results of processing a project
 router.get("/:user/:project/process", checkSharePermission, (req, res, next) => {
@@ -1538,6 +1578,10 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         return;
       }
 
+      if (project.processingState?.status === "processing") {
+        return res.status(409).jsonp("This project is already processing");
+      }
+      if (project.imgs.length === 0) return res.status(400).jsonp("No media selected");
       if (project.tools.length == 0) {
         res.status(400).jsonp("No tools selected");
         return;
@@ -1620,6 +1664,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
               img_resp.data.pipe(writer);
             });
           } catch (_) {
+            await Project.failProcessing(ownerId, req.params.project, runToken, "Unable to acquire source media");
             res.status(400).jsonp("Error acquiring source images");
             return;
           }
@@ -1671,6 +1716,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
             send: (job) => send_msg_tool(job.msg_id, job.timestamp, job.og_img_uri, job.new_img_uri, job.tool_name, job.params),
           });
         } catch (error) {
+          await Project.failProcessing(ownerId, req.params.project, runToken, "Unable to start processing");
           return res.status(603).jsonp("Could not start all processing requests. Please try again.");
         }
         res.sendStatus(201);
@@ -1717,7 +1763,8 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
             ownerId,
             req.params.project,
             project,
-            req.expectedVersion
+            req.expectedVersion,
+            { processingState: initialProcessingState(project, runnerUserId) }
           );
 
           if (!updated) {
@@ -1735,6 +1782,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
 
           await startProcessing();
         } catch (e) {
+          if (runToken != null) await Project.failProcessing(ownerId, req.params.project, runToken, "Unable to start processing");
           console.error("Error starting processing (no advanced tools):", e);
           res.status(500).jsonp("Error processing project");
         }
@@ -1768,7 +1816,8 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
               ownerId,
               req.params.project,
               project,
-              req.expectedVersion
+              req.expectedVersion,
+              { processingState: initialProcessingState(project, runnerUserId) }
             );
 
             if (!updated) {
@@ -1785,6 +1834,7 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
 
             await startProcessing();
           } catch (e) {
+            if (runToken != null) await Project.failProcessing(ownerId, req.params.project, runToken, "Unable to start processing");
             console.error("Error starting processing (advanced tools):", e);
             res.status(500).jsonp("Error processing project");
           }
@@ -2267,6 +2317,11 @@ router.delete(
       const adv_ops = project.pendingAdvancedOps || 0;
 
       const cancelTok = project.activeToken || 0;
+      const requestedToken = req.headers["x-process-token"];
+      if (requestedToken !== undefined && (Number(requestedToken) !== cancelTok ||
+          project.processingState?.status !== "processing")) {
+        return res.status(409).jsonp("This processing run is no longer active");
+      }
 
       // invalidar sempre execução atual
       project.activeToken = (project.activeToken || 0) + 1;
@@ -2289,6 +2344,26 @@ router.delete(
           project.committedTools = Array.isArray(prevTools) ? prevTools : [];
       }
 
+      // persistir alterações (inclui committedToken rollback)
+      const updated = await Project.updateIfVersion(
+        ownerId,
+        projectId,
+        project,
+        req.expectedVersion,
+        { activeToken: cancelTok, requireProcessing: requestedToken !== undefined,
+          processingState: project.processingState ? {
+          ...project.processingState, status: "cancelled", updatedAt: new Date(),
+        } : undefined }
+      );
+
+      if (!updated) {
+        const fresh = await Project.getOne(ownerId, projectId);
+        return res.status(409).jsonp({
+          message: "Project version conflict",
+          serverVersion: fresh?.version ?? null,
+        });
+      }
+
       // refund se necessário
       if (adv_ops > 0) {
         try {
@@ -2300,22 +2375,6 @@ router.delete(
         } catch (err) {
           console.error("Error refunding operations on cancel:", err);
         }
-      }
-
-      // persistir alterações (inclui committedToken rollback)
-      const updated = await Project.updateIfVersion(
-        ownerId,
-        projectId,
-        project,
-        req.expectedVersion
-      );
-
-      if (!updated) {
-        const fresh = await Project.getOne(ownerId, projectId);
-        return res.status(409).jsonp({
-          message: "Project version conflict",
-          serverVersion: fresh?.version ?? null,
-        });
       }
 
       // apagar apenas resultados da execução cancelada

@@ -294,6 +294,21 @@ router.get(
   }
 );
 
+router.get("/:user/:project/process/status", auth.checkToken, (req, res) => {
+  const ownerId = req.query.owner || req.params.user;
+  axios.get(projectsURL + `${ownerId}/${req.params.project}/process/status`, {
+    httpsAgent,
+    params: req.query.share ? { share: req.query.share } : undefined,
+    headers: {
+      Authorization: req.headers.authorization,
+      "X-Caller-Id": req.authUserId,
+    },
+  }).then(response => {
+    res.set("Cache-Control", "no-store");
+    res.json(response.data);
+  }).catch(error => forwardAxiosError(res, error, "Unable to read processing status"));
+});
+
   // Cancelar processamento de um projeto
 router.delete("/:user/:project/process", auth.checkToken, (req, res) => {
   const ownerId = req.query.owner || req.params.user;
@@ -307,6 +322,7 @@ router.delete("/:user/:project/process", auth.checkToken, (req, res) => {
       headers: {
         Authorization: req.headers["authorization"],
         "X-Project-Version": req.headers["x-project-version"],
+        "X-Process-Token": req.headers["x-process-token"],
         "X-Caller-Id": callerId,
       },
     })
