@@ -1,0 +1,15 @@
+CONTAINER                                      REPOSITORY                           TAG                 PLATFORM            IMAGE ID            SIZE                CREATED
+picturas-perf-216856-api_gateway-1             picturas-perf-216856-api_gateway     latest              linux/amd64         7613924e98ab        1.84GB              22 minutes ago
+picturas-perf-216856-frontend-1                picturas-perf-216856-frontend        latest              linux/amd64         3d266a859a25        3.05GB              21 minutes ago
+picturas-perf-216856-img_storage-1             picturas-perf-216856-img_storage     latest              linux/amd64         2dc2989d790e        1.98GB              22 minutes ago
+picturas-perf-216856-nginx-1                   nginx                                latest              linux/amd64         f9ea18bfa4fa        240MB               6 weeks ago
+picturas-perf-216856-projects-1                picturas-perf-216856-projects        latest              linux/amd64         74f7f914740e        2.49GB              21 minutes ago
+picturas-perf-216856-projects_mongoDB-1        mongo                                4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-216856-rabbitmq-1                picturas-perf-216856-rabbitmq        latest              linux/amd64         274784697276        410MB               13 days ago
+picturas-perf-216856-seaweedfs-1               chrislusf/seaweedfs                  4.47                linux/amd64         ce9e796f1fe6        729MB               2 months ago
+picturas-perf-216856-subscriptions-1           picturas-perf-216856-subscriptions   latest              linux/amd64         ff76dc083c58        1.87GB              20 minutes ago
+picturas-perf-216856-subscriptions_mongoDB-1   mongo                                4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-216856-users-1                   picturas-perf-216856-users           latest              linux/amd64         c39a5c4e1e8b        1.87GB              22 minutes ago
+picturas-perf-216856-users_mongoDB-1           mongo                                4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-216856-video_tool-1              picturas-perf-216856-video_tool      latest              linux/amd64         845c09be9eeb        1.71GB              21 minutes ago
+picturas-perf-216856-ws_gateway-1              picturas-perf-216856-ws_gateway      latest              linux/amd64         304e7a859153        1.61GB              13 days ago

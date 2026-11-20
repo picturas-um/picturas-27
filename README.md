@@ -521,19 +521,11 @@ Python tools have no bind mount — rebuild them after every change:
 docker compose up -d --build border_tool
 ```
 
-### Testing the video worker
+### Testing the video workers
 
-The tests run on the host, with no image to build. They only need Python 3.11+ and
-`ffmpeg`/`ffprobe` on the `PATH` (`brew install ffmpeg`, `apt install ffmpeg`, ...):
-
-```bash
-cd Tools/video
-python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt   # once
-.venv/bin/python -m pytest -q tests
-```
-
-Without ffmpeg on the host, run them in the already-built worker image instead:
-`docker compose run --rm video_tool sh -c "pip install -q pytest && python -m pytest -q tests"`.
+The tests run on the host with Python 3.11+ and `ffmpeg`/`ffprobe` on the `PATH`.
+Follow the setup in [the test guide](tests/README.md), then run `make test-python` from
+the repository root.
 
 The media tests use real FFmpeg; speech recognition is simulated, so no model is downloaded.
 The orchestration tests for the video pipeline and frame extraction run inside `projects`:

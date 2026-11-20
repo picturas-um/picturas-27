@@ -1,0 +1,137 @@
+ Image picturas-perf-0523102-rabbitmq Building 
+ Image picturas-perf-0523102-resize_tool Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.04kB done
+#1 DONE 0.0s
+
+#2 [resize_tool internal] load build definition from Dockerfile
+#2 transferring dockerfile: 270B done
+#2 DONE 0.0s
+
+#3 [rabbitmq internal] load build definition from Dockerfile
+#3 transferring dockerfile: 460B done
+#3 DONE 0.0s
+
+#4 [rabbitmq internal] load metadata for docker.io/library/rabbitmq:4.0.5-management
+#4 DONE 0.7s
+
+#5 [resize_tool internal] load metadata for docker.io/library/python:3.11-slim
+#5 DONE 0.7s
+
+#6 [rabbitmq internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [resize_tool internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [rabbitmq internal] load build context
+#8 transferring context: 71B done
+#8 DONE 0.0s
+
+#9 [resize_tool internal] load build context
+#9 DONE 0.0s
+
+#10 [rabbitmq 1/3] FROM docker.io/library/rabbitmq:4.0.5-management@sha256:697da87bf89699fda7c7da8067cc91b055353056d52a07e7f3c41bd67b0b5f71
+#10 resolve docker.io/library/rabbitmq:4.0.5-management@sha256:697da87bf89699fda7c7da8067cc91b055353056d52a07e7f3c41bd67b0b5f71 0.0s done
+#10 DONE 0.0s
+
+#11 [rabbitmq 2/3] COPY definitions.json /etc/rabbitmq/definitions.json
+#11 CACHED
+
+#12 [rabbitmq 3/3] COPY rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
+#12 CACHED
+
+#13 [rabbitmq] exporting to image
+#13 exporting layers done
+#13 ...
+
+#14 [resize_tool 1/6] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#14 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.1s done
+#14 CACHED
+
+#9 [resize_tool internal] load build context
+#9 transferring context: 3.86kB done
+#9 DONE 0.0s
+
+#13 [rabbitmq] exporting to image
+#13 exporting manifest sha256:6d2b2224ca49426cd78d346f3337f4097a99a7c94bbe724a770d6426c4308b67 done
+#13 exporting config sha256:6678d3cda00fe735b423e1885850f52b064161d157cf874f564492a036b413b1 done
+#13 exporting attestation manifest sha256:0027d694346871b10ebfb6c4e0e8c64b77d41e7b8c12de25d244959ad6530a7f 0.1s done
+#13 exporting manifest list sha256:99583ce279447ecd02502f13f29fe78a36ac9966d7271f9cc120b1e261f758d5
+#13 exporting manifest list sha256:99583ce279447ecd02502f13f29fe78a36ac9966d7271f9cc120b1e261f758d5 0.1s done
+#13 naming to docker.io/library/picturas-perf-0523102-rabbitmq:latest done
+#13 unpacking to docker.io/library/picturas-perf-0523102-rabbitmq:latest 0.0s done
+#13 DONE 0.3s
+
+#15 [resize_tool 2/6] WORKDIR /app
+#15 DONE 0.1s
+
+#16 [resize_tool 3/6] COPY ./resize .
+#16 DONE 0.1s
+
+#17 [resize_tool 4/6] COPY ./utils ./utils
+#17 DONE 0.2s
+
+#18 [rabbitmq] resolving provenance for metadata file
+#18 DONE 0.0s
+
+#19 [resize_tool 5/6] RUN pip install --no-cache-dir -r ./utils/requirements.txt
+#19 2.636 Collecting python-dotenv (from -r ./utils/requirements.txt (line 1))
+#19 2.715   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#19 2.772 Collecting pika==1.3.2 (from -r ./utils/requirements.txt (line 2))
+#19 2.788   Downloading pika-1.3.2-py3-none-any.whl.metadata (13 kB)
+#19 3.256 Collecting pillow==11.0.0 (from -r ./utils/requirements.txt (line 3))
+#19 3.273   Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+#19 3.357 Collecting pytz>=2023.3 (from -r ./utils/requirements.txt (line 4))
+#19 3.371   Downloading pytz-2026.6-py2.py3-none-any.whl.metadata (22 kB)
+#19 3.414 Downloading pika-1.3.2-py3-none-any.whl (155 kB)
+#19 3.441    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.4/155.4 kB 6.3 MB/s eta 0:00:00
+#19 3.456 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.4 MB)
+#19 3.788    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 13.2 MB/s eta 0:00:00
+#19 3.803 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#19 3.816 Downloading pytz-2026.6-py2.py3-none-any.whl (506 kB)
+#19 3.850    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 506.3/506.3 kB 15.9 MB/s eta 0:00:00
+#19 3.979 Installing collected packages: pytz, python-dotenv, pillow, pika
+#19 4.638 Successfully installed pika-1.3.2 pillow-11.0.0 python-dotenv-1.2.4 pytz-2026.6
+#19 4.639 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#19 4.891 
+#19 4.891 [notice] A new release of pip is available: 24.0 -> 26.3
+#19 4.891 [notice] To update, run: pip install --upgrade pip
+#19 DONE 5.2s
+
+#20 [resize_tool 6/6] RUN pip install --no-cache-dir -r requirements.txt
+#20 0.979 Requirement already satisfied: pika==1.3.2 in /usr/local/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (1.3.2)
+#20 0.980 Requirement already satisfied: pillow==11.0.0 in /usr/local/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (11.0.0)
+#20 0.982 Requirement already satisfied: pytz>=2023.3 in /usr/local/lib/python3.11/site-packages (from -r requirements.txt (line 3)) (2026.6)
+#20 1.076 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#20 1.363 
+#20 1.363 [notice] A new release of pip is available: 24.0 -> 26.3
+#20 1.363 [notice] To update, run: pip install --upgrade pip
+#20 DONE 1.5s
+
+#21 [resize_tool] exporting to image
+#21 exporting layers
+#21 exporting layers 1.6s done
+#21 exporting manifest sha256:903a62bddbf52539fc404e6783248f3756dc1e1fcd07470d0e8fbfd0b3c99ed1 0.0s done
+#21 exporting config sha256:f97e34d523db8d49c2013b4ea0a3948e725882ea3bffdd96d30927e04800007b 0.0s done
+#21 exporting attestation manifest sha256:9426bac8e0ede681420b1131fceefb4aee9f1f88990d71fa3c06da892f4feb3e 0.0s done
+#21 exporting manifest list sha256:31cb74dcb6be2a6bb954f9b8947cd31b3f9f1578be823151d6a2e34ee7a18096
+#21 exporting manifest list sha256:31cb74dcb6be2a6bb954f9b8947cd31b3f9f1578be823151d6a2e34ee7a18096 0.0s done
+#21 naming to docker.io/library/picturas-perf-0523102-resize_tool:latest done
+#21 unpacking to docker.io/library/picturas-perf-0523102-resize_tool:latest
+#21 unpacking to docker.io/library/picturas-perf-0523102-resize_tool:latest 0.5s done
+#21 DONE 2.3s
+
+#22 [resize_tool] resolving provenance for metadata file
+#22 DONE 0.0s
+ Image picturas-perf-0523102-rabbitmq Built 
+ Image picturas-perf-0523102-resize_tool Built 
+ Container picturas-perf-0523102-rabbitmq-1 Running 
+ Container picturas-perf-0523102-resize_tool-1 Creating 
+ Container picturas-perf-0523102-resize_tool-1 Created 
+ Container picturas-perf-0523102-rabbitmq-1 Waiting 
+ Container picturas-perf-0523102-rabbitmq-1 Healthy 
+ Container picturas-perf-0523102-resize_tool-1 Starting 
+ Container picturas-perf-0523102-resize_tool-1 Started 

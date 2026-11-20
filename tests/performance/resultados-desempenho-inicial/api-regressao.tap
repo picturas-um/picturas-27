@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: [VID-01,VID-02,EDGE-02] real video trim and speed preserve audio and source
+ok 1 - [VID-01,VID-02,EDGE-02] real video trim and speed preserve audio and source
+  ---
+  duration_ms: 1079.496946
+  type: 'test'
+  ...
+# Subtest: [VID-03] preview is limited to three seconds and emits video progress
+ok 2 - [VID-03] preview is limited to three seconds and emits video progress
+  ---
+  duration_ms: 1536.783393
+  type: 'test'
+  ...
+# Subtest: [VID-04] subtitles on a silent video are a no-op with valid output
+ok 3 - [VID-04] subtitles on a silent video are a no-op with valid output
+  ---
+  duration_ms: 1351.67028
+  type: 'test'
+  ...
+# Subtest: [VID-05.2,VID-05.3,OUT-03] extracted frames and preview belong to edited timeline and ZIP
+ok 4 - [VID-05.2,VID-05.3,OUT-03] extracted frames and preview belong to edited timeline and ZIP
+  ---
+  duration_ms: 3158.913763
+  type: 'test'
+  ...
+# Subtest: [VID-02,EDGE-02] mixed media applies trim to one video and common effects to all items
+ok 5 - [VID-02,EDGE-02] mixed media applies trim to one video and common effects to all items
+  ---
+  duration_ms: 5556.527441
+  type: 'test'
+  ...
+# Subtest: [RUN-02] a failed video stage reports an error without replacing committed results
+ok 6 - [RUN-02] a failed video stage reports an error without replacing committed results
+  ---
+  duration_ms: 2098.373601
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15090.61454

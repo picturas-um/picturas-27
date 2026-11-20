@@ -1,0 +1,137 @@
+TAP version 13
+# Subtest: extraction is project-wide and terminal, with ordinary effects inserted before it
+ok 1 - extraction is project-wide and terminal, with ordinary effects inserted before it
+  ---
+  duration_ms: 6.112368
+  type: 'test'
+  ...
+# Subtest: extraction validates active mode parameters and disallows targeted/potentially unbounded inputs
+ok 2 - extraction validates active mode parameters and disallows targeted/potentially unbounded inputs
+  ---
+  duration_ms: 0.728916
+  type: 'test'
+  ...
+# Subtest: manifest validation rejects escaped, duplicate and oversized frame output before upload
+ok 3 - manifest validation rejects escaped, duplicate and oversized frame output before upload
+  ---
+  duration_ms: 9.439649
+  type: 'test'
+  ...
+# Subtest: all extracted images retain the source ID and run token; upload failure rolls back only this batch
+ok 4 - all extracted images retain the source ID and run token; upload failure rolls back only this batch
+  ---
+  duration_ms: 4.585716
+  type: 'test'
+  ...
+# Subtest: a fast first worker cannot commit while later sources are still being scheduled
+ok 5 - a fast first worker cannot commit while later sources are still being scheduled
+  ---
+  duration_ms: 4.793849
+  type: 'test'
+  ...
+# Subtest: registration failure starts no workers and rolls back only newly registered jobs
+ok 6 - registration failure starts no workers and rolls back only newly registered jobs
+  ---
+  duration_ms: 1.543914
+  type: 'test'
+  ...
+# Subtest: a cancelled run cannot overwrite the committed results with a delayed commit
+ok 7 - a cancelled run cannot overwrite the committed results with a delayed commit
+  ---
+  duration_ms: 2.157292
+  type: 'test'
+  ...
+# Subtest: captions apply to all videos, while images skip them and trim stays targeted
+ok 8 - captions apply to all videos, while images skip them and trim stays targeted
+  ---
+  duration_ms: 5.435721
+  type: 'test'
+  ...
+# Subtest: routes video tools to specialized workers (effects, subtitles, frames)
+not ok 9 - routes video tools to specialized workers (effects, subtitles, frames)
+  ---
+  duration_ms: 0.746029
+  type: 'test'
+  location: '/tmp/tmp.E0KBgbg87X/projects/tests/video-pipeline.test.js:24:1'
+  failureType: 'testCodeFailure'
+  error: 'resolveVideoWorkerTool is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (/tmp/tmp.E0KBgbg87X/projects/tests/video-pipeline.test.js:25:16)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: free account accepts supported MP4, MOV and WebM videos
+ok 10 - free account accepts supported MP4, MOV and WebM videos
+  ---
+  duration_ms: 3.285281
+  type: 'test'
+  ...
+# Subtest: free duration limit accepts the boundary and rejects the next second
+ok 11 - free duration limit accepts the boundary and rejects the next second
+  ---
+  duration_ms: 0.43425
+  type: 'test'
+  ...
+# Subtest: free size limit accepts the boundary and rejects one extra byte
+ok 12 - free size limit accepts the boundary and rejects one extra byte
+  ---
+  duration_ms: 0.395236
+  type: 'test'
+  ...
+# Subtest: free resolution limit accepts landscape and portrait boundaries but rejects overflow
+ok 13 - free resolution limit accepts landscape and portrait boundaries but rejects overflow
+  ---
+  duration_ms: 0.412809
+  type: 'test'
+  ...
+# Subtest: premium accepts a video over free limits when within premium limits
+ok 14 - premium accepts a video over free limits when within premium limits
+  ---
+  duration_ms: 0.354119
+  type: 'test'
+  ...
+# Subtest: premium limits accept exact boundaries and reject each overflow
+ok 15 - premium limits accept exact boundaries and reject each overflow
+  ---
+  duration_ms: 0.475779
+  type: 'test'
+  ...
+# Subtest: anonymous account cannot upload an otherwise valid video
+ok 16 - anonymous account cannot upload an otherwise valid video
+  ---
+  duration_ms: 0.361272
+  type: 'test'
+  ...
+# Subtest: unsupported extension and MIME combination is rejected
+ok 17 - unsupported extension and MIME combination is rejected
+  ---
+  duration_ms: 0.229002
+  type: 'test'
+  ...
+# Subtest: unsupported video codec is rejected for a supported container
+ok 18 - unsupported video codec is rejected for a supported container
+  ---
+  duration_ms: 0.620151
+  type: 'test'
+  ...
+# Subtest: zero or missing duration is rejected
+ok 19 - zero or missing duration is rejected
+  ---
+  duration_ms: 0.808065
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 18
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 264.98789

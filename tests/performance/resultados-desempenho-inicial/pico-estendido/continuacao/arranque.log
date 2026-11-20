@@ -1,0 +1,413 @@
+ Image picturas-perf-195569-subscriptions Building 
+ Image picturas-perf-195569-api_gateway Building 
+ Image picturas-perf-195569-frontend Building 
+ Image picturas-perf-195569-ws_gateway Building 
+ Image picturas-perf-195569-projects Building 
+ Image picturas-perf-195569-video_tool Building 
+ Image picturas-perf-195569-rabbitmq Building 
+ Image picturas-perf-195569-img_storage Building 
+ Image picturas-perf-195569-users Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 4.26kB done
+#1 DONE 0.0s
+
+#2 [frontend internal] load build definition from Dockerfile
+#2 transferring dockerfile: 261B done
+#2 DONE 0.1s
+
+#3 [rabbitmq internal] load build definition from Dockerfile
+#3 transferring dockerfile: 460B done
+#3 DONE 0.1s
+
+#4 [ws_gateway internal] load build definition from Dockerfile
+#4 transferring dockerfile: 160B done
+#4 DONE 0.1s
+
+#5 [frontend internal] load metadata for docker.io/library/node:18
+#5 ...
+
+#6 [api_gateway internal] load build definition from Dockerfile
+#6 transferring dockerfile: 126B done
+#6 DONE 0.1s
+
+#7 [projects internal] load build definition from Dockerfile
+#7 transferring dockerfile: 272B done
+#7 DONE 0.1s
+
+#8 [video_tool internal] load build definition from Dockerfile
+#8 transferring dockerfile: 466B done
+#8 DONE 0.1s
+
+#9 [subscriptions internal] load build definition from Dockerfile
+#9 transferring dockerfile: 120B done
+#9 DONE 0.2s
+
+#10 [users internal] load build definition from Dockerfile
+#10 transferring dockerfile: 127B done
+#10 DONE 0.2s
+
+#11 [img_storage internal] load build definition from Dockerfile
+#11 transferring dockerfile: 127B done
+#11 DONE 0.2s
+
+#5 [ws_gateway internal] load metadata for docker.io/library/node:18
+#5 ...
+
+#12 [video_tool internal] load metadata for docker.io/library/python:3.11-slim
+#12 DONE 0.6s
+
+#5 [ws_gateway internal] load metadata for docker.io/library/node:18
+#5 DONE 0.7s
+
+#13 [subscriptions internal] load metadata for docker.io/library/node:latest
+#13 DONE 0.7s
+
+#14 [video_tool internal] load .dockerignore
+#14 transferring context: 2B done
+#14 DONE 0.0s
+
+#15 [frontend internal] load .dockerignore
+#15 transferring context: 52B done
+#15 DONE 0.1s
+
+#16 [video_tool internal] load build context
+#16 DONE 0.0s
+
+#17 [projects internal] load .dockerignore
+#17 transferring context: 2B done
+#17 DONE 0.1s
+
+#18 [frontend internal] load build context
+#18 DONE 0.0s
+
+#19 [frontend 1/7] FROM docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783
+#19 resolve docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783
+#19 resolve docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783 0.1s done
+#19 DONE 0.1s
+
+#20 [projects internal] load build context
+#20 DONE 0.0s
+
+#21 [ws_gateway internal] load .dockerignore
+#21 transferring context: 52B done
+#21 DONE 0.1s
+
+#22 [users internal] load .dockerignore
+#22 transferring context: 2B done
+#22 DONE 0.1s
+
+#23 [ws_gateway internal] load build context
+#23 DONE 0.0s
+
+#24 [subscriptions internal] load .dockerignore
+#24 transferring context: 2B done
+#24 DONE 0.1s
+
+#25 [users internal] load build context
+#25 DONE 0.0s
+
+#26 [video_tool 1/7] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#26 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.1s done
+#26 DONE 0.1s
+
+#27 [api_gateway internal] load .dockerignore
+#27 transferring context: 2B done
+#27 DONE 0.2s
+
+#28 [img_storage internal] load .dockerignore
+#28 transferring context: 2B done
+#28 DONE 0.2s
+
+#29 [subscriptions 1/5] FROM docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac
+#29 resolve docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac
+#29 resolve docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac 0.1s done
+#29 DONE 0.1s
+
+#30 [subscriptions internal] load build context
+#30 DONE 0.0s
+
+#31 [img_storage internal] load build context
+#31 DONE 0.0s
+
+#32 [api_gateway internal] load build context
+#32 DONE 0.0s
+
+#33 [rabbitmq internal] load metadata for docker.io/library/rabbitmq:4.0.5-management
+#33 DONE 0.9s
+
+#23 [ws_gateway internal] load build context
+#23 transferring context: 7.53kB done
+#23 DONE 0.1s
+
+#16 [video_tool internal] load build context
+#16 transferring context: 64.86kB done
+#16 DONE 0.1s
+
+#18 [frontend internal] load build context
+#18 transferring context: 749.63kB 0.0s done
+#18 DONE 0.2s
+
+#30 [subscriptions internal] load build context
+#30 transferring context: 22.57kB done
+#30 DONE 0.1s
+
+#25 [users internal] load build context
+#25 transferring context: 36.02kB done
+#25 DONE 0.1s
+
+#32 [api_gateway internal] load build context
+#32 transferring context: 47.89kB done
+#32 DONE 0.1s
+
+#31 [img_storage internal] load build context
+#31 transferring context: 10.34kB done
+#31 DONE 0.1s
+
+#34 [rabbitmq internal] load .dockerignore
+#34 transferring context: 2B done
+#34 DONE 0.1s
+
+#20 [projects internal] load build context
+#20 transferring context: 150.51kB done
+#20 DONE 0.2s
+
+#35 [ws_gateway 3/5] COPY package.json ./
+#35 CACHED
+
+#36 [ws_gateway 4/5] COPY . .
+#36 CACHED
+
+#37 [ws_gateway 2/7] WORKDIR /usr/src/app
+#37 CACHED
+
+#38 [ws_gateway 5/5] RUN npm i
+#38 CACHED
+
+#39 [video_tool 2/7] RUN apt-get update     && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-noto-core fonts-noto-cjk     && rm -rf /var/lib/apt/lists/*
+#39 CACHED
+
+#40 [video_tool 4/7] COPY ./video .
+#40 CACHED
+
+#41 [video_tool 5/7] COPY ./utils ./utils
+#41 CACHED
+
+#42 [video_tool 3/7] WORKDIR /app
+#42 CACHED
+
+#43 [video_tool 6/7] RUN pip install --no-cache-dir -r ./utils/requirements.txt
+#43 CACHED
+
+#44 [video_tool 7/7] RUN pip install --no-cache-dir -r requirements.txt
+#44 CACHED
+
+#45 [img_storage 3/4] COPY . .
+#45 CACHED
+
+#46 [users 3/4] COPY . .
+#46 CACHED
+
+#47 [img_storage 4/4] RUN npm install
+#47 CACHED
+
+#48 [users 4/4] RUN npm install
+#48 CACHED
+
+#49 [subscriptions 3/4] COPY . .
+#49 CACHED
+
+#50 [subscriptions 4/4] RUN npm install
+#50 CACHED
+
+#51 [projects 2/5] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+#51 CACHED
+
+#52 [projects 3/5] WORKDIR /app
+#52 CACHED
+
+#53 [projects 4/5] COPY . .
+#53 CACHED
+
+#54 [projects 5/5] RUN npm install
+#54 CACHED
+
+#55 [img_storage 2/4] WORKDIR /app
+#55 CACHED
+
+#56 [api_gateway 3/4] COPY . .
+#56 CACHED
+
+#57 [api_gateway 4/4] RUN npm install
+#57 CACHED
+
+#58 [frontend 3/7] COPY package.json ./
+#58 CACHED
+
+#59 [frontend 5/7] RUN bun i
+#59 CACHED
+
+#37 [frontend 2/7] WORKDIR /usr/src/app
+#37 CACHED
+
+#60 [frontend 6/7] COPY . .
+#60 CACHED
+
+#61 [frontend 4/7] RUN npm install -g bun
+#61 CACHED
+
+#62 [frontend 7/7] RUN bun run build
+#62 CACHED
+
+#63 [rabbitmq internal] load build context
+#63 transferring context: 10.12kB done
+#63 DONE 0.0s
+
+#64 [img_storage] exporting to image
+#64 exporting layers done
+#64 exporting manifest sha256:501dd16d1cf198d7029191bbb9eb7f7c3a40870a0e574785d2ce25cbb711f53b 0.2s done
+#64 exporting config sha256:0a821df68496da4c64356b0105bedbc2b1b06677235c65333fee5c08739431b9
+#64 exporting config sha256:0a821df68496da4c64356b0105bedbc2b1b06677235c65333fee5c08739431b9 0.2s done
+#64 ...
+
+#65 [rabbitmq 1/3] FROM docker.io/library/rabbitmq:4.0.5-management@sha256:697da87bf89699fda7c7da8067cc91b055353056d52a07e7f3c41bd67b0b5f71
+#65 resolve docker.io/library/rabbitmq:4.0.5-management@sha256:697da87bf89699fda7c7da8067cc91b055353056d52a07e7f3c41bd67b0b5f71 0.6s done
+#65 DONE 0.7s
+
+#66 [rabbitmq 2/3] COPY definitions.json /etc/rabbitmq/definitions.json
+#66 CACHED
+
+#64 [img_storage] exporting to image
+#64 exporting attestation manifest sha256:e7a6298980013744d70f1045f2138dd8df1e4f59f49d722474b7986c67681b57
+#64 ...
+
+#67 [rabbitmq 3/3] COPY rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
+#67 CACHED
+
+#64 [img_storage] exporting to image
+#64 exporting attestation manifest sha256:e7a6298980013744d70f1045f2138dd8df1e4f59f49d722474b7986c67681b57 0.3s done
+#64 exporting manifest list sha256:cf1849b2dd75de7da97e5b295c0dc0b52c3e7572ea903859a7f48b59560a1598
+#64 exporting manifest list sha256:cf1849b2dd75de7da97e5b295c0dc0b52c3e7572ea903859a7f48b59560a1598 0.2s done
+#64 naming to docker.io/library/picturas-perf-195569-img_storage:latest
+#64 naming to docker.io/library/picturas-perf-195569-img_storage:latest 0.1s done
+#64 unpacking to docker.io/library/picturas-perf-195569-img_storage:latest
+#64 unpacking to docker.io/library/picturas-perf-195569-img_storage:latest 0.1s done
+#64 DONE 1.3s
+
+#68 [video_tool] exporting to image
+#68 exporting layers done
+#68 exporting manifest sha256:454eaf4cc1d40ffc719fc923b3f1801abe9d6b06a3419512318b4cbfb9689b23 0.2s done
+#68 exporting config sha256:719f6df9f25c60ab21aa5c75b3bc1ad0dfb8b0ad50e6b2e6947e551834d524dc 0.2s done
+#68 exporting attestation manifest sha256:9a5ed38d3e4b7231f28477ad2694e8c6edd1a1ae6d9f26b62d533f7d58835f61 0.3s done
+#68 exporting manifest list sha256:ae28817ea384a0c484813373ba349daf923aec50646bc7090859c2c5a8da3684 0.2s done
+#68 naming to docker.io/library/picturas-perf-195569-video_tool:latest 0.1s done
+#68 unpacking to docker.io/library/picturas-perf-195569-video_tool:latest 0.1s done
+#68 DONE 1.3s
+
+#69 [subscriptions] exporting to image
+#69 exporting layers done
+#69 exporting manifest sha256:c7eab09e42c7c2b52fa44e72d471dfa032e544b81299865e0d17426babc8f80e 0.2s done
+#69 exporting config sha256:2131a336506b44280190607f95f9c79384eabadae6ad5804039844f52a585c9a 0.2s done
+#69 exporting attestation manifest sha256:285a32f5a45c036bdfa2d2dbe513e66e3e5f46458eb595fe2e7f925ef116d7ba 0.2s done
+#69 exporting manifest list sha256:3a19bac2df0af111b7ee33f592e1f804d90eb4402d4a58a8bfebd0c476f677b8 0.2s done
+#69 naming to docker.io/library/picturas-perf-195569-subscriptions:latest 0.1s done
+#69 unpacking to docker.io/library/picturas-perf-195569-subscriptions:latest 0.1s done
+#69 DONE 1.3s
+
+#70 [frontend] exporting to image
+#70 exporting layers done
+#70 exporting manifest sha256:dc02205ac2d65f37ff26e3a4cf6f3442ba09e0082e9f61638ebfe52e280c8bde 0.2s done
+#70 exporting config sha256:8566784b8777036763ee22188b515399f64c4b79b56a1bdba0323e7d41aead31 0.2s done
+#70 exporting attestation manifest sha256:7a0dc7eddc9fa3241b19641b8ff417341e9dcdbaeb0249dd3da733a85009c0cb 0.3s done
+#70 exporting manifest list sha256:3b83291088e0d2f7c6eb9b4e53eaba214cceb407b9cb2eb480d50ee9d0f6ccd3 0.2s done
+#70 naming to docker.io/library/picturas-perf-195569-frontend:latest 0.1s done
+#70 unpacking to docker.io/library/picturas-perf-195569-frontend:latest 0.1s done
+#70 DONE 1.3s
+
+#71 [users] exporting to image
+#71 exporting layers done
+#71 exporting manifest sha256:5179eb52ea136a499c0b35d5866f9b70eb5b3dcdb38683db6c877df16438136a 0.2s done
+#71 exporting config sha256:8cbb5284a879ebca569cfe201ce1abfd96d168f83c19472760ed7527df6d4ca0 0.2s done
+#71 exporting attestation manifest sha256:86771d3ff9a87ef1af7dba4007b0d1ca47feb33b710162bc9bc01bb90a22b5a4 0.2s done
+#71 exporting manifest list sha256:58109491f1645d7e964d72b9707d3a61c6148be5510fbee7aa88b93f5d7a6be3 0.2s done
+#71 naming to docker.io/library/picturas-perf-195569-users:latest 0.1s done
+#71 unpacking to docker.io/library/picturas-perf-195569-users:latest 0.1s done
+#71 DONE 1.3s
+
+#72 [ws_gateway] exporting to image
+#72 exporting layers done
+#72 exporting manifest sha256:77fd33e66334d34aec7ec9b1d090d2386381a21803b5e24bf303c79024feafee 0.2s done
+#72 exporting config sha256:1a1ac88bc506fc2001e177877e68313f0c33ba5680c21b9eb058214c3a6c4cdb 0.2s done
+#72 exporting attestation manifest sha256:00db9040fbe4e95601099f582665a80d7b926ed89934fe6100837acf1f2ab7d8 0.2s done
+#72 exporting manifest list sha256:473ed0f13d17a47949b4d7d7a38ca7ad611105d4c769acf7b80e41d8a428e3e6 0.2s done
+#72 naming to docker.io/library/picturas-perf-195569-ws_gateway:latest 0.1s done
+#72 unpacking to docker.io/library/picturas-perf-195569-ws_gateway:latest 0.1s done
+#72 DONE 1.3s
+
+#73 [api_gateway] exporting to image
+#73 exporting layers done
+#73 exporting manifest sha256:5f33373331ae0950741de95ba4bd6f7b560c265602f2e5c60b630d0f750c8fcc 0.2s done
+#73 exporting config sha256:6d472c6b476b511e3cfbe57c405b95d4bedb4d7ab369d74b93ed8200ca61781d 0.2s done
+#73 exporting attestation manifest sha256:8a3b56e535246f0b249101ea16353bc63d607eb510e6f6695cfbc6a5ca2cecc8 0.2s done
+#73 exporting manifest list sha256:cb5d70f222574f1140eb097f5caace2e257594a99a53926a856ecfb3cc3827f9 0.2s done
+#73 naming to docker.io/library/picturas-perf-195569-api_gateway:latest 0.1s done
+#73 unpacking to docker.io/library/picturas-perf-195569-api_gateway:latest 0.1s done
+#73 DONE 1.3s
+
+#74 [projects] exporting to image
+#74 exporting layers done
+#74 exporting manifest sha256:d491ce4a30318b3dc2526b7c8a2cd663e574fa801646331de26eb59f0ebcb2de 0.2s done
+#74 exporting config sha256:b905f4a205e73158084d04dc8076a9cfc6def7f1d215a7386da1f8c8093506f4 0.2s done
+#74 exporting attestation manifest sha256:2b7f1a749360fe84a71ce5c1a7e129e85dd3ff5a6d866dc52dc8798e2d799ec3 0.3s done
+#74 exporting manifest list sha256:b14215b9b80e5f39618ca5540894f4fe1409b9c40541a1973926695df59a7923 0.2s done
+#74 naming to docker.io/library/picturas-perf-195569-projects:latest 0.1s done
+#74 unpacking to docker.io/library/picturas-perf-195569-projects:latest 0.1s done
+#74 DONE 1.3s
+
+#75 [rabbitmq] exporting to image
+#75 exporting layers done
+#75 exporting manifest sha256:714bd9e65595bae15312a5e735b5f2057355b8bffa158a3c5fb73b3bd91944f3 0.2s done
+#75 exporting config sha256:17074fed2c9e54d2457800799dd1a7cdf9ad397975a59bed20c61bfe70c3d161 0.1s done
+#75 exporting attestation manifest sha256:fefbea3517e70e53b7bfa7f41aec0e19327bda0d9ede902ddb3734d1367c8aec 0.1s done
+#75 exporting manifest list sha256:217c9fd2ef6d86659dd24a83728ce15e5ded5fb1f2ecc9267be26165e8b20fa9
+#75 exporting manifest list sha256:217c9fd2ef6d86659dd24a83728ce15e5ded5fb1f2ecc9267be26165e8b20fa9 0.3s done
+#75 naming to docker.io/library/picturas-perf-195569-rabbitmq:latest
+#75 naming to docker.io/library/picturas-perf-195569-rabbitmq:latest 0.1s done
+#75 unpacking to docker.io/library/picturas-perf-195569-rabbitmq:latest
+#75 unpacking to docker.io/library/picturas-perf-195569-rabbitmq:latest 0.0s done
+#75 DONE 1.0s
+
+#76 [video_tool] resolving provenance for metadata file
+#76 DONE 0.0s
+
+#77 [img_storage] resolving provenance for metadata file
+#77 DONE 0.0s
+
+#78 [subscriptions] resolving provenance for metadata file
+#78 DONE 0.0s
+
+#79 [users] resolving provenance for metadata file
+#79 DONE 0.0s
+
+#80 [api_gateway] resolving provenance for metadata file
+#80 DONE 0.0s
+
+#81 [projects] resolving provenance for metadata file
+#81 DONE 0.0s
+
+#82 [rabbitmq] resolving provenance for metadata file
+#82 DONE 0.0s
+
+#83 [frontend] resolving provenance for metadata file
+#83 DONE 0.0s
+
+#84 [ws_gateway] resolving provenance for metadata file
+#84 DONE 0.0s
+ Image picturas-perf-195569-video_tool Built 
+ Image picturas-perf-195569-img_storage Built 
+ Image picturas-perf-195569-users Built 
+ Image picturas-perf-195569-subscriptions Built 
+ Image picturas-perf-195569-ws_gateway Built 
+ Image picturas-perf-195569-frontend Built 
+ Image picturas-perf-195569-rabbitmq Built 
+ Image picturas-perf-195569-projects Built 
+ Image picturas-perf-195569-api_gateway Built 

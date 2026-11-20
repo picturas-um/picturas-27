@@ -1,0 +1,72 @@
+ Image picturas-perf-0523102-subscriptions Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.02kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 120B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:latest
+#3 DONE 0.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac
+#5 resolve docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 22.57kB done
+#6 DONE 0.0s
+
+#7 [2/4] WORKDIR /app
+#7 CACHED
+
+#8 [3/4] COPY . .
+#8 DONE 0.1s
+
+#9 [4/4] RUN npm install
+#9 3.789 npm warn deprecated transformers@2.1.0: Deprecated, use jstransformer
+#9 3.808 npm warn deprecated constantinople@3.0.2: Please update to at least constantinople 3.1.1
+#9 3.995 npm warn deprecated jade@1.11.0: Jade has been renamed to pug, please install the latest version of pug instead of jade
+#9 4.550 
+#9 4.550 added 149 packages, and audited 150 packages in 4s
+#9 4.550 
+#9 4.551 9 packages are looking for funding
+#9 4.551   run `npm fund` for details
+#9 4.560 
+#9 4.560 16 vulnerabilities (5 low, 3 moderate, 5 high, 3 critical)
+#9 4.560 
+#9 4.560 To address issues that do not require attention, run:
+#9 4.560   npm audit fix
+#9 4.560 
+#9 4.560 To address all issues (including breaking changes), run:
+#9 4.560   npm audit fix --force
+#9 4.560 
+#9 4.560 Run `npm audit` for details.
+#9 4.561 npm notice
+#9 4.561 npm notice New major version of npm available! 11.20.0 -> 12.2.3
+#9 4.561 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#9 4.561 npm notice To update run: npm install -g npm@12.2.3
+#9 4.561 npm notice
+#9 DONE 4.8s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 1.4s done
+#10 exporting manifest sha256:cb2a88b1a5209371c3f3355b42951ddbbca90d95f794b88a42c8d7bea8c613f8 0.0s done
+#10 exporting config sha256:1df3049adee09afae169de0e514acd4f0c0a8c080e464d2d31c9082972f01457 0.0s done
+#10 exporting attestation manifest sha256:50c712d3eac6d8d1a94a26a523b823cc119881e5fb677f50ee149a774b9dbde9 0.0s done
+#10 exporting manifest list sha256:1ede07df41d02769b4137422504c8beaf646f021ebf6ed60fd3760c540fdb940
+#10 exporting manifest list sha256:1ede07df41d02769b4137422504c8beaf646f021ebf6ed60fd3760c540fdb940 0.0s done
+#10 naming to docker.io/library/picturas-perf-0523102-subscriptions:latest done
+#10 unpacking to docker.io/library/picturas-perf-0523102-subscriptions:latest
+#10 unpacking to docker.io/library/picturas-perf-0523102-subscriptions:latest 0.6s done
+#10 DONE 2.2s
+
+#11 resolving provenance for metadata file
+#11 DONE 0.0s
+ Image picturas-perf-0523102-subscriptions Built 

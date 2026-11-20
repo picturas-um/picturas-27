@@ -61,7 +61,7 @@ def record(suite, command, code, report, started, output):
                     cls = case.get('classname', '')
                     if 'test_subtitles' in cls: ids = ['VID-04']
                     elif 'test_frame_extraction' in cls: ids = ['VID-05.1', 'VID-05.2']
-                    elif 'test_video_processor' in cls: ids = ['VID-01', 'VID-02', 'VID-03']
+                    elif 'test_effects' in cls or 'test_video_processor' in cls: ids = ['VID-01', 'VID-02', 'VID-03']
                     if 'preview_contact_sheet' in name: ids = ['VID-05.3']
                 for ident in ids:
                     outcomes.setdefault(ident, []).append(status)
@@ -106,13 +106,15 @@ def main():
         if suite == 'node':
             command = ['node', '--test', '--test-reporter=junit', *map(str, sorted((ROOT / 'projects/tests').glob('*.test.js')))]
         elif suite == 'python':
-            command = [str(ROOT / '.venv/bin/python'), '-m', 'pytest', '-q', 'Tools/video/tests', 'tests/python', f'--junitxml={report}']
+            command = [str(ROOT / '.venv/bin/python'), '-m', 'pytest', '-q', f'--junitxml={report}']
         elif suite == 'e2e':
             command = ['node_modules/.bin/playwright', 'test', '--reporter=junit']
             if args.match: command += ['--grep', args.match]
         else:
-            directory = 'known_failures' if suite == 'known-failures' else suite
-            files = sorted((ROOT / 'tests' / directory).rglob('*.test.js'))
+            directory = (ROOT / 'tests' / suite if suite == 'performance' else
+                         KNOWN_FAILURE_DIR if suite == 'known-failures' else
+                         ROOT / 'tests' / 'functional' / suite)
+            files = sorted(directory.rglob('*.test.js'))
             command = ['node', '--test', '--test-concurrency=1', '--test-reporter=junit']
             if args.match: command += ['--test-name-pattern=' + args.match]
             command += list(map(str, files))

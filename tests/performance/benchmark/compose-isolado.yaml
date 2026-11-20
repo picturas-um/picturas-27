@@ -1,0 +1,32 @@
+services:
+  nginx:
+    ports: !override
+      - "127.0.0.1:${PERF_HTTPS_PORT:-18443}:443"
+  img_storage:
+    ports: !reset []
+    environment:
+      FRONTEND_URL: "https://localhost:${PERF_HTTPS_PORT:-18443}"
+  seaweedfs:
+    ports: !reset []
+  rabbitmq:
+    environment:
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit collect_statistics_interval 1000"
+    healthcheck:
+      start_period: 30s
+      interval: 2s
+    ports: !override
+      - "127.0.0.1:${PERF_RABBIT_PORT:-18672}:15672"
+  projects_mongoDB:
+    ports: !reset []
+  projects:
+    ports: !reset []
+  users_mongoDB:
+    ports: !reset []
+  users:
+    ports: !reset []
+  subscriptions:
+    ports: !reset []
+  generative-mock:
+    ports: !reset []
+  ws_gateway:
+    ports: !reset []

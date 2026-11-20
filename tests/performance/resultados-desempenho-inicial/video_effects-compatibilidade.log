@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_effects.py ____________________
+ImportError while importing test module '/tmp/tmp.kVmBkZwOW0/video_effects/tests/test_effects.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.14/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_effects.py:12: in <module>
+    from effects import (
+E   ImportError: cannot import name 'InvalidSpeed' from 'effects' (/tmp/tmp.PENHFS68sA/Tools/video/effects.py)
+=========================== short test summary info ============================
+ERROR tests/test_effects.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+no tests collected, 1 error in 0.32s

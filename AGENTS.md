@@ -86,12 +86,9 @@ Replacing an older (e.g. Phase 1) checkout: it shares the Compose project name `
 its volumes, whose S3 layout (one bucket per user) is incompatible. Run
 `docker compose down -v --remove-orphans` once before the first `up`.
 
-Video worker tests run on the host (needs ffmpeg/ffprobe on the PATH, no Docker):
-
-```bash
-cd Tools/video && python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python -m pytest -q tests
-```
+Video worker tests run on the host (needs ffmpeg/ffprobe on the PATH, no Docker).
+Set up the Python environment using `tests/README.md`, then run `make test-python` from
+the repository root. Use `make test-unit` to include the Node tests in `projects/tests/`.
 
 After any AI agent runs tests, follow `tests/TEST_EXECUTION_PROTOCOL.md`: add an
 execution-history entry and update the **Última execução** cells for only the

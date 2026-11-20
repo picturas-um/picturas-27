@@ -1,0 +1,7 @@
+{ "collection" : "presences", "count" : 4 }
+{ "collection" : "preview_caches", "count" : 0 }
+{ "collection" : "previews", "count" : 0 }
+{ "collection" : "processes", "count" : 0 }
+{ "collection" : "projects", "count" : 4 }
+{ "collection" : "results", "count" : 4 }
+{ "was" : 0, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }

@@ -1,0 +1,15 @@
+CONTAINER                                       REPOSITORY                            TAG                 PLATFORM            IMAGE ID            SIZE                CREATED
+picturas-perf-0523102-api_gateway-1             picturas-perf-0523102-api_gateway     latest              linux/amd64         878c952247ad        1.84GB              8 minutes ago
+picturas-perf-0523102-frontend-1                picturas-perf-0523102-frontend        latest              linux/amd64         97a33ab09f13        3.05GB              7 minutes ago
+picturas-perf-0523102-img_storage-1             picturas-perf-0523102-img_storage     latest              linux/amd64         d93d8a8fca2c        1.98GB              8 minutes ago
+picturas-perf-0523102-nginx-1                   nginx                                 latest              linux/amd64         f9ea18bfa4fa        240MB               6 weeks ago
+picturas-perf-0523102-projects-1                picturas-perf-0523102-projects        latest              linux/amd64         deca8982e285        2.49GB              7 minutes ago
+picturas-perf-0523102-projects_mongoDB-1        mongo                                 4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-0523102-rabbitmq-1                picturas-perf-0523102-rabbitmq        latest              linux/amd64         324684797ed4        410MB               13 days ago
+picturas-perf-0523102-seaweedfs-1               chrislusf/seaweedfs                   4.47                linux/amd64         ce9e796f1fe6        729MB               2 months ago
+picturas-perf-0523102-subscriptions-1           picturas-perf-0523102-subscriptions   latest              linux/amd64         1ede07df41d0        1.87GB              5 minutes ago
+picturas-perf-0523102-subscriptions_mongoDB-1   mongo                                 4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-0523102-users-1                   picturas-perf-0523102-users           latest              linux/amd64         3b34bc864bec        1.87GB              8 minutes ago
+picturas-perf-0523102-users_mongoDB-1           mongo                                 4.4                 linux/amd64         4be76f674fc4        591MB               10 months ago
+picturas-perf-0523102-video_tool-1              picturas-perf-0523102-video_tool      latest              linux/amd64         44ae7556e258        1.71GB              7 minutes ago
+picturas-perf-0523102-ws_gateway-1              picturas-perf-0523102-ws_gateway      latest              linux/amd64         2057f8afb01c        1.61GB              13 days ago

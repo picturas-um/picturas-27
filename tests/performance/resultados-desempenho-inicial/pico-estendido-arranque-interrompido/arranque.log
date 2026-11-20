@@ -1,0 +1,198 @@
+ Image picturas-perf-137340-frontend Building 
+ Image picturas-perf-137340-img_storage Building 
+ Image picturas-perf-137340-video_tool Building 
+ Image picturas-perf-137340-subscriptions Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 4.16kB done
+#1 DONE 0.0s
+
+#2 [frontend internal] load build definition from Dockerfile
+#2 transferring dockerfile: 261B done
+#2 DONE 0.0s
+
+#3 [video_tool internal] load build definition from Dockerfile
+#3 transferring dockerfile: 466B done
+#3 DONE 0.0s
+
+#4 [img_storage internal] load build definition from Dockerfile
+#4 transferring dockerfile: 127B done
+#4 DONE 0.1s
+
+#5 [subscriptions internal] load build definition from Dockerfile
+#5 transferring dockerfile: 120B done
+#5 DONE 0.1s
+
+#6 [subscriptions internal] load metadata for docker.io/library/node:latest
+#6 ...
+
+#7 [video_tool internal] load metadata for docker.io/library/python:3.11-slim
+#7 DONE 0.2s
+
+#8 [video_tool internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [video_tool 1/7] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#9 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.0s done
+#9 DONE 0.0s
+
+#10 [video_tool internal] load build context
+#10 transferring context: 64.86kB done
+#10 DONE 0.0s
+
+#11 [video_tool 3/7] WORKDIR /app
+#11 CACHED
+
+#12 [video_tool 2/7] RUN apt-get update     && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-noto-core fonts-noto-cjk     && rm -rf /var/lib/apt/lists/*
+#12 CACHED
+
+#13 [video_tool 4/7] COPY ./video .
+#13 CACHED
+
+#14 [video_tool 6/7] RUN pip install --no-cache-dir -r ./utils/requirements.txt
+#14 CACHED
+
+#15 [video_tool 5/7] COPY ./utils ./utils
+#15 CACHED
+
+#16 [video_tool 7/7] RUN pip install --no-cache-dir -r requirements.txt
+#16 CACHED
+
+#17 [video_tool] exporting to image
+#17 exporting layers done
+#17 exporting manifest sha256:4f6f0ebb2d7c84c539518763daa16db9c7b1978a5e0d514cd2c7e43203a4f9c5 0.0s done
+#17 exporting config sha256:83ff249428332a6b6dad1eee1ac9d3d9ce1ee3c2f8726f18534ef82779f20f36
+#17 exporting config sha256:83ff249428332a6b6dad1eee1ac9d3d9ce1ee3c2f8726f18534ef82779f20f36 0.0s done
+#17 exporting attestation manifest sha256:118e1bfcb3fe49e10d32c01b9616d16a18010f9441539d72948f9bd57bf05d69 0.0s done
+#17 exporting manifest list sha256:6d89f9b12f708065fd8fae478d2201efb97e28ace39bff0d0a8ad974c7cab92f 0.0s done
+#17 naming to docker.io/library/picturas-perf-137340-video_tool:latest done
+#17 unpacking to docker.io/library/picturas-perf-137340-video_tool:latest
+#17 unpacking to docker.io/library/picturas-perf-137340-video_tool:latest done
+#17 DONE 0.2s
+
+#18 [video_tool] resolving provenance for metadata file
+#18 DONE 0.0s
+
+#6 [img_storage internal] load metadata for docker.io/library/node:latest
+#6 DONE 0.7s
+
+#19 [frontend internal] load metadata for docker.io/library/node:18
+#19 DONE 0.7s
+
+#20 [img_storage internal] load .dockerignore
+#20 transferring context: 2B done
+#20 DONE 0.0s
+
+#21 [img_storage internal] load build context
+#21 DONE 0.0s
+
+#22 [subscriptions internal] load .dockerignore
+#22 transferring context: 2B done
+#22 DONE 0.0s
+
+#23 [frontend internal] load .dockerignore
+#23 transferring context: 52B done
+#23 DONE 0.0s
+
+#24 [img_storage 1/4] FROM docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac
+#24 resolve docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac
+#24 resolve docker.io/library/node:latest@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac 0.0s done
+#24 DONE 0.0s
+
+#25 [frontend 1/7] FROM docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783
+#25 resolve docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783 0.0s done
+#25 DONE 0.0s
+
+#26 [subscriptions internal] load build context
+#26 transferring context: 22.57kB done
+#26 DONE 0.0s
+
+#21 [img_storage internal] load build context
+#21 transferring context: 10.34kB done
+#21 DONE 0.0s
+
+#27 [img_storage 3/4] COPY . .
+#27 CACHED
+
+#28 [img_storage 4/4] RUN npm install
+#28 CACHED
+
+#29 [subscriptions 2/4] WORKDIR /app
+#29 CACHED
+
+#30 [subscriptions 3/4] COPY . .
+#30 CACHED
+
+#31 [subscriptions 4/4] RUN npm install
+#31 CACHED
+
+#32 [frontend internal] load build context
+#32 transferring context: 749.63kB 0.0s done
+#32 DONE 0.0s
+
+#33 [subscriptions] exporting to image
+#33 exporting layers done
+#33 exporting manifest sha256:73542e564e2b7fb4e2e8f46a65bdd01dbe13342848d71087bcd8f37f5eaec2ad
+#33 ...
+
+#34 [frontend 6/7] COPY . .
+#34 CACHED
+
+#35 [frontend 3/7] COPY package.json ./
+#35 CACHED
+
+#36 [frontend 2/7] WORKDIR /usr/src/app
+#36 CACHED
+
+#37 [frontend 4/7] RUN npm install -g bun
+#37 CACHED
+
+#38 [frontend 5/7] RUN bun i
+#38 CACHED
+
+#39 [frontend 7/7] RUN bun run build
+#39 CACHED
+
+#33 [subscriptions] exporting to image
+#33 exporting manifest sha256:73542e564e2b7fb4e2e8f46a65bdd01dbe13342848d71087bcd8f37f5eaec2ad 0.1s done
+#33 exporting config sha256:a9db443975a2ed6d897031a4a61956599d7c292c528b0db4667a90aa7a59ef59 0.0s done
+#33 exporting attestation manifest sha256:04eee33f83c847e7591fc7c5d06973e64d64e5c56661b22f31f860f10a36143b 0.1s done
+#33 exporting manifest list sha256:e50cae8b9069801579659983639494a2143c4ec9d17468b728666afa59a9ffa4
+#33 exporting manifest list sha256:e50cae8b9069801579659983639494a2143c4ec9d17468b728666afa59a9ffa4 0.1s done
+#33 naming to docker.io/library/picturas-perf-137340-subscriptions:latest 0.0s done
+#33 unpacking to docker.io/library/picturas-perf-137340-subscriptions:latest
+#33 unpacking to docker.io/library/picturas-perf-137340-subscriptions:latest 0.0s done
+#33 DONE 0.4s
+
+#40 [img_storage] exporting to image
+#40 exporting layers done
+#40 exporting manifest sha256:2f7e572b0f0e601e021948efe30b64680db5abb1e6580acc6f16823f07656a0d 0.0s done
+#40 exporting config sha256:b032a12f343fadd4f7a7e6dda0dc648ad404086d55696855b1a0e7bdb99353b2 0.1s done
+#40 exporting attestation manifest sha256:1c282832da4b684eadbac281922faa78a4f3d06c09db43f470618de8f1660371 0.1s done
+#40 exporting manifest list sha256:0556b353bd511f0f037ad2a18bb036e5db6d7563b342f999fe42a5c7fb26835b 0.1s done
+#40 naming to docker.io/library/picturas-perf-137340-img_storage:latest 0.0s done
+#40 unpacking to docker.io/library/picturas-perf-137340-img_storage:latest 0.0s done
+#40 DONE 0.4s
+
+#41 [frontend] exporting to image
+#41 exporting layers done
+#41 exporting manifest sha256:2cb8fa0878de56f1ff2c5685a824ecdbc605ab1d21bae97dc064591dc567e9fb 0.1s done
+#41 exporting config sha256:2f2b94277c285b2d77cd255186632c96b3fa611f16d8df49069d8e58ec0a3e9e 0.1s done
+#41 exporting attestation manifest sha256:321bfea03b091df49f00f748aa2a86af606ce1bd566c7bf2fccfe43e8057b029 0.1s done
+#41 exporting manifest list sha256:24c7b4cc7ad118589cb0658bc0254744381fc9a5772e3a528067ffb58074bc41 0.0s done
+#41 naming to docker.io/library/picturas-perf-137340-frontend:latest 0.0s done
+#41 unpacking to docker.io/library/picturas-perf-137340-frontend:latest 0.0s done
+#41 DONE 0.4s
+
+#42 [subscriptions] resolving provenance for metadata file
+#42 DONE 0.2s
+
+#43 [img_storage] resolving provenance for metadata file
+#43 DONE 0.1s
+
+#44 [frontend] resolving provenance for metadata file
+#44 DONE 0.0s
+ Image picturas-perf-137340-subscriptions Built 
+ Image picturas-perf-137340-frontend Built 
+ Image picturas-perf-137340-video_tool Built 
+ Image picturas-perf-137340-img_storage Built 

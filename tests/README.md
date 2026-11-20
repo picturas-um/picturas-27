@@ -6,7 +6,7 @@ A checklist em `docs/REGRESSION_CHECKLIST.md` liga os requisitos aos testes e ao
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r tests/requirements-python.txt -r Tools/video/requirements-dev.txt
+.venv/bin/pip install -r tests/requirements-python.txt -r Tools/video_effects/requirements.txt
 npm install --no-package-lock
 npx playwright install chromium firefox
 docker compose up -d
@@ -25,7 +25,7 @@ São necessários ffmpeg/ffprobe no host. A suite foi executada com Node 22 e Py
 | `make test-unit` | Node e Python, incluindo processamento real com ffmpeg |
 | `make test-node` | Orquestração e validação Node |
 | `make test-python` | Workers de vídeo e comparação dos efeitos de imagem/vídeo |
-| `make test-api` | Contratos HTTP de contas, projetos, processamento e uploads
+| `make test-api` | Contratos HTTP de contas, projetos, processamento e uploads |
 | `make test-integration` | Filas, workers, S3, quotas e processamento entre serviços |
 | `make test-e2e` | Playwright: Chromium, Firefox e viewport móvel |
 | `make test-security` | Autenticação, autorização, WebSocket e URLs de media |
@@ -39,15 +39,16 @@ Os 13 cenários isolados estão auditados em `tests/KNOWN_FAILURES.md`. Podem se
 ## Organização e resultados
 
 - `projects/tests/`: validação e orquestração Node.
-- `Tools/video/tests/`: vídeo, legendas com reconhecimento simulado e extração de frames.
-- `tests/python/unit/`: efeitos reais de imagem comparados com as implementações do vídeo.
-- `tests/api/auth/`, `tests/api/projects/`, `tests/api/processing/`, `tests/api/uploads/`: contratos HTTP por domínio.
-- `tests/integration/`: processamento, quotas, armazenamento e concorrência entre serviços.
-- `tests/security/`: acesso, autorização, WebSocket e URLs de media.
-- `tests/e2e/`: autenticação, projetos, edição de imagem/vídeo e acessibilidade, em ficheiros com testes reais.
+- `Tools/video_effects/tests/`, `Tools/video_subtitles/tests/` e `Tools/video_frames/tests/`: efeitos de vídeo, legendas com reconhecimento simulado e extração de frames.
+- `tests/functional/unit/python/`: efeitos reais de imagem comparados com as implementações do vídeo.
+- `tests/functional/api/auth/`, `tests/functional/api/projects/`, `tests/functional/api/processing/`, `tests/functional/api/uploads/`: contratos HTTP por domínio.
+- `tests/functional/integration/`: processamento, quotas, armazenamento e concorrência entre serviços.
+- `tests/functional/security/`: acesso, autorização, WebSocket e URLs de media.
+- `tests/functional/e2e/`: autenticação, projetos, edição de imagem/vídeo e acessibilidade, em ficheiros com testes reais.
 - `tests/known_failures/`: testes isolados que reproduzem falhas do código recebido.
-- `tests/resilience/`: contentores e rede temporários; não reinicia os serviços da aplicação em uso.
-- `tests/performance/`: orçamento local mensurável; não é um ensaio de capacidade de produção.
+- `tests/functional/resilience/`: contentores e rede temporários; não reinicia os serviços da aplicação em uso.
+- `tests/performance/local-budget.test.js`: orçamento local de regressão.
+- `tests/performance/benchmark/`: ensaios de carga isolados, recolha de métricas e reprodução da referência. [Relatório inicial](../resultados-desempenho-inicial.md)
 - `tests/helpers/`: clientes HTTP, sockets, verificações de media e dados de teste.
 - `tests/fixtures/generate.py`: gera imagens em `images/`, vídeos em `videos/` e entradas inválidas em `invalid/`. Os ficheiros gerados são ignorados pelo Git.
 - `tests/reports/`: XML JUnit, logs, screenshots, traces e lista dos IDs criados. Estes artefactos são ignorados pelo Git.

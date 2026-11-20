@@ -1,0 +1,10 @@
+........................................................................ [ 97%]
+..                                                                       [100%]
+=============================== warnings summary ===============================
+tests/test_subtitles.py::test_caption_rendering_preserves_audio_and_original
+  /tmp/picturas-perf.S5t9if/Tools/video/tests/test_subtitles.py:49: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+    assert sum(ImageChops.difference(a, b).convert("L").getdata()) / (280 * 40) > 3
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/francisco/Desktop/Semestre7/Trabalhos/RAS/picturas-27/resultados-desempenho-inicial/video.xml -
+74 passed, 1 warning in 43.28s
