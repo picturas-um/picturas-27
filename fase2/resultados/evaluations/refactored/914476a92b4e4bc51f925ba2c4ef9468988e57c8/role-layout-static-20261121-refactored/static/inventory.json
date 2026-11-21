@@ -1,0 +1,113 @@
+{
+  "modules": [
+    {
+      "classes": 5,
+      "functions": 17,
+      "imports": [
+        "PIL",
+        "fractions",
+        "json",
+        "os",
+        "pathlib",
+        "subprocess",
+        "tempfile"
+      ],
+      "path": "Tools/video_effects/effects.py",
+      "physical_lines": 316
+    },
+    {
+      "classes": 1,
+      "functions": 9,
+      "imports": [
+        "datetime",
+        "effects",
+        "json",
+        "os",
+        "pika",
+        "pytz",
+        "time",
+        "utils",
+        "uuid"
+      ],
+      "path": "Tools/video_effects/video_effects.py",
+      "physical_lines": 176
+    },
+    {
+      "classes": 2,
+      "functions": 5,
+      "imports": [
+        "PIL",
+        "fractions",
+        "json",
+        "math",
+        "os",
+        "pathlib",
+        "subprocess",
+        "tempfile",
+        "uuid"
+      ],
+      "path": "Tools/video_frames/frame_extraction.py",
+      "physical_lines": 155
+    },
+    {
+      "classes": 1,
+      "functions": 9,
+      "imports": [
+        "datetime",
+        "frame_extraction",
+        "json",
+        "os",
+        "pika",
+        "pytz",
+        "time",
+        "utils",
+        "uuid"
+      ],
+      "path": "Tools/video_frames/video_frames.py",
+      "physical_lines": 168
+    },
+    {
+      "classes": 1,
+      "functions": 6,
+      "imports": [
+        "faster_whisper",
+        "fractions",
+        "functools",
+        "json",
+        "math",
+        "os",
+        "pathlib",
+        "shutil",
+        "subprocess",
+        "tempfile"
+      ],
+      "path": "Tools/video_subtitles/subtitles.py",
+      "physical_lines": 162
+    },
+    {
+      "classes": 1,
+      "functions": 9,
+      "imports": [
+        "datetime",
+        "json",
+        "os",
+        "pika",
+        "pytz",
+        "subtitles",
+        "time",
+        "utils",
+        "uuid"
+      ],
+      "path": "Tools/video_subtitles/video_subtitles.py",
+      "physical_lines": 158
+    }
+  ],
+  "scope": [
+    "Tools/video_effects/effects.py",
+    "Tools/video_effects/video_effects.py",
+    "Tools/video_frames/frame_extraction.py",
+    "Tools/video_frames/video_frames.py",
+    "Tools/video_subtitles/subtitles.py",
+    "Tools/video_subtitles/video_subtitles.py"
+  ]
+}

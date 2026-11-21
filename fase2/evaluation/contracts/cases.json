@@ -1,0 +1,9 @@
+{
+  "origin": "93746e46a367739e92eac1f74028906388fbfd50:fase2/documentacao/video-cases.json",
+  "inputs": {
+    "sample_6s.mov": "dfae0d1fe6387c792c8e94700927deb8e282a15c449f4f6fabdcedd72940c4be",
+    "sample_10s_720p.mp4": "a261d91c6cd4b7d1bc445259439613107e4c49484587be25ef19036336255280",
+    "corrupted.mp4": "d2ac1ad31b409ab1bf9a94a222a55e6bb036861da13ccc0064ef30f17dbe2864",
+    "speech_mandela_177s_1080p.webm": "3a58e266d7552d700846b362933d1649b384493dc4a68db22df12d0bd3c1db3f"
+  }
+}

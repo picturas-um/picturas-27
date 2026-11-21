@@ -1,0 +1,1553 @@
+{
+  "duplicates": [
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 41,
+        "endLoc": {
+          "column": 61,
+          "line": 41,
+          "position": 1382
+        },
+        "name": "Tools/border/border.py",
+        "start": 33,
+        "startLoc": {
+          "column": 23,
+          "line": 33,
+          "position": 1006
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 52,
+        "endLoc": {
+          "column": 61,
+          "line": 52,
+          "position": 1653
+        },
+        "name": "Tools/brightness/brightness.py",
+        "start": 44,
+        "startLoc": {
+          "column": 27,
+          "line": 44,
+          "position": 1285
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 50,
+        "endLoc": {
+          "column": 61,
+          "line": 50,
+          "position": 1610
+        },
+        "name": "Tools/contrast/contrast.py",
+        "start": 42,
+        "startLoc": {
+          "column": 25,
+          "line": 42,
+          "position": 1242
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 51,
+        "endLoc": {
+          "column": 61,
+          "line": 51,
+          "position": 1651
+        },
+        "name": "Tools/cut/cut.py",
+        "start": 43,
+        "startLoc": {
+          "column": 20,
+          "line": 43,
+          "position": 1275
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 40,
+        "endLoc": {
+          "column": 61,
+          "line": 40,
+          "position": 1389
+        },
+        "name": "Tools/resize/resize.py",
+        "start": 32,
+        "startLoc": {
+          "column": 23,
+          "line": 32,
+          "position": 1005
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 39,
+        "startLoc": {
+          "column": 29,
+          "line": 39,
+          "position": 1133
+        }
+      },
+      "format": "python",
+      "fragment": "    def binarization_callback(self, ch, method, properties, body):\n        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 50,
+        "endLoc": {
+          "column": 61,
+          "line": 50,
+          "position": 1630
+        },
+        "name": "Tools/saturation/saturation.py",
+        "start": 42,
+        "startLoc": {
+          "column": 27,
+          "line": 42,
+          "position": 1254
+        }
+      },
+      "tokens": 70
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 61,
+          "line": 47,
+          "position": 1501
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 40,
+        "startLoc": {
+          "column": 31,
+          "line": 40,
+          "position": 1202
+        }
+      },
+      "format": "python",
+      "fragment": "        json_str = body.decode()\n        info = json.loads(json_str)\n\n        msg_id = info['messageId']\n        timestamp = datetime.datetime.fromisoformat(info['timestamp'])\n        procedure = info['procedure']\n        img_path = info['parameters']['inputImageURI']\n        store_img_path = info['parameters']['outputImageURI']",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 38,
+        "endLoc": {
+          "column": 61,
+          "line": 38,
+          "position": 1252
+        },
+        "name": "Tools/rotate/rotate.py",
+        "start": 31,
+        "startLoc": {
+          "column": 22,
+          "line": 31,
+          "position": 945
+        }
+      },
+      "tokens": 52
+    },
+    {
+      "firstFile": {
+        "end": 58,
+        "endLoc": {
+          "column": 116,
+          "line": 58,
+          "position": 1998
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 6,
+      "secondFile": {
+        "end": 74,
+        "endLoc": {
+          "column": 116,
+          "line": 74,
+          "position": 2842
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 69,
+        "startLoc": {
+          "column": 29,
+          "line": 69,
+          "position": 2528
+        }
+      },
+      "tokens": 55
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 60,
+        "endLoc": {
+          "column": 17,
+          "line": 60,
+          "position": 2155
+        },
+        "name": "Tools/border/border.py",
+        "start": 51,
+        "startLoc": {
+          "column": 32,
+          "line": 51,
+          "position": 1707
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 58,
+        "endLoc": {
+          "column": 116,
+          "line": 58,
+          "position": 1998
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 6,
+      "secondFile": {
+        "end": 72,
+        "endLoc": {
+          "column": 116,
+          "line": 72,
+          "position": 2895
+        },
+        "name": "Tools/border/border.py",
+        "start": 67,
+        "startLoc": {
+          "column": 24,
+          "line": 67,
+          "position": 2569
+        }
+      },
+      "tokens": 55
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 77,
+        "endLoc": {
+          "column": 17,
+          "line": 77,
+          "position": 2454
+        },
+        "name": "Tools/brightness/brightness.py",
+        "start": 58,
+        "startLoc": {
+          "column": 36,
+          "line": 58,
+          "position": 1841
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 70,
+        "endLoc": {
+          "column": 17,
+          "line": 70,
+          "position": 2429
+        },
+        "name": "Tools/contrast/contrast.py",
+        "start": 56,
+        "startLoc": {
+          "column": 34,
+          "line": 56,
+          "position": 1796
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 17,
+          "line": 78,
+          "position": 2696
+        },
+        "name": "Tools/cut/cut.py",
+        "start": 61,
+        "startLoc": {
+          "column": 29,
+          "line": 61,
+          "position": 1953
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 56,
+        "endLoc": {
+          "column": 17,
+          "line": 56,
+          "position": 2070
+        },
+        "name": "Tools/resize/resize.py",
+        "start": 47,
+        "startLoc": {
+          "column": 32,
+          "line": 47,
+          "position": 1613
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 53,
+        "endLoc": {
+          "column": 17,
+          "line": 53,
+          "position": 1875
+        },
+        "name": "Tools/rotate/rotate.py",
+        "start": 44,
+        "startLoc": {
+          "column": 32,
+          "line": 44,
+          "position": 1427
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 62,
+        "endLoc": {
+          "column": 17,
+          "line": 62,
+          "position": 2132
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 53,
+        "startLoc": {
+          "column": 38,
+          "line": 53,
+          "position": 1684
+        }
+      },
+      "format": "python",
+      "fragment": "        if procedure != 'binarization':\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['wrong_procedure'], \"The procedure received does not fit into this tool\", img_path)\n            return\n\n        try:\n            self.add_binarization(img_path, store_img_path, threshold)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 10,
+      "secondFile": {
+        "end": 73,
+        "endLoc": {
+          "column": 17,
+          "line": 73,
+          "position": 2576
+        },
+        "name": "Tools/saturation/saturation.py",
+        "start": 56,
+        "startLoc": {
+          "column": 36,
+          "line": 56,
+          "position": 1832
+        }
+      },
+      "tokens": 67
+    },
+    {
+      "firstFile": {
+        "end": 69,
+        "endLoc": {
+          "column": 24,
+          "line": 69,
+          "position": 2523
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 67,
+        "endLoc": {
+          "column": 24,
+          "line": 67,
+          "position": 2569
+        },
+        "name": "Tools/border/border.py",
+        "start": 60,
+        "startLoc": {
+          "column": 80,
+          "line": 60,
+          "position": 2218
+        }
+      },
+      "tokens": 53
+    },
+    {
+      "firstFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 41,
+          "line": 78,
+          "position": 2969
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], str(e), img_path)\n\n    def exec(self, args):\n        while True:\n            self._tool_msg.read_msg(self.binarization_callback)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 110,
+        "endLoc": {
+          "column": 41,
+          "line": 110,
+          "position": 3568
+        },
+        "name": "Tools/brightness/brightness.py",
+        "start": 77,
+        "startLoc": {
+          "column": 78,
+          "line": 77,
+          "position": 2515
+        }
+      },
+      "tokens": 139
+    },
+    {
+      "firstFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 41,
+          "line": 78,
+          "position": 2969
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], str(e), img_path)\n\n    def exec(self, args):\n        while True:\n            self._tool_msg.read_msg(self.binarization_callback)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 92,
+        "endLoc": {
+          "column": 41,
+          "line": 92,
+          "position": 3492
+        },
+        "name": "Tools/contrast/contrast.py",
+        "start": 70,
+        "startLoc": {
+          "column": 73,
+          "line": 70,
+          "position": 2485
+        }
+      },
+      "tokens": 139
+    },
+    {
+      "firstFile": {
+        "end": 74,
+        "endLoc": {
+          "column": 136,
+          "line": 74,
+          "position": 2862
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], str(e), img_path)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 101,
+        "endLoc": {
+          "column": 68,
+          "line": 101,
+          "position": 3863
+        },
+        "name": "Tools/cut/cut.py",
+        "start": 78,
+        "startLoc": {
+          "column": 76,
+          "line": 78,
+          "position": 2755
+        }
+      },
+      "tokens": 113
+    },
+    {
+      "firstFile": {
+        "end": 69,
+        "endLoc": {
+          "column": 24,
+          "line": 69,
+          "position": 2523
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 60,
+        "endLoc": {
+          "column": 24,
+          "line": 60,
+          "position": 2272
+        },
+        "name": "Tools/rotate/rotate.py",
+        "start": 53,
+        "startLoc": {
+          "column": 63,
+          "line": 53,
+          "position": 1921
+        }
+      },
+      "tokens": 53
+    },
+    {
+      "firstFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 41,
+          "line": 78,
+          "position": 2969
+        },
+        "name": "Tools/binarization/binarization.py",
+        "start": 62,
+        "startLoc": {
+          "column": 69,
+          "line": 62,
+          "position": 2184
+        }
+      },
+      "format": "python",
+      "fragment": "            self.add_binarization(img_path, store_img_path, threshold)\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception as e:\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n\n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], str(e), img_path)\n\n    def exec(self, args):\n        while True:\n            self._tool_msg.read_msg(self.binarization_callback)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 102,
+        "endLoc": {
+          "column": 41,
+          "line": 102,
+          "position": 3911
+        },
+        "name": "Tools/saturation/saturation.py",
+        "start": 73,
+        "startLoc": {
+          "column": 77,
+          "line": 73,
+          "position": 2636
+        }
+      },
+      "tokens": 139
+    },
+    {
+      "firstFile": {
+        "end": 72,
+        "endLoc": {
+          "column": 136,
+          "line": 72,
+          "position": 2915
+        },
+        "name": "Tools/border/border.py",
+        "start": 62,
+        "startLoc": {
+          "column": 36,
+          "line": 62,
+          "position": 2257
+        }
+      },
+      "format": "python",
+      "fragment": "            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n            \n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'success', processing_time, store_img_path)\n        except Exception:\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n            \n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], \"An error occured while processing the request\", img_path)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 11,
+      "secondFile": {
+        "end": 65,
+        "endLoc": {
+          "column": 136,
+          "line": 65,
+          "position": 2618
+        },
+        "name": "Tools/rotate/rotate.py",
+        "start": 55,
+        "startLoc": {
+          "column": 36,
+          "line": 55,
+          "position": 1960
+        }
+      },
+      "tokens": 107
+    },
+    {
+      "firstFile": {
+        "end": 76,
+        "endLoc": {
+          "column": 41,
+          "line": 76,
+          "position": 3063
+        },
+        "name": "Tools/border/border.py",
+        "start": 68,
+        "startLoc": {
+          "column": 50,
+          "line": 68,
+          "position": 2621
+        }
+      },
+      "format": "python",
+      "fragment": "            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n            \n            self._tool_msg.send_msg(msg_id, resp_msg_id, cur_timestamp, 'error', processing_time, None, self._codes['error_processing'], \"An error occured while processing the request\", img_path)\n\n    def exec(self, args):\n        while True:\n            self._tool_msg.read_msg(self.border_callback)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 9,
+      "secondFile": {
+        "end": 73,
+        "endLoc": {
+          "column": 41,
+          "line": 73,
+          "position": 3028
+        },
+        "name": "Tools/resize/resize.py",
+        "start": 65,
+        "startLoc": {
+          "column": 50,
+          "line": 65,
+          "position": 2562
+        }
+      },
+      "tokens": 72
+    },
+    {
+      "firstFile": {
+        "end": 90,
+        "endLoc": {
+          "column": 30,
+          "line": 90,
+          "position": 3296
+        },
+        "name": "Tools/cut/cut.py",
+        "start": 78,
+        "startLoc": {
+          "column": 75,
+          "line": 78,
+          "position": 2754
+        }
+      },
+      "format": "python",
+      "fragment": "            self.cut_image(img_path, store_img_path, (left,top,right,bottom))\n\n            cur_timestamp = datetime.datetime.now(pytz.utc)\n            processing_time = (cur_timestamp - timestamp).total_seconds() * 1000\n            cur_timestamp = cur_timestamp.isoformat()\n            \n            self._tool_msg.send_msg(msg_id, \n                                    resp_msg_id, \n                                    cur_timestamp, \n                                    'success', \n                                    processing_time,\n                                    store_img_path)\n        except Exception as e:",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 63,
+        "endLoc": {
+          "column": 30,
+          "line": 63,
+          "position": 2488
+        },
+        "name": "Tools/resize/resize.py",
+        "start": 56,
+        "startLoc": {
+          "column": 70,
+          "line": 56,
+          "position": 2123
+        }
+      },
+      "tokens": 57
+    },
+    {
+      "firstFile": {
+        "end": 129,
+        "endLoc": {
+          "column": 73,
+          "line": 129,
+          "position": 4072
+        },
+        "name": "Tools/video_effects/effects.py",
+        "start": 105,
+        "startLoc": {
+          "column": 53,
+          "line": 105,
+          "position": 3099
+        }
+      },
+      "format": "python",
+      "fragment": "    \"\"\"Reads the video characteristics with ffprobe.\"\"\"\n    cmd = [\n        \"ffprobe\", \"-v\", \"error\", \"-print_format\", \"json\",\n        \"-show_format\", \"-show_streams\", path,\n    ]\n    res = subprocess.run(cmd, capture_output=True, text=True)\n    if res.returncode != 0:\n        raise InvalidVideo(f\"Unreadable video file: {res.stderr.strip()[:200]}\")\n\n    data = json.loads(res.stdout or \"{}\")\n    streams = data.get(\"streams\", [])\n    video = next((s for s in streams if s.get(\"codec_type\") == \"video\"), None)\n    audio = next((s for s in streams if s.get(\"codec_type\") == \"audio\"), None)\n    if video is None:\n        raise InvalidVideo(\"The file has no video stream\")\n\n    fmt = data.get(\"format\", {})\n    duration = float(\n        (video.get(\"duration\") if prefer_video_duration else None)\n        or fmt.get(\"duration\") or video.get(\"duration\") or 0\n    )\n    if duration <= 0:\n        raise InvalidVideo(\"Could not determine the video duration\")\n\n    fps_str = video.get(\"avg_frame_rate\") or video.get(\"r_frame_rate\") or \"0/1\"",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 25,
+      "secondFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 73,
+          "line": 78,
+          "position": 3041
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 54,
+        "startLoc": {
+          "column": 49,
+          "line": 54,
+          "position": 2068
+        }
+      },
+      "tokens": 203
+    },
+    {
+      "firstFile": {
+        "end": 151,
+        "endLoc": {
+          "column": 3,
+          "line": 151,
+          "position": 4694
+        },
+        "name": "Tools/video_effects/effects.py",
+        "start": 135,
+        "startLoc": {
+          "column": 31,
+          "line": 135,
+          "position": 4237
+        }
+      },
+      "format": "python",
+      "fragment": "        fps_str, fps = \"25/1\", 25.0\n\n    return {\n        \"duration\": duration,\n        \"width\": int(video[\"width\"]),\n        \"height\": int(video[\"height\"]),\n        \"fps\": fps,\n        \"fps_str\": fps_str,\n        \"video_codec\": video.get(\"codec_name\"),\n        \"audio_codec\": audio.get(\"codec_name\") if audio else None,\n        \"has_audio\": audio is not None,\n        \"format_name\": fmt.get(\"format_name\"),\n        \"size_bytes\": int(fmt.get(\"size\") or os.path.getsize(path)),\n    }\n\n\ndef resolve_trim(tools: list, duration: float) -> tuple:",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 98,
+        "endLoc": {
+          "column": 3,
+          "line": 98,
+          "position": 3612
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 82,
+        "startLoc": {
+          "column": 14,
+          "line": 82,
+          "position": 3155
+        }
+      },
+      "tokens": 96
+    },
+    {
+      "firstFile": {
+        "end": 54,
+        "endLoc": {
+          "column": 95,
+          "line": 54,
+          "position": 1483
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 47,
+        "startLoc": {
+          "column": 24,
+          "line": 47,
+          "position": 1053
+        }
+      },
+      "format": "python",
+      "fragment": "class VideoEffectsWorker:\n    def __init__(self):\n        self._connection = self._connect()\n        self._channel = self._connection.channel()\n        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 44,
+        "endLoc": {
+          "column": 95,
+          "line": 44,
+          "position": 1268
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 37,
+        "startLoc": {
+          "column": 23,
+          "line": 37,
+          "position": 838
+        }
+      },
+      "tokens": 79
+    },
+    {
+      "firstFile": {
+        "end": 54,
+        "endLoc": {
+          "column": 95,
+          "line": 54,
+          "position": 1483
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 47,
+        "startLoc": {
+          "column": 24,
+          "line": 47,
+          "position": 1053
+        }
+      },
+      "format": "python",
+      "fragment": "class VideoEffectsWorker:\n    def __init__(self):\n        self._connection = self._connect()\n        self._channel = self._connection.channel()\n        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 44,
+        "endLoc": {
+          "column": 95,
+          "line": 44,
+          "position": 1260
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 37,
+        "startLoc": {
+          "column": 26,
+          "line": 37,
+          "position": 830
+        }
+      },
+      "tokens": 79
+    },
+    {
+      "firstFile": {
+        "end": 77,
+        "endLoc": {
+          "column": 25,
+          "line": 77,
+          "position": 2408
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 56,
+        "startLoc": {
+          "column": 8,
+          "line": 56,
+          "position": 1567
+        }
+      },
+      "format": "python",
+      "fragment": "        self._channel.basic_qos(prefetch_count=1)\n\n    @staticmethod\n    def _connect():\n        credentials = pika.PlainCredentials(env.RABBITMQ_USERNAME, env.RABBITMQ_PASSWORD)\n        params = pika.ConnectionParameters(\n            env.RABBITMQ_HOST, int(env.RABBITMQ_PORT), \"/\", credentials,\n            heartbeat=0,\n        )\n        for attempt in range(30):\n            try:\n                return pika.BlockingConnection(params)\n            except pika.exceptions.AMQPConnectionError:\n                time.sleep(2)\n        raise RuntimeError(\"Could not connect to RabbitMQ\")\n\n    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\"type\": \"video\", \"imageURI\": video_info.get(\"output_path\", output_uri)}",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 67,
+        "endLoc": {
+          "column": 19,
+          "line": 67,
+          "position": 2131
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 45,
+        "startLoc": {
+          "column": 8,
+          "line": 45,
+          "position": 1277
+        }
+      },
+      "tokens": 144
+    },
+    {
+      "firstFile": {
+        "end": 79,
+        "endLoc": {
+          "column": 26,
+          "line": 79,
+          "position": 2538
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 72,
+        "startLoc": {
+          "column": 17,
+          "line": 72,
+          "position": 2160
+        }
+      },
+      "format": "python",
+      "fragment": "    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\"type\": \"video\", \"imageURI\": video_info.get(\"output_path\", output_uri)}\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 68,
+        "endLoc": {
+          "column": 26,
+          "line": 68,
+          "position": 2240
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 61,
+        "startLoc": {
+          "column": 17,
+          "line": 61,
+          "position": 1862
+        }
+      },
+      "tokens": 72
+    },
+    {
+      "firstFile": {
+        "end": 93,
+        "endLoc": {
+          "column": 26,
+          "line": 93,
+          "position": 3054
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 79,
+        "startLoc": {
+          "column": 48,
+          "line": 79,
+          "position": 2560
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"output\": output,\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n                \"video\": video_info,\n            },\n        })\n\n    def _reply_error(self, msg_id, started, code, message, input_uri):\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 87,
+        "endLoc": {
+          "column": 26,
+          "line": 87,
+          "position": 2937
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 73,
+        "startLoc": {
+          "column": 55,
+          "line": 73,
+          "position": 2443
+        }
+      },
+      "tokens": 80
+    },
+    {
+      "firstFile": {
+        "end": 93,
+        "endLoc": {
+          "column": 26,
+          "line": 93,
+          "position": 3054
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 79,
+        "startLoc": {
+          "column": 48,
+          "line": 79,
+          "position": 2560
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"output\": output,\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n                \"video\": video_info,\n            },\n        })\n\n    def _reply_error(self, msg_id, started, code, message, input_uri):\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 82,
+        "endLoc": {
+          "column": 26,
+          "line": 82,
+          "position": 2766
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 68,
+        "startLoc": {
+          "column": 58,
+          "line": 68,
+          "position": 2272
+        }
+      },
+      "tokens": 80
+    },
+    {
+      "firstFile": {
+        "end": 131,
+        "endLoc": {
+          "column": 45,
+          "line": 131,
+          "position": 4440
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 93,
+        "startLoc": {
+          "column": 48,
+          "line": 93,
+          "position": 3076
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"error\",\n            \"error\": {\n                \"code\": code,\n                \"message\": message,\n                \"msg\": message,\n                \"details\": {\"inputFileURI\": input_uri},\n            },\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n            },\n        })\n\n    def _progress(self, progress, preview, percent):\n        if not progress or not progress.get(\"user\"):\n            return\n        self._publish(WS_QUEUE, {\n            \"messageId\": f\"update-client-video-progress-{uuid.uuid4()}\",\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"user\": progress[\"user\"],\n            \"projectId\": progress.get(\"projectId\"),\n            \"imgId\": progress.get(\"imgId\"),\n            \"preview\": bool(preview),\n            \"percent\": percent,\n        })\n\n    def callback(self, ch, method, properties, body):\n        started = now()\n        try:\n            info = json.loads(body.decode())\n            msg_id = info[\"messageId\"]\n            params = info[\"parameters\"]\n            input_uri = params[\"inputImageURI\"]\n            output_uri = params[\"outputImageURI\"]\n            tools = params.get(\"tools\") or []",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 39,
+      "secondFile": {
+        "end": 125,
+        "endLoc": {
+          "column": 45,
+          "line": 125,
+          "position": 4330
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 87,
+        "startLoc": {
+          "column": 55,
+          "line": 87,
+          "position": 2966
+        }
+      },
+      "tokens": 228
+    },
+    {
+      "firstFile": {
+        "end": 130,
+        "endLoc": {
+          "column": 49,
+          "line": 130,
+          "position": 4394
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 93,
+        "startLoc": {
+          "column": 48,
+          "line": 93,
+          "position": 3076
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"error\",\n            \"error\": {\n                \"code\": code,\n                \"message\": message,\n                \"msg\": message,\n                \"details\": {\"inputFileURI\": input_uri},\n            },\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n            },\n        })\n\n    def _progress(self, progress, preview, percent):\n        if not progress or not progress.get(\"user\"):\n            return\n        self._publish(WS_QUEUE, {\n            \"messageId\": f\"update-client-video-progress-{uuid.uuid4()}\",\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"user\": progress[\"user\"],\n            \"projectId\": progress.get(\"projectId\"),\n            \"imgId\": progress.get(\"imgId\"),\n            \"preview\": bool(preview),\n            \"percent\": percent,\n        })\n\n    def callback(self, ch, method, properties, body):\n        started = now()\n        try:\n            info = json.loads(body.decode())\n            msg_id = info[\"messageId\"]\n            params = info[\"parameters\"]\n            input_uri = params[\"inputImageURI\"]\n            output_uri = params[\"outputImageURI\"]",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 38,
+      "secondFile": {
+        "end": 119,
+        "endLoc": {
+          "column": 49,
+          "line": 119,
+          "position": 4116
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 82,
+        "startLoc": {
+          "column": 58,
+          "line": 82,
+          "position": 2798
+        }
+      },
+      "tokens": 217
+    },
+    {
+      "firstFile": {
+        "end": 171,
+        "endLoc": {
+          "column": 15,
+          "line": 171,
+          "position": 6544
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 160,
+        "startLoc": {
+          "column": 72,
+          "line": 160,
+          "position": 6009
+        }
+      },
+      "format": "python",
+      "fragment": "                self._reply_error(msg_id, started, CODES[\"invalid_speed\"], str(e), input_uri)\n            except InvalidVideo as e:\n                self._reply_error(msg_id, started, CODES[\"invalid_video\"], str(e), input_uri)\n            except Exception as e:  # noqa: BLE001\n                self._reply_error(msg_id, started, CODES[\"error_processing\"], str(e), input_uri)\n\n        ch.basic_ack(delivery_tag=method.delivery_tag)\n\n    def run(self):\n        self._channel.basic_consume(queue=VIDEO_QUEUE, on_message_callback=self.callback,\n                                    auto_ack=False)\n        print(f\"[video_effects] waiting for jobs on {VIDEO_QUEUE}\", flush=True)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 163,
+        "endLoc": {
+          "column": 15,
+          "line": 163,
+          "position": 6241
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 152,
+        "startLoc": {
+          "column": 77,
+          "line": 152,
+          "position": 5706
+        }
+      },
+      "tokens": 99
+    },
+    {
+      "firstFile": {
+        "end": 171,
+        "endLoc": {
+          "column": 15,
+          "line": 171,
+          "position": 6544
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 160,
+        "startLoc": {
+          "column": 92,
+          "line": 160,
+          "position": 6029
+        }
+      },
+      "format": "python",
+      "fragment": "                self._reply_error(msg_id, started, CODES[\"invalid_speed\"], str(e), input_uri)\n            except InvalidVideo as e:\n                self._reply_error(msg_id, started, CODES[\"invalid_video\"], str(e), input_uri)\n            except Exception as e:  # noqa: BLE001\n                self._reply_error(msg_id, started, CODES[\"error_processing\"], str(e), input_uri)\n\n        ch.basic_ack(delivery_tag=method.delivery_tag)\n\n    def run(self):\n        self._channel.basic_consume(queue=VIDEO_QUEUE, on_message_callback=self.callback,\n                                    auto_ack=False)\n        print(f\"[video_effects] waiting for jobs on {VIDEO_QUEUE}\", flush=True)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 153,
+        "endLoc": {
+          "column": 15,
+          "line": 153,
+          "position": 5762
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 142,
+        "startLoc": {
+          "column": 32,
+          "line": 142,
+          "position": 5247
+        }
+      },
+      "tokens": 91
+    },
+    {
+      "firstFile": {
+        "end": 71,
+        "endLoc": {
+          "column": 21,
+          "line": 71,
+          "position": 2741
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 53,
+        "startLoc": {
+          "column": 56,
+          "line": 53,
+          "position": 2008
+        }
+      },
+      "format": "python",
+      "fragment": "def probe(path: str, prefer_video_duration: bool = False) -> dict:\n    \"\"\"Reads video characteristics with ffprobe.\"\"\"\n    cmd = [\n        \"ffprobe\", \"-v\", \"error\", \"-print_format\", \"json\",\n        \"-show_format\", \"-show_streams\", path,\n    ]\n    res = subprocess.run(cmd, capture_output=True, text=True)\n    if res.returncode != 0:\n        raise InvalidVideo(f\"Unreadable video file: {res.stderr.strip()[:200]}\")\n\n    data = json.loads(res.stdout or \"{}\")\n    streams = data.get(\"streams\", [])\n    video = next((s for s in streams if s.get(\"codec_type\") == \"video\"), None)\n    audio = next((s for s in streams if s.get(\"codec_type\") == \"audio\"), None)\n    if video is None:\n        raise InvalidVideo(\"The file has no video stream\")\n\n    fmt = data.get(\"format\", {})\n    duration = float(",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 21,
+          "line": 78,
+          "position": 2840
+        },
+        "name": "Tools/video_subtitles/subtitles.py",
+        "start": 60,
+        "startLoc": {
+          "column": 19,
+          "line": 60,
+          "position": 2107
+        }
+      },
+      "tokens": 154
+    },
+    {
+      "firstFile": {
+        "end": 98,
+        "endLoc": {
+          "column": 3,
+          "line": 98,
+          "position": 3612
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 73,
+        "startLoc": {
+          "column": 39,
+          "line": 73,
+          "position": 2848
+        }
+      },
+      "format": "python",
+      "fragment": "        or fmt.get(\"duration\") or video.get(\"duration\") or 0\n    )\n    if duration <= 0:\n        raise InvalidVideo(\"Could not determine the video duration\")\n\n    fps_str = video.get(\"avg_frame_rate\") or video.get(\"r_frame_rate\") or \"25/1\"\n    try:\n        fps = float(Fraction(fps_str))\n    except (ZeroDivisionError, ValueError):\n        fps = 25.0\n\n    return {\n        \"duration\": duration,\n        \"width\": int(video[\"width\"]),\n        \"height\": int(video[\"height\"]),\n        \"fps\": fps,\n        \"fps_str\": fps_str,\n        \"video_codec\": video.get(\"codec_name\"),\n        \"audio_codec\": audio.get(\"codec_name\") if audio else None,\n        \"has_audio\": audio is not None,\n        \"format_name\": fmt.get(\"format_name\"),\n        \"size_bytes\": int(fmt.get(\"size\") or os.path.getsize(path)),\n    }\n\n\ndef extract_frames(input_path, output_path, info, params, progress, preview=False):",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 26,
+      "secondFile": {
+        "end": 102,
+        "endLoc": {
+          "column": 3,
+          "line": 102,
+          "position": 3627
+        },
+        "name": "Tools/video_subtitles/subtitles.py",
+        "start": 78,
+        "startLoc": {
+          "column": 49,
+          "line": 78,
+          "position": 2868
+        }
+      },
+      "tokens": 152
+    },
+    {
+      "firstFile": {
+        "end": 67,
+        "endLoc": {
+          "column": 19,
+          "line": 67,
+          "position": 2131
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 41,
+        "startLoc": {
+          "column": 21,
+          "line": 41,
+          "position": 979
+        }
+      },
+      "format": "python",
+      "fragment": "        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)\n        self._channel.basic_qos(prefetch_count=1)\n\n    @staticmethod\n    def _connect():\n        credentials = pika.PlainCredentials(env.RABBITMQ_USERNAME, env.RABBITMQ_PASSWORD)\n        params = pika.ConnectionParameters(\n            env.RABBITMQ_HOST, int(env.RABBITMQ_PORT), \"/\", credentials,\n            heartbeat=0,\n        )\n        for attempt in range(30):\n            try:\n                return pika.BlockingConnection(params)\n            except pika.exceptions.AMQPConnectionError:\n                time.sleep(2)\n        raise RuntimeError(\"Could not connect to RabbitMQ\")\n\n    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\n            \"type\": video_info.get(\"output_type\", \"frames\"),",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 27,
+      "secondFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 25,
+          "line": 66,
+          "position": 2110
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 41,
+        "startLoc": {
+          "column": 21,
+          "line": 41,
+          "position": 971
+        }
+      },
+      "tokens": 193
+    }
+  ],
+  "statistics": {
+    "detectionDate": "2026-11-21T18:56:15.261Z",
+    "formats": {
+      "python": {
+        "clones": 40,
+        "duplicatedLines": 548,
+        "duplicatedTokens": 3890,
+        "lines": 1879,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 29.164449175093132,
+        "percentageTokens": 33.84374456238037,
+        "sources": 14,
+        "tokens": 11494
+      }
+    },
+    "total": {
+      "clones": 40,
+      "duplicatedLines": 548,
+      "duplicatedTokens": 3890,
+      "lines": 1879,
+      "newClones": 0,
+      "newDuplicatedLines": 0,
+      "percentage": 29.164449175093132,
+      "percentageTokens": 33.84374456238037,
+      "sources": 14,
+      "tokens": 11494
+    }
+  }
+}

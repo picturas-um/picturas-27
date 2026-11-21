@@ -1,0 +1,5 @@
+{
+  "error_type": "InvalidExtraction",
+  "error": "Frame extraction must appear once, at the end of the pipeline",
+  "input_sha256": "dfae0d1fe6387c792c8e94700927deb8e282a15c449f4f6fabdcedd72940c4be"
+}

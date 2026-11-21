@@ -1,0 +1,958 @@
+{
+  "cleanup_errors": [],
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "--version"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0182,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/version-docker.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "version"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0611,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/version-compose.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0691,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/version-daemon.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=picturas-eval-6b6293b9a78a"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0248,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/preflight-container.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=picturas-eval-6b6293b9a78a"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0275,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/preflight-volume.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=picturas-eval-6b6293b9a78a"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0277,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/preflight-network.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "ls",
+        "-q",
+        "--filter",
+        "reference=picturas-eval-6b6293b9a78a-*"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0316,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/preflight-image.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "config",
+        "--format",
+        "json"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.1887,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/compose-config.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "build",
+        "video_effects_tool"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.3847,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-effects-pytest-build.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_effects_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.036,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video_effects_tool-image.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_effects/tests:/app/tests:ro",
+        "--entrypoint",
+        "python",
+        "video_effects_tool",
+        "-c",
+        "import hashlib,json,subprocess,sys; digest=lambda path:hashlib.sha256(open(path,'rb').read()).hexdigest(); version=lambda name:subprocess.run([name,'-version'],capture_output=True,text=True).stdout.splitlines()[0]; print(json.dumps({'hashes':{path:digest(path) for path in sys.argv[1:]},'python':sys.version.split()[0],'ffmpeg':version('ffmpeg'),'ffprobe':version('ffprobe')}))",
+        "/app/effects.py",
+        "/app/video_effects.py",
+        "/app/utils/__init__.py",
+        "/app/utils/env.py",
+        "/app/utils/img_handler.py",
+        "/app/utils/rabbit_mq.py",
+        "/app/utils/tool_msg.py",
+        "/app/tests/conftest.py",
+        "/app/tests/test_effects.py"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.1287,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-effects-pytest-attest.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_effects/tests:/app/tests:ro",
+        "--entrypoint",
+        "sh",
+        "video_effects_tool",
+        "-c",
+        "set -eu; python --version; ffmpeg -version | head -n 1; ffprobe -version | head -n 1; python -m pip install --disable-pip-version-check --quiet pytest==9.2.0; python -m pytest --version; python -m pip freeze; echo EVALUATION_TEST_START; python -m pytest -q tests"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 12.1159,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-effects-pytest-test.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "build",
+        "video_subtitles_tool"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 3.4944,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-subtitles-pytest-build.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_subtitles_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.074,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video_subtitles_tool-image.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_subtitles/tests:/app/tests:ro",
+        "--entrypoint",
+        "python",
+        "video_subtitles_tool",
+        "-c",
+        "import hashlib,json,subprocess,sys; digest=lambda path:hashlib.sha256(open(path,'rb').read()).hexdigest(); version=lambda name:subprocess.run([name,'-version'],capture_output=True,text=True).stdout.splitlines()[0]; print(json.dumps({'hashes':{path:digest(path) for path in sys.argv[1:]},'python':sys.version.split()[0],'ffmpeg':version('ffmpeg'),'ffprobe':version('ffprobe')}))",
+        "/app/subtitles.py",
+        "/app/video_subtitles.py",
+        "/app/utils/__init__.py",
+        "/app/utils/env.py",
+        "/app/utils/img_handler.py",
+        "/app/utils/rabbit_mq.py",
+        "/app/utils/tool_msg.py",
+        "/app/tests/conftest.py",
+        "/app/tests/test_subtitles.py"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.5496,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-subtitles-pytest-attest.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_subtitles/tests:/app/tests:ro",
+        "--entrypoint",
+        "sh",
+        "video_subtitles_tool",
+        "-c",
+        "set -eu; python --version; ffmpeg -version | head -n 1; ffprobe -version | head -n 1; python -m pip install --disable-pip-version-check --quiet pytest==9.2.0; python -m pytest --version; python -m pip freeze; echo EVALUATION_TEST_START; python -m pytest -q tests"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 5.6945,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-subtitles-pytest-test.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "build",
+        "video_frames_tool"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.2776,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-frames-pytest-build.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_frames_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0713,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video_frames_tool-image.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_frames/tests:/app/tests:ro",
+        "--entrypoint",
+        "python",
+        "video_frames_tool",
+        "-c",
+        "import hashlib,json,subprocess,sys; digest=lambda path:hashlib.sha256(open(path,'rb').read()).hexdigest(); version=lambda name:subprocess.run([name,'-version'],capture_output=True,text=True).stdout.splitlines()[0]; print(json.dumps({'hashes':{path:digest(path) for path in sys.argv[1:]},'python':sys.version.split()[0],'ffmpeg':version('ffmpeg'),'ffprobe':version('ffprobe')}))",
+        "/app/frame_extraction.py",
+        "/app/video_frames.py",
+        "/app/utils/__init__.py",
+        "/app/utils/env.py",
+        "/app/utils/img_handler.py",
+        "/app/utils/rabbit_mq.py",
+        "/app/utils/tool_msg.py",
+        "/app/tests/conftest.py",
+        "/app/tests/test_frame_extraction.py"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.1919,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-frames-pytest-attest.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_frames/tests:/app/tests:ro",
+        "--entrypoint",
+        "sh",
+        "video_frames_tool",
+        "-c",
+        "set -eu; python --version; ffmpeg -version | head -n 1; ffprobe -version | head -n 1; python -m pip install --disable-pip-version-check --quiet pytest==9.2.0; python -m pytest --version; python -m pip freeze; echo EVALUATION_TEST_START; python -m pytest -q tests"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 21.5732,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/video-frames-pytest-test.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "build",
+        "projects"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.5355,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/projects-node-test-build.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-projects:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0669,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/projects-image.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/projects/tests:/app/tests:ro",
+        "--entrypoint",
+        "node",
+        "projects",
+        "-e",
+        "const fs=require('fs'),c=require('crypto'),cp=require('child_process');const hash=p=>c.createHash('sha256').update(fs.readFileSync(p)).digest('hex');const v=p=>cp.execFileSync(p,['-version'],{encoding:'utf8'}).split(String.fromCharCode(10))[0];console.log(JSON.stringify({hashes:Object.fromEntries(process.argv.slice(1).map(p=>[p,hash(p)])),node:process.version,npm:cp.execFileSync('npm',['--version'],{encoding:'utf8'}).trim(),ffmpeg:v('ffmpeg'),ffprobe:v('ffprobe')}))",
+        "/app/tests/frame-extraction.test.js",
+        "/app/tests/process-batch.test.js",
+        "/app/tests/video-pipeline.test.js",
+        "/app/tests/video-validation.test.js",
+        "/app/utils/video.js",
+        "/app/utils/project_msg.js",
+        "/app/utils/frameResults.js",
+        "/app/utils/processBatch.js",
+        "/app/routes/projects.js"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 1.8902,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/projects-node-test-attest.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "run",
+        "-T",
+        "--no-deps",
+        "--rm",
+        "-v",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/projects/tests:/app/tests:ro",
+        "--entrypoint",
+        "sh",
+        "projects",
+        "-c",
+        "set -eu; node --version; npm --version; echo EVALUATION_TEST_START; node --test \"$@\"",
+        "evaluation-sh",
+        "tests/frame-extraction.test.js",
+        "tests/process-batch.test.js",
+        "tests/video-pipeline.test.js",
+        "tests/video-validation.test.js"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.9659,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/projects-node-test-test.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "/tmp/picturas-evaluation-8p0jf4l5/source/docker-compose.yaml",
+        "--project-directory",
+        "/tmp/picturas-evaluation-8p0jf4l5/source",
+        "-p",
+        "picturas-eval-6b6293b9a78a",
+        "down",
+        "--remove-orphans"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.313,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/cleanup-down.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_image_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.031,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_image_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "picturas-eval-6b6293b9a78a_image_data"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0291,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-volume-picturas-eval-6b6293b9a78a_image_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_project_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0362,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_project_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "picturas-eval-6b6293b9a78a_project_data"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.035,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-volume-picturas-eval-6b6293b9a78a_project_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_rabbitmq_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0131,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_rabbitmq_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "picturas-eval-6b6293b9a78a_rabbitmq_data"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0202,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-volume-picturas-eval-6b6293b9a78a_rabbitmq_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_seaweedfs_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0197,
+      "exit_code": 1,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_seaweedfs_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_subscription_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0231,
+      "exit_code": 1,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_subscription_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_user_data",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0283,
+      "exit_code": 1,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_user_data.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "picturas-eval-6b6293b9a78a_whisper_models",
+        "--format",
+        "{{json .Labels}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0286,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-volume-picturas-eval-6b6293b9a78a_whisper_models.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "picturas-eval-6b6293b9a78a_whisper_models"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0262,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-volume-picturas-eval-6b6293b9a78a_whisper_models.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_effects_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0705,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-cleanup-image-video_effects_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "rm",
+        "picturas-eval-6b6293b9a78a-video_effects_tool:latest"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.1232,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-image-video_effects_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_subtitles_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0369,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-cleanup-image-video_subtitles_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "rm",
+        "picturas-eval-6b6293b9a78a-video_subtitles_tool:latest"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.1878,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-image-video_subtitles_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-video_frames_tool:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0476,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-cleanup-image-video_frames_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "rm",
+        "picturas-eval-6b6293b9a78a-video_frames_tool:latest"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.1566,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-image-video_frames_tool.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "picturas-eval-6b6293b9a78a-projects:latest",
+        "--format",
+        "{{.Id}}"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.0523,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/inspect-cleanup-image-projects.log"
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "rm",
+        "picturas-eval-6b6293b9a78a-projects:latest"
+      ],
+      "cwd": "/tmp/picturas-evaluation-8p0jf4l5/source",
+      "duration_seconds": 0.1814,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-m3-m4-20261121-refactored/functional/logs/remove-image-projects.log"
+    }
+  ],
+  "contexts": {
+    "projects": {
+      "context": "/tmp/picturas-evaluation-8p0jf4l5/source/projects",
+      "dockerfile": "/tmp/picturas-evaluation-8p0jf4l5/source/projects/Dockerfile",
+      "dockerfile_sha256": "162a1695452d7962e012477b0e5f8e13ae1d2b30c96aa4412bf77222dd2d79ac",
+      "named_volumes": [
+        "image_data"
+      ]
+    },
+    "video_effects_tool": {
+      "context": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools",
+      "dockerfile": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_effects/Dockerfile",
+      "dockerfile_sha256": "ab5f7453dc5407e8529c2dba12416ef4a36294fb52d18a1b4a537ff2c6126d61",
+      "named_volumes": [
+        "image_data"
+      ]
+    },
+    "video_frames_tool": {
+      "context": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools",
+      "dockerfile": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_frames/Dockerfile",
+      "dockerfile_sha256": "9af84f7f86b91cb46ddff43784d79d057fee5d5cb899c5164ccefbd5d5be6bde",
+      "named_volumes": [
+        "image_data"
+      ]
+    },
+    "video_subtitles_tool": {
+      "context": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools",
+      "dockerfile": "/tmp/picturas-evaluation-8p0jf4l5/source/Tools/video_subtitles/Dockerfile",
+      "dockerfile_sha256": "3d50d586dd1f72d261805523d67635b5303b5eef6cf6b8350a6aa2e9ac467070",
+      "named_volumes": [
+        "image_data",
+        "whisper_models"
+      ]
+    }
+  },
+  "docker_versions": {
+    "compose": "Docker Compose version 5.8.0",
+    "daemon": "29.10.0",
+    "docker": "Docker version 29.10.0, build fdd4b8e5da"
+  },
+  "project": "picturas-eval-6b6293b9a78a",
+  "run_id": "role-layout-m3-m4-20261121-refactored",
+  "status": "complete",
+  "suites": [
+    {
+      "build_duration_seconds": 1.3847,
+      "counts": {
+        "passed": 29
+      },
+      "duration_seconds": 12.1159,
+      "id": "video-effects-pytest",
+      "image_id": "sha256:53031b2599e972a73909a18e77b63f50ffdba4ab0ad30ee78707a594864f2371",
+      "kind": "python-pytest",
+      "provenance": {
+        "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+        "hashes": {
+          "/app/effects.py": "6f9948f4f77412b1bb465d54e4dfb194162a38cafb71f83d6c59ce4632ace9b6",
+          "/app/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+          "/app/tests/test_effects.py": "d53f271ab6544ba25a8cb4d2ea9effad1ddf70668e93b3c48c0a19e797f65dcb",
+          "/app/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "/app/utils/env.py": "11380b3aa2971e6d360081dfebf2494d85dc3535cbcba3bb568f0dba485c27f9",
+          "/app/utils/img_handler.py": "0fb95ae759a70b26b9a8a8e6cfa6c66e2e8112f7892b5f32b13a5ecbcf4a843f",
+          "/app/utils/rabbit_mq.py": "79a4b5e1dd1d76500ecc4889768f73b569565ab593ccd423b3a01d05116db1f6",
+          "/app/utils/tool_msg.py": "9fadf3c436f34b7519ae67bbac0aeb3437f2a7b0e22a1f259175d85ca71d4de9",
+          "/app/video_effects.py": "08f04c7b52ea58bd462893f69db5954b6a05c5e2ef39c7f0444e85e14349fb17"
+        },
+        "python": "3.11.16",
+        "verified_file_count": 9
+      },
+      "reported_duration_seconds": 8.93,
+      "service": "video_effects_tool",
+      "status": "passed",
+      "test_files": {
+        "Tools/video_effects/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+        "Tools/video_effects/tests/test_effects.py": "d53f271ab6544ba25a8cb4d2ea9effad1ddf70668e93b3c48c0a19e797f65dcb"
+      },
+      "test_log": "logs/video-effects-pytest-test.log"
+    },
+    {
+      "build_duration_seconds": 3.4944,
+      "counts": {
+        "passed": 9
+      },
+      "duration_seconds": 5.6945,
+      "id": "video-subtitles-pytest",
+      "image_id": "sha256:09031b14a5b17c146c7408c1b76e073862b89bf9cc677a51538a01664eba2f83",
+      "kind": "python-pytest",
+      "provenance": {
+        "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+        "hashes": {
+          "/app/subtitles.py": "f48b8dee7e4e97d2b2b7e6548d318427ca2c51df56606803898d8488f86fc08b",
+          "/app/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+          "/app/tests/test_subtitles.py": "fa07a363b7f1d70f9c4c03b3f3d09b398fb98c4a96b755da293c266aaa89f98b",
+          "/app/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "/app/utils/env.py": "11380b3aa2971e6d360081dfebf2494d85dc3535cbcba3bb568f0dba485c27f9",
+          "/app/utils/img_handler.py": "0fb95ae759a70b26b9a8a8e6cfa6c66e2e8112f7892b5f32b13a5ecbcf4a843f",
+          "/app/utils/rabbit_mq.py": "79a4b5e1dd1d76500ecc4889768f73b569565ab593ccd423b3a01d05116db1f6",
+          "/app/utils/tool_msg.py": "9fadf3c436f34b7519ae67bbac0aeb3437f2a7b0e22a1f259175d85ca71d4de9",
+          "/app/video_subtitles.py": "015d9df6ceb47e5dcff40f2873e138daed2a102b6879dff20ac421077448c469"
+        },
+        "python": "3.11.16",
+        "verified_file_count": 9
+      },
+      "reported_duration_seconds": 2.27,
+      "service": "video_subtitles_tool",
+      "status": "passed",
+      "test_files": {
+        "Tools/video_subtitles/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+        "Tools/video_subtitles/tests/test_subtitles.py": "fa07a363b7f1d70f9c4c03b3f3d09b398fb98c4a96b755da293c266aaa89f98b"
+      },
+      "test_log": "logs/video-subtitles-pytest-test.log"
+    },
+    {
+      "build_duration_seconds": 1.2776,
+      "counts": {
+        "passed": 15
+      },
+      "duration_seconds": 21.5732,
+      "id": "video-frames-pytest",
+      "image_id": "sha256:90b63a16c4a968640dd444792ef091716bf5971984beccf6b824227671dcb644",
+      "kind": "python-pytest",
+      "provenance": {
+        "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+        "hashes": {
+          "/app/frame_extraction.py": "a158f4c861706dc577631fb2137a9eae53e8d8f034489e3690d61b71a52cbbca",
+          "/app/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+          "/app/tests/test_frame_extraction.py": "65ab96dc45bb4cd901871d8ab92efcb4f89e6f2f32fc96d30323d0ff0f689103",
+          "/app/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "/app/utils/env.py": "11380b3aa2971e6d360081dfebf2494d85dc3535cbcba3bb568f0dba485c27f9",
+          "/app/utils/img_handler.py": "0fb95ae759a70b26b9a8a8e6cfa6c66e2e8112f7892b5f32b13a5ecbcf4a843f",
+          "/app/utils/rabbit_mq.py": "79a4b5e1dd1d76500ecc4889768f73b569565ab593ccd423b3a01d05116db1f6",
+          "/app/utils/tool_msg.py": "9fadf3c436f34b7519ae67bbac0aeb3437f2a7b0e22a1f259175d85ca71d4de9",
+          "/app/video_frames.py": "c93905ae7cd41c172b1f4df245ec0b992baacb494ca44c97a3efa651f10ab4d7"
+        },
+        "python": "3.11.16",
+        "verified_file_count": 9
+      },
+      "reported_duration_seconds": 18.58,
+      "service": "video_frames_tool",
+      "status": "passed",
+      "test_files": {
+        "Tools/video_frames/tests/conftest.py": "42dc12d0574b3993cc9814eb5182a2daa9061da6c932401396c4e22d8622b9cb",
+        "Tools/video_frames/tests/test_frame_extraction.py": "65ab96dc45bb4cd901871d8ab92efcb4f89e6f2f32fc96d30323d0ff0f689103"
+      },
+      "test_log": "logs/video-frames-pytest-test.log"
+    },
+    {
+      "build_duration_seconds": 1.5355,
+      "counts": {
+        "cancelled": 0,
+        "fail": 0,
+        "pass": 19,
+        "skipped": 0,
+        "tests": 19
+      },
+      "duration_seconds": 0.9659,
+      "id": "projects-node-test",
+      "image_id": "sha256:cabf3f9b405b190e5ef051f39b93af1df8edaa287bee1667e0c2ea7f9c3196a4",
+      "kind": "node-test",
+      "provenance": {
+        "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+        "hashes": {
+          "/app/routes/projects.js": "4b6b058e2d5455c6f6fcbcdd4e60ce1a113443d45baafba1cc1889b72301bc8b",
+          "/app/tests/frame-extraction.test.js": "f532d9f91c8213f9d1d6fac2135beec910fb7cfb27a8f6f5bc0a2bf94514585c",
+          "/app/tests/process-batch.test.js": "600105d8197f9e4b646029544f3baffaa17836ff925bc5349a9365607f331818",
+          "/app/tests/video-pipeline.test.js": "8292e9f4f833303c02b77cf8bb41df5dc3c0e6df7875b436a1a5bddd69031097",
+          "/app/tests/video-validation.test.js": "69710c71cc052a30fe8d5e2cd3a33c9ef09c7362a16ca9eef02a0c2e5f0dd404",
+          "/app/utils/frameResults.js": "a1af92d73d114e4a2cfa43b41386f3ad12738dfb4165876b928a79e68515b37e",
+          "/app/utils/processBatch.js": "055f1e1781ca0d6e6830b7ee915cf71e67e1837420cbc7c409192dd45aef4634",
+          "/app/utils/project_msg.js": "9966a4d09fa114d4e6037b720dff43e749ce75ef4ea1e05a6c6b2eeca113abca",
+          "/app/utils/video.js": "68571239ae9a5396f60761c5b95172ff4e740d4838b38c72f416c9c61172a732"
+        },
+        "node": "v26.10.0",
+        "npm": "11.19.1",
+        "verified_file_count": 9
+      },
+      "reported_duration_seconds": 0.071983275,
+      "service": "projects",
+      "status": "passed",
+      "test_files": {
+        "projects/tests/frame-extraction.test.js": "f532d9f91c8213f9d1d6fac2135beec910fb7cfb27a8f6f5bc0a2bf94514585c",
+        "projects/tests/process-batch.test.js": "600105d8197f9e4b646029544f3baffaa17836ff925bc5349a9365607f331818",
+        "projects/tests/video-pipeline.test.js": "8292e9f4f833303c02b77cf8bb41df5dc3c0e6df7875b436a1a5bddd69031097",
+        "projects/tests/video-validation.test.js": "69710c71cc052a30fe8d5e2cd3a33c9ef09c7362a16ca9eef02a0c2e5f0dd404"
+      },
+      "test_log": "logs/projects-node-test-test.log"
+    }
+  ],
+  "verification_status": "passed"
+}

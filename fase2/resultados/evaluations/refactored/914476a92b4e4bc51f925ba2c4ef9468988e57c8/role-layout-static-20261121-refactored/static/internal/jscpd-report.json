@@ -1,0 +1,603 @@
+{
+  "duplicates": [
+    {
+      "firstFile": {
+        "end": 129,
+        "endLoc": {
+          "column": 73,
+          "line": 129,
+          "position": 4072
+        },
+        "name": "Tools/video_effects/effects.py",
+        "start": 105,
+        "startLoc": {
+          "column": 53,
+          "line": 105,
+          "position": 3099
+        }
+      },
+      "format": "python",
+      "fragment": "    \"\"\"Reads the video characteristics with ffprobe.\"\"\"\n    cmd = [\n        \"ffprobe\", \"-v\", \"error\", \"-print_format\", \"json\",\n        \"-show_format\", \"-show_streams\", path,\n    ]\n    res = subprocess.run(cmd, capture_output=True, text=True)\n    if res.returncode != 0:\n        raise InvalidVideo(f\"Unreadable video file: {res.stderr.strip()[:200]}\")\n\n    data = json.loads(res.stdout or \"{}\")\n    streams = data.get(\"streams\", [])\n    video = next((s for s in streams if s.get(\"codec_type\") == \"video\"), None)\n    audio = next((s for s in streams if s.get(\"codec_type\") == \"audio\"), None)\n    if video is None:\n        raise InvalidVideo(\"The file has no video stream\")\n\n    fmt = data.get(\"format\", {})\n    duration = float(\n        (video.get(\"duration\") if prefer_video_duration else None)\n        or fmt.get(\"duration\") or video.get(\"duration\") or 0\n    )\n    if duration <= 0:\n        raise InvalidVideo(\"Could not determine the video duration\")\n\n    fps_str = video.get(\"avg_frame_rate\") or video.get(\"r_frame_rate\") or \"0/1\"",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 25,
+      "secondFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 73,
+          "line": 78,
+          "position": 3041
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 54,
+        "startLoc": {
+          "column": 49,
+          "line": 54,
+          "position": 2068
+        }
+      },
+      "tokens": 203
+    },
+    {
+      "firstFile": {
+        "end": 151,
+        "endLoc": {
+          "column": 3,
+          "line": 151,
+          "position": 4694
+        },
+        "name": "Tools/video_effects/effects.py",
+        "start": 135,
+        "startLoc": {
+          "column": 31,
+          "line": 135,
+          "position": 4237
+        }
+      },
+      "format": "python",
+      "fragment": "        fps_str, fps = \"25/1\", 25.0\n\n    return {\n        \"duration\": duration,\n        \"width\": int(video[\"width\"]),\n        \"height\": int(video[\"height\"]),\n        \"fps\": fps,\n        \"fps_str\": fps_str,\n        \"video_codec\": video.get(\"codec_name\"),\n        \"audio_codec\": audio.get(\"codec_name\") if audio else None,\n        \"has_audio\": audio is not None,\n        \"format_name\": fmt.get(\"format_name\"),\n        \"size_bytes\": int(fmt.get(\"size\") or os.path.getsize(path)),\n    }\n\n\ndef resolve_trim(tools: list, duration: float) -> tuple:",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 98,
+        "endLoc": {
+          "column": 3,
+          "line": 98,
+          "position": 3612
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 82,
+        "startLoc": {
+          "column": 14,
+          "line": 82,
+          "position": 3155
+        }
+      },
+      "tokens": 96
+    },
+    {
+      "firstFile": {
+        "end": 54,
+        "endLoc": {
+          "column": 95,
+          "line": 54,
+          "position": 1483
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 47,
+        "startLoc": {
+          "column": 24,
+          "line": 47,
+          "position": 1053
+        }
+      },
+      "format": "python",
+      "fragment": "class VideoEffectsWorker:\n    def __init__(self):\n        self._connection = self._connect()\n        self._channel = self._connection.channel()\n        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 44,
+        "endLoc": {
+          "column": 95,
+          "line": 44,
+          "position": 1268
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 37,
+        "startLoc": {
+          "column": 23,
+          "line": 37,
+          "position": 838
+        }
+      },
+      "tokens": 79
+    },
+    {
+      "firstFile": {
+        "end": 54,
+        "endLoc": {
+          "column": 95,
+          "line": 54,
+          "position": 1483
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 47,
+        "startLoc": {
+          "column": 24,
+          "line": 47,
+          "position": 1053
+        }
+      },
+      "format": "python",
+      "fragment": "class VideoEffectsWorker:\n    def __init__(self):\n        self._connection = self._connect()\n        self._channel = self._connection.channel()\n        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 44,
+        "endLoc": {
+          "column": 95,
+          "line": 44,
+          "position": 1260
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 37,
+        "startLoc": {
+          "column": 26,
+          "line": 37,
+          "position": 830
+        }
+      },
+      "tokens": 79
+    },
+    {
+      "firstFile": {
+        "end": 77,
+        "endLoc": {
+          "column": 25,
+          "line": 77,
+          "position": 2408
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 56,
+        "startLoc": {
+          "column": 8,
+          "line": 56,
+          "position": 1567
+        }
+      },
+      "format": "python",
+      "fragment": "        self._channel.basic_qos(prefetch_count=1)\n\n    @staticmethod\n    def _connect():\n        credentials = pika.PlainCredentials(env.RABBITMQ_USERNAME, env.RABBITMQ_PASSWORD)\n        params = pika.ConnectionParameters(\n            env.RABBITMQ_HOST, int(env.RABBITMQ_PORT), \"/\", credentials,\n            heartbeat=0,\n        )\n        for attempt in range(30):\n            try:\n                return pika.BlockingConnection(params)\n            except pika.exceptions.AMQPConnectionError:\n                time.sleep(2)\n        raise RuntimeError(\"Could not connect to RabbitMQ\")\n\n    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\"type\": \"video\", \"imageURI\": video_info.get(\"output_path\", output_uri)}",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 67,
+        "endLoc": {
+          "column": 19,
+          "line": 67,
+          "position": 2131
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 45,
+        "startLoc": {
+          "column": 8,
+          "line": 45,
+          "position": 1277
+        }
+      },
+      "tokens": 144
+    },
+    {
+      "firstFile": {
+        "end": 79,
+        "endLoc": {
+          "column": 26,
+          "line": 79,
+          "position": 2538
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 72,
+        "startLoc": {
+          "column": 17,
+          "line": 72,
+          "position": 2160
+        }
+      },
+      "format": "python",
+      "fragment": "    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\"type\": \"video\", \"imageURI\": video_info.get(\"output_path\", output_uri)}\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 8,
+      "secondFile": {
+        "end": 68,
+        "endLoc": {
+          "column": 26,
+          "line": 68,
+          "position": 2240
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 61,
+        "startLoc": {
+          "column": 17,
+          "line": 61,
+          "position": 1862
+        }
+      },
+      "tokens": 72
+    },
+    {
+      "firstFile": {
+        "end": 93,
+        "endLoc": {
+          "column": 26,
+          "line": 93,
+          "position": 3054
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 79,
+        "startLoc": {
+          "column": 48,
+          "line": 79,
+          "position": 2560
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"output\": output,\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n                \"video\": video_info,\n            },\n        })\n\n    def _reply_error(self, msg_id, started, code, message, input_uri):\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 87,
+        "endLoc": {
+          "column": 26,
+          "line": 87,
+          "position": 2937
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 73,
+        "startLoc": {
+          "column": 55,
+          "line": 73,
+          "position": 2443
+        }
+      },
+      "tokens": 80
+    },
+    {
+      "firstFile": {
+        "end": 93,
+        "endLoc": {
+          "column": 26,
+          "line": 93,
+          "position": 3054
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 79,
+        "startLoc": {
+          "column": 48,
+          "line": 79,
+          "position": 2560
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"output\": output,\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n                \"video\": video_info,\n            },\n        })\n\n    def _reply_error(self, msg_id, started, code, message, input_uri):\n        self._publish(PROJECT_QUEUE, {\n            \"messageId\": f\"video-{uuid.uuid4()}\",",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 82,
+        "endLoc": {
+          "column": 26,
+          "line": 82,
+          "position": 2766
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 68,
+        "startLoc": {
+          "column": 58,
+          "line": 68,
+          "position": 2272
+        }
+      },
+      "tokens": 80
+    },
+    {
+      "firstFile": {
+        "end": 131,
+        "endLoc": {
+          "column": 45,
+          "line": 131,
+          "position": 4440
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 93,
+        "startLoc": {
+          "column": 48,
+          "line": 93,
+          "position": 3076
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"error\",\n            \"error\": {\n                \"code\": code,\n                \"message\": message,\n                \"msg\": message,\n                \"details\": {\"inputFileURI\": input_uri},\n            },\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n            },\n        })\n\n    def _progress(self, progress, preview, percent):\n        if not progress or not progress.get(\"user\"):\n            return\n        self._publish(WS_QUEUE, {\n            \"messageId\": f\"update-client-video-progress-{uuid.uuid4()}\",\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"user\": progress[\"user\"],\n            \"projectId\": progress.get(\"projectId\"),\n            \"imgId\": progress.get(\"imgId\"),\n            \"preview\": bool(preview),\n            \"percent\": percent,\n        })\n\n    def callback(self, ch, method, properties, body):\n        started = now()\n        try:\n            info = json.loads(body.decode())\n            msg_id = info[\"messageId\"]\n            params = info[\"parameters\"]\n            input_uri = params[\"inputImageURI\"]\n            output_uri = params[\"outputImageURI\"]\n            tools = params.get(\"tools\") or []",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 39,
+      "secondFile": {
+        "end": 125,
+        "endLoc": {
+          "column": 45,
+          "line": 125,
+          "position": 4330
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 87,
+        "startLoc": {
+          "column": 55,
+          "line": 87,
+          "position": 2966
+        }
+      },
+      "tokens": 228
+    },
+    {
+      "firstFile": {
+        "end": 130,
+        "endLoc": {
+          "column": 49,
+          "line": 130,
+          "position": 4394
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 93,
+        "startLoc": {
+          "column": 48,
+          "line": 93,
+          "position": 3076
+        }
+      },
+      "format": "python",
+      "fragment": "            \"messageId\": f\"video-{uuid.uuid4()}\",\n            \"correlationId\": msg_id,\n            \"timestamp\": now().isoformat(),\n            \"status\": \"error\",\n            \"error\": {\n                \"code\": code,\n                \"message\": message,\n                \"msg\": message,\n                \"details\": {\"inputFileURI\": input_uri},\n            },\n            \"metadata\": {\n                \"processingTime\": (now() - started).total_seconds() * 1000,\n                \"microservice\": MICROSERVICE,\n            },\n        })\n\n    def _progress(self, progress, preview, percent):\n        if not progress or not progress.get(\"user\"):\n            return\n        self._publish(WS_QUEUE, {\n            \"messageId\": f\"update-client-video-progress-{uuid.uuid4()}\",\n            \"timestamp\": now().isoformat(),\n            \"status\": \"success\",\n            \"user\": progress[\"user\"],\n            \"projectId\": progress.get(\"projectId\"),\n            \"imgId\": progress.get(\"imgId\"),\n            \"preview\": bool(preview),\n            \"percent\": percent,\n        })\n\n    def callback(self, ch, method, properties, body):\n        started = now()\n        try:\n            info = json.loads(body.decode())\n            msg_id = info[\"messageId\"]\n            params = info[\"parameters\"]\n            input_uri = params[\"inputImageURI\"]\n            output_uri = params[\"outputImageURI\"]",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 38,
+      "secondFile": {
+        "end": 119,
+        "endLoc": {
+          "column": 49,
+          "line": 119,
+          "position": 4116
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 82,
+        "startLoc": {
+          "column": 58,
+          "line": 82,
+          "position": 2798
+        }
+      },
+      "tokens": 217
+    },
+    {
+      "firstFile": {
+        "end": 171,
+        "endLoc": {
+          "column": 15,
+          "line": 171,
+          "position": 6544
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 160,
+        "startLoc": {
+          "column": 72,
+          "line": 160,
+          "position": 6009
+        }
+      },
+      "format": "python",
+      "fragment": "                self._reply_error(msg_id, started, CODES[\"invalid_speed\"], str(e), input_uri)\n            except InvalidVideo as e:\n                self._reply_error(msg_id, started, CODES[\"invalid_video\"], str(e), input_uri)\n            except Exception as e:  # noqa: BLE001\n                self._reply_error(msg_id, started, CODES[\"error_processing\"], str(e), input_uri)\n\n        ch.basic_ack(delivery_tag=method.delivery_tag)\n\n    def run(self):\n        self._channel.basic_consume(queue=VIDEO_QUEUE, on_message_callback=self.callback,\n                                    auto_ack=False)\n        print(f\"[video_effects] waiting for jobs on {VIDEO_QUEUE}\", flush=True)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 163,
+        "endLoc": {
+          "column": 15,
+          "line": 163,
+          "position": 6241
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 152,
+        "startLoc": {
+          "column": 77,
+          "line": 152,
+          "position": 5706
+        }
+      },
+      "tokens": 99
+    },
+    {
+      "firstFile": {
+        "end": 171,
+        "endLoc": {
+          "column": 15,
+          "line": 171,
+          "position": 6544
+        },
+        "name": "Tools/video_effects/video_effects.py",
+        "start": 160,
+        "startLoc": {
+          "column": 92,
+          "line": 160,
+          "position": 6029
+        }
+      },
+      "format": "python",
+      "fragment": "                self._reply_error(msg_id, started, CODES[\"invalid_speed\"], str(e), input_uri)\n            except InvalidVideo as e:\n                self._reply_error(msg_id, started, CODES[\"invalid_video\"], str(e), input_uri)\n            except Exception as e:  # noqa: BLE001\n                self._reply_error(msg_id, started, CODES[\"error_processing\"], str(e), input_uri)\n\n        ch.basic_ack(delivery_tag=method.delivery_tag)\n\n    def run(self):\n        self._channel.basic_consume(queue=VIDEO_QUEUE, on_message_callback=self.callback,\n                                    auto_ack=False)\n        print(f\"[video_effects] waiting for jobs on {VIDEO_QUEUE}\", flush=True)",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 153,
+        "endLoc": {
+          "column": 15,
+          "line": 153,
+          "position": 5762
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 142,
+        "startLoc": {
+          "column": 32,
+          "line": 142,
+          "position": 5247
+        }
+      },
+      "tokens": 91
+    },
+    {
+      "firstFile": {
+        "end": 71,
+        "endLoc": {
+          "column": 21,
+          "line": 71,
+          "position": 2741
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 53,
+        "startLoc": {
+          "column": 56,
+          "line": 53,
+          "position": 2008
+        }
+      },
+      "format": "python",
+      "fragment": "def probe(path: str, prefer_video_duration: bool = False) -> dict:\n    \"\"\"Reads video characteristics with ffprobe.\"\"\"\n    cmd = [\n        \"ffprobe\", \"-v\", \"error\", \"-print_format\", \"json\",\n        \"-show_format\", \"-show_streams\", path,\n    ]\n    res = subprocess.run(cmd, capture_output=True, text=True)\n    if res.returncode != 0:\n        raise InvalidVideo(f\"Unreadable video file: {res.stderr.strip()[:200]}\")\n\n    data = json.loads(res.stdout or \"{}\")\n    streams = data.get(\"streams\", [])\n    video = next((s for s in streams if s.get(\"codec_type\") == \"video\"), None)\n    audio = next((s for s in streams if s.get(\"codec_type\") == \"audio\"), None)\n    if video is None:\n        raise InvalidVideo(\"The file has no video stream\")\n\n    fmt = data.get(\"format\", {})\n    duration = float(",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 21,
+          "line": 78,
+          "position": 2840
+        },
+        "name": "Tools/video_subtitles/subtitles.py",
+        "start": 60,
+        "startLoc": {
+          "column": 19,
+          "line": 60,
+          "position": 2107
+        }
+      },
+      "tokens": 154
+    },
+    {
+      "firstFile": {
+        "end": 98,
+        "endLoc": {
+          "column": 3,
+          "line": 98,
+          "position": 3612
+        },
+        "name": "Tools/video_frames/frame_extraction.py",
+        "start": 73,
+        "startLoc": {
+          "column": 39,
+          "line": 73,
+          "position": 2848
+        }
+      },
+      "format": "python",
+      "fragment": "        or fmt.get(\"duration\") or video.get(\"duration\") or 0\n    )\n    if duration <= 0:\n        raise InvalidVideo(\"Could not determine the video duration\")\n\n    fps_str = video.get(\"avg_frame_rate\") or video.get(\"r_frame_rate\") or \"25/1\"\n    try:\n        fps = float(Fraction(fps_str))\n    except (ZeroDivisionError, ValueError):\n        fps = 25.0\n\n    return {\n        \"duration\": duration,\n        \"width\": int(video[\"width\"]),\n        \"height\": int(video[\"height\"]),\n        \"fps\": fps,\n        \"fps_str\": fps_str,\n        \"video_codec\": video.get(\"codec_name\"),\n        \"audio_codec\": audio.get(\"codec_name\") if audio else None,\n        \"has_audio\": audio is not None,\n        \"format_name\": fmt.get(\"format_name\"),\n        \"size_bytes\": int(fmt.get(\"size\") or os.path.getsize(path)),\n    }\n\n\ndef extract_frames(input_path, output_path, info, params, progress, preview=False):",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 26,
+      "secondFile": {
+        "end": 102,
+        "endLoc": {
+          "column": 3,
+          "line": 102,
+          "position": 3627
+        },
+        "name": "Tools/video_subtitles/subtitles.py",
+        "start": 78,
+        "startLoc": {
+          "column": 49,
+          "line": 78,
+          "position": 2868
+        }
+      },
+      "tokens": 152
+    },
+    {
+      "firstFile": {
+        "end": 67,
+        "endLoc": {
+          "column": 19,
+          "line": 67,
+          "position": 2131
+        },
+        "name": "Tools/video_frames/video_frames.py",
+        "start": 41,
+        "startLoc": {
+          "column": 21,
+          "line": 41,
+          "position": 979
+        }
+      },
+      "format": "python",
+      "fragment": "        self._channel.exchange_declare(exchange=EXCHANGE,\n                                       exchange_type=ExchangeType.direct, durable=True)\n        self._channel.queue_declare(queue=VIDEO_QUEUE, durable=True)\n        self._channel.queue_bind(queue=VIDEO_QUEUE, exchange=EXCHANGE, routing_key=VIDEO_QUEUE)\n        self._channel.basic_qos(prefetch_count=1)\n\n    @staticmethod\n    def _connect():\n        credentials = pika.PlainCredentials(env.RABBITMQ_USERNAME, env.RABBITMQ_PASSWORD)\n        params = pika.ConnectionParameters(\n            env.RABBITMQ_HOST, int(env.RABBITMQ_PORT), \"/\", credentials,\n            heartbeat=0,\n        )\n        for attempt in range(30):\n            try:\n                return pika.BlockingConnection(params)\n            except pika.exceptions.AMQPConnectionError:\n                time.sleep(2)\n        raise RuntimeError(\"Could not connect to RabbitMQ\")\n\n    def _publish(self, queue, msg):\n        self._channel.basic_publish(exchange=EXCHANGE, routing_key=queue,\n                                    body=json.dumps(msg))\n\n    def _reply_success(self, msg_id, started, output_uri, video_info):\n        output = {\n            \"type\": video_info.get(\"output_type\", \"frames\"),",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 27,
+      "secondFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 25,
+          "line": 66,
+          "position": 2110
+        },
+        "name": "Tools/video_subtitles/video_subtitles.py",
+        "start": 41,
+        "startLoc": {
+          "column": 21,
+          "line": 41,
+          "position": 971
+        }
+      },
+      "tokens": 193
+    }
+  ],
+  "statistics": {
+    "detectionDate": "2026-11-21T18:56:15.221Z",
+    "formats": {
+      "python": {
+        "clones": 15,
+        "duplicatedLines": 291,
+        "duplicatedTokens": 1967,
+        "lines": 1135,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 25.63876651982379,
+        "percentageTokens": 25.980715889578654,
+        "sources": 6,
+        "tokens": 7571
+      }
+    },
+    "total": {
+      "clones": 15,
+      "duplicatedLines": 291,
+      "duplicatedTokens": 1967,
+      "lines": 1135,
+      "newClones": 0,
+      "newDuplicatedLines": 0,
+      "percentage": 25.63876651982379,
+      "percentageTokens": 25.980715889578654,
+      "sources": 6,
+      "tokens": 7571
+    }
+  }
+}

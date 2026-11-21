@@ -1,0 +1,15 @@
+{
+  "observed": [
+    {
+      "case": "trim",
+      "type": "InvalidTrim",
+      "message": "Trim end must be after its start"
+    },
+    {
+      "case": "speed",
+      "type": "InvalidSpeed",
+      "message": "Speed must be between 0.25x and 5.0x (got 6.0x)"
+    }
+  ],
+  "input_sha256": "dfae0d1fe6387c792c8e94700927deb8e282a15c449f4f6fabdcedd72940c4be"
+}

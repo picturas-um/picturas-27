@@ -1,0 +1,468 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-venv/bin/python",
+        "--version"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0021,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/metric_python-version.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-venv/bin/python",
+        "-m",
+        "radon",
+        "--version"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0602,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/radon-version.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd",
+        "--version"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0888,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/jscpd-version.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-venv/bin/python",
+        "-m",
+        "radon",
+        "cc",
+        "Tools/video/effects.py",
+        "Tools/video/frame_extraction.py",
+        "Tools/video/subtitles.py",
+        "Tools/video/video.py",
+        "Tools/video/video_processor.py",
+        "-j"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0719,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/radon-cc.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-venv/bin/python",
+        "-m",
+        "radon",
+        "raw",
+        "Tools/video/effects.py",
+        "Tools/video/frame_extraction.py",
+        "Tools/video/subtitles.py",
+        "Tools/video/video.py",
+        "Tools/video/video_processor.py",
+        "-j"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0767,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/radon-raw.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd",
+        "/tmp/picturas-jscpd-di6a9g74",
+        "--pattern",
+        "**/*.py",
+        "--min-lines",
+        "5",
+        "--min-tokens",
+        "50",
+        "--reporters",
+        "json",
+        "--output",
+        "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/internal",
+        "--silent"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0394,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/internal/command.log"
+    },
+    {
+      "argv": [
+        "/tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd",
+        "/tmp/picturas-jscpd-it1a7nfv",
+        "--pattern",
+        "**/*.py",
+        "--min-lines",
+        "5",
+        "--min-tokens",
+        "50",
+        "--reporters",
+        "json",
+        "--output",
+        "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/video_image",
+        "--silent"
+      ],
+      "cwd": "/tmp/picturas-evaluation-fuue8clq/source",
+      "duration_seconds": 0.0466,
+      "exit_code": 0,
+      "log": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/baseline/ab3ae9cf8efcfa444e9599f8e291551c5930c289/role-layout-static-20261121-baseline/static/video_image/command.log"
+    }
+  ],
+  "metrics": {
+    "inventory": {
+      "module_count": 5,
+      "physical_lines": 807,
+      "status": "complete"
+    },
+    "jscpd_internal": {
+      "clones": 0,
+      "duplicated_line_percentage": 0.0,
+      "duplicated_lines": 0,
+      "files": [
+        "Tools/video/effects.py",
+        "Tools/video/frame_extraction.py",
+        "Tools/video/subtitles.py",
+        "Tools/video/video.py",
+        "Tools/video/video_processor.py"
+      ],
+      "lines": 807,
+      "minimum_lines": 5,
+      "minimum_tokens": 50,
+      "sources": 5,
+      "status": "complete"
+    },
+    "jscpd_video_image": {
+      "combined_sample": {
+        "clones": 25,
+        "duplicated_line_percentage": 16.569954867827207,
+        "duplicated_lines": 257,
+        "files": [
+          "Tools/video/effects.py",
+          "Tools/video/frame_extraction.py",
+          "Tools/video/subtitles.py",
+          "Tools/video/video.py",
+          "Tools/video/video_processor.py",
+          "Tools/binarization/binarization.py",
+          "Tools/border/border.py",
+          "Tools/brightness/brightness.py",
+          "Tools/contrast/contrast.py",
+          "Tools/cut/cut.py",
+          "Tools/resize/resize.py",
+          "Tools/rotate/rotate.py",
+          "Tools/saturation/saturation.py"
+        ],
+        "lines": 1551,
+        "minimum_lines": 5,
+        "minimum_tokens": 50,
+        "sources": 13
+      },
+      "status": "complete",
+      "video_image_cross": {
+        "clone_count": 0,
+        "clones": [],
+        "note": "No cross-boundary percentage: jscpd's combined percentage includes image-image clones."
+      }
+    },
+    "radon_cc": {
+      "block_count": 41,
+      "blocks_by_rank": {
+        "A": 29,
+        "B": 6,
+        "C": 5,
+        "D": 1,
+        "E": 0,
+        "F": 0
+      },
+      "function_method_count": 34,
+      "functions_and_methods": [
+        {
+          "complexity": 6,
+          "line": 67,
+          "module": "Tools/video/effects.py",
+          "name": "apply_frame_effects",
+          "rank": "B"
+        },
+        {
+          "complexity": 2,
+          "line": 31,
+          "module": "Tools/video/effects.py",
+          "name": "binarization",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 11,
+          "module": "Tools/video/effects.py",
+          "name": "brightness",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 15,
+          "module": "Tools/video/effects.py",
+          "name": "contrast",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 19,
+          "module": "Tools/video/effects.py",
+          "name": "saturation",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 23,
+          "module": "Tools/video/effects.py",
+          "name": "rotate",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 27,
+          "module": "Tools/video/effects.py",
+          "name": "resize",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 37,
+          "module": "Tools/video/effects.py",
+          "name": "cut",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 41,
+          "module": "Tools/video/effects.py",
+          "name": "border",
+          "rank": "A"
+        },
+        {
+          "complexity": 14,
+          "line": 50,
+          "module": "Tools/video/frame_extraction.py",
+          "name": "extract_frames",
+          "rank": "C"
+        },
+        {
+          "complexity": 13,
+          "line": 18,
+          "module": "Tools/video/frame_extraction.py",
+          "name": "validate_params",
+          "rank": "C"
+        },
+        {
+          "complexity": 7,
+          "line": 35,
+          "module": "Tools/video/frame_extraction.py",
+          "name": "sampling_times",
+          "rank": "B"
+        },
+        {
+          "complexity": 7,
+          "line": 33,
+          "module": "Tools/video/subtitles.py",
+          "name": "write_captions",
+          "rank": "B"
+        },
+        {
+          "complexity": 4,
+          "line": 52,
+          "module": "Tools/video/subtitles.py",
+          "name": "caption_video",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 16,
+          "module": "Tools/video/subtitles.py",
+          "name": "speech_model",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 25,
+          "module": "Tools/video/subtitles.py",
+          "name": "timestamp",
+          "rank": "A"
+        },
+        {
+          "complexity": 11,
+          "line": 126,
+          "module": "Tools/video/video.py",
+          "name": "callback",
+          "rank": "C"
+        },
+        {
+          "complexity": 3,
+          "line": 57,
+          "module": "Tools/video/video.py",
+          "name": "_connect",
+          "rank": "A"
+        },
+        {
+          "complexity": 3,
+          "line": 112,
+          "module": "Tools/video/video.py",
+          "name": "_progress",
+          "rank": "A"
+        },
+        {
+          "complexity": 2,
+          "line": 76,
+          "module": "Tools/video/video.py",
+          "name": "_reply_success",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 41,
+          "module": "Tools/video/video.py",
+          "name": "now",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 46,
+          "module": "Tools/video/video.py",
+          "name": "__init__",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 72,
+          "module": "Tools/video/video.py",
+          "name": "_publish",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 94,
+          "module": "Tools/video/video.py",
+          "name": "_reply_error",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 172,
+          "module": "Tools/video/video.py",
+          "name": "run",
+          "rank": "A"
+        },
+        {
+          "complexity": 22,
+          "line": 286,
+          "module": "Tools/video/video_processor.py",
+          "name": "process_video",
+          "rank": "D"
+        },
+        {
+          "complexity": 20,
+          "line": 167,
+          "module": "Tools/video/video_processor.py",
+          "name": "_process_video",
+          "rank": "C"
+        },
+        {
+          "complexity": 19,
+          "line": 50,
+          "module": "Tools/video/video_processor.py",
+          "name": "probe",
+          "rank": "C"
+        },
+        {
+          "complexity": 9,
+          "line": 97,
+          "module": "Tools/video/video_processor.py",
+          "name": "resolve_trim",
+          "rank": "B"
+        },
+        {
+          "complexity": 7,
+          "line": 153,
+          "module": "Tools/video/video_processor.py",
+          "name": "validate_tools",
+          "rank": "B"
+        },
+        {
+          "complexity": 6,
+          "line": 124,
+          "module": "Tools/video/video_processor.py",
+          "name": "resolve_speed",
+          "rank": "B"
+        },
+        {
+          "complexity": 4,
+          "line": 140,
+          "module": "Tools/video/video_processor.py",
+          "name": "atempo_chain",
+          "rank": "A"
+        },
+        {
+          "complexity": 3,
+          "line": 255,
+          "module": "Tools/video/video_processor.py",
+          "name": "_start_encoder",
+          "rank": "A"
+        },
+        {
+          "complexity": 1,
+          "line": 281,
+          "module": "Tools/video/video_processor.py",
+          "name": "_read",
+          "rank": "A"
+        }
+      ],
+      "maximum_complexity": 22,
+      "mean_block_complexity": 4.560975609756097,
+      "mean_function_method_complexity": 5.205882352941177,
+      "status": "complete"
+    },
+    "radon_raw": {
+      "average_module_loc": 161.4,
+      "largest_module_loc": 369,
+      "module_count": 5,
+      "modules": [
+        {
+          "loc": 79,
+          "path": "Tools/video/effects.py",
+          "sloc": 45
+        },
+        {
+          "loc": 97,
+          "path": "Tools/video/frame_extraction.py",
+          "sloc": 80
+        },
+        {
+          "loc": 82,
+          "path": "Tools/video/subtitles.py",
+          "sloc": 64
+        },
+        {
+          "loc": 180,
+          "path": "Tools/video/video.py",
+          "sloc": 148
+        },
+        {
+          "loc": 369,
+          "path": "Tools/video/video_processor.py",
+          "sloc": 264
+        }
+      ],
+      "physical_loc": 807,
+      "sloc": 601,
+      "status": "complete"
+    }
+  },
+  "status": "complete",
+  "tool_versions": {
+    "framework_python": "3.14.10",
+    "jscpd": "jscpd 5.4.3",
+    "metric_python": "Python 3.14.10",
+    "radon": "6.0.1"
+  }
+}

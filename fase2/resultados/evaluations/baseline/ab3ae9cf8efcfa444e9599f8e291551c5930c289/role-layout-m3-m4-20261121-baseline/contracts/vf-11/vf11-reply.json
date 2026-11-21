@@ -1,0 +1,56 @@
+{
+  "messageId": "video-9f323494-7a05-48f2-8215-fc77d01419e8",
+  "correlationId": "m4-vf11-request",
+  "timestamp": "2026-11-21T19:04:23.477196+00:00",
+  "status": "success",
+  "output": {
+    "type": "frames",
+    "imageURI": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343",
+    "frames": [
+      {
+        "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0001-000000000ms.png",
+        "time": 0.0
+      },
+      {
+        "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0002-000002000ms.png",
+        "time": 2.0
+      },
+      {
+        "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0003-000004000ms.png",
+        "time": 4.0
+      }
+    ]
+  },
+  "metadata": {
+    "processingTime": 301.35499999999996,
+    "microservice": "picturas-video-tool-ms",
+    "video": {
+      "duration": 6.0,
+      "width": 640,
+      "height": 480,
+      "fps": 25.0,
+      "fps_str": "25/1",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "has_audio": true,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "size_bytes": 63600,
+      "output_type": "frames",
+      "output_path": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343",
+      "frames": [
+        {
+          "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0001-000000000ms.png",
+          "time": 0.0
+        },
+        {
+          "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0002-000002000ms.png",
+          "time": 2.0
+        },
+        {
+          "file": "/evidence/vf11-frames-98ecc2b5b37d453db7fa3a7754edd343/frame-0003-000004000ms.png",
+          "time": 4.0
+        }
+      ]
+    }
+  }
+}

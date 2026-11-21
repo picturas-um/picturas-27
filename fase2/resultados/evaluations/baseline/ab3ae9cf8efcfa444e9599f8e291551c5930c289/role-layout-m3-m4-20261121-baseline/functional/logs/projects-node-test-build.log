@@ -1,0 +1,54 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.08kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 272B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:latest
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/node:latest@sha256:a723b54c35a76e947095a20a67d39585bb09c862e6b1adeb8a9f518f95e34fb0
+#6 resolve docker.io/library/node:latest@sha256:a723b54c35a76e947095a20a67d39585bb09c862e6b1adeb8a9f518f95e34fb0
+#6 resolve docker.io/library/node:latest@sha256:a723b54c35a76e947095a20a67d39585bb09c862e6b1adeb8a9f518f95e34fb0 0.0s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 150.51kB 0.0s done
+#5 DONE 0.0s
+
+#7 [2/5] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [3/5] WORKDIR /app
+#8 CACHED
+
+#9 [4/5] COPY . .
+#9 CACHED
+
+#10 [5/5] RUN npm install
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:7f453bf7f30e7dfa9463d006d83819e14cfa1e10e82173f64e2da0066f0d3d1f 0.0s done
+#11 exporting config sha256:ca1f700428d725ecaa4febd5b9dac782742127b6c24f08f54422347b1ea4940b 0.0s done
+#11 exporting attestation manifest sha256:1d5642c13d02f3fa1ec3a6a35009d0ee1632937079978954aa1aa8dba20df6c2 0.0s done
+#11 exporting manifest list sha256:d04072ddae89251396fbf9e3918bb592e2dbf7d76d02bbda685b55c95687001a 0.0s done
+#11 naming to docker.io/library/picturas-eval-2ab8f7237ade-projects:latest
+#11 naming to docker.io/library/picturas-eval-2ab8f7237ade-projects:latest done
+#11 unpacking to docker.io/library/picturas-eval-2ab8f7237ade-projects:latest 0.0s done
+#11 DONE 0.2s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image picturas-eval-2ab8f7237ade-projects Building 
+ Image picturas-eval-2ab8f7237ade-projects Built 

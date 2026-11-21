@@ -1,0 +1,61 @@
+{
+  "boundary": "video-processing Python core",
+  "core_file_sha256": {
+    "Tools/video/effects.py": "4c833c05e37b8510646a34974b6a1cca3b5d2de6aa0046372f96af542b0406d9",
+    "Tools/video/frame_extraction.py": "b8df35126502980caeec1a7d0ce66f00da08e8dd878b125e9b1f685104cefbf3",
+    "Tools/video/subtitles.py": "a259d3653af7809a4aeb4be31fdffd7b9ef8e8b2e95ca6afb47158e4b260f397",
+    "Tools/video/video.py": "b80c0df63d212bdf0ce4bfaae551e805acee290c483dacbfa4c7b7b820d1c45c",
+    "Tools/video/video_processor.py": "f7734e0c24df0f11914b02b185368a8fb74fe937cbe092e5f9ee3577d27a8305"
+  },
+  "core_python_files": [
+    "Tools/video/effects.py",
+    "Tools/video/frame_extraction.py",
+    "Tools/video/subtitles.py",
+    "Tools/video/video.py",
+    "Tools/video/video_processor.py"
+  ],
+  "excluded": "tests, __init__.py, generated files, and non-video tools",
+  "image_effect_files_for_cross_duplication": [
+    "Tools/binarization/binarization.py",
+    "Tools/border/border.py",
+    "Tools/brightness/brightness.py",
+    "Tools/contrast/contrast.py",
+    "Tools/cut/cut.py",
+    "Tools/resize/resize.py",
+    "Tools/rotate/rotate.py",
+    "Tools/saturation/saturation.py"
+  ],
+  "integration_file_sha256": {
+    "apiGateway/routes/projects.js": "00c4b260d48679051fb252bd3a75ac06b788a56b9c740df7e78fc29f6fa1093c",
+    "docker-compose.yaml": "2607bfa77fcc05ead07da1d5b9b8accd24b71f007be522da57ec4e43c9b66c83",
+    "imageStorageService/server.js": "e6903aabc385c2851b4e975b62cab8d6201368434f78fb085ab2cd4f4be70615",
+    "projects/routes/projects.js": "51afe2603e9fdc1aa788c6b4cf460841a149920f7475f1837f184c9bd7e8336c",
+    "projects/utils/frameResults.js": "a1af92d73d114e4a2cfa43b41386f3ad12738dfb4165876b928a79e68515b37e",
+    "projects/utils/imageStorage.js": "62ac2fa24457d588014a79b9bc066411444698fd28def61acb739c3f70c4a7a5",
+    "projects/utils/processBatch.js": "055f1e1781ca0d6e6830b7ee915cf71e67e1837420cbc7c409192dd45aef4634",
+    "projects/utils/project_msg.js": "3197330bc7281cfd5a1219e6f43a5955af791db0d44f38c1e532b9b34447658c",
+    "projects/utils/rabbit_mq.js": "616407a4a4cd9d7e19275e650d664580ee5596a757bfcc043a9d77cf5cdf913f",
+    "projects/utils/video.js": "1713a7c3a0299c260ea488ce1a769e5103cf1783a87c68c0d5c2b0f5f43b4ebe",
+    "rabbitMQ/definitions.json": "38f4a97f07687521e7757569fb785fb97a131e7b30ede08612cb56897e59ae06",
+    "wsGateway/index.js": "0a0e67cc9e01906b8cc34bc2a0183c291f5e55018f4204d61827844de6905769",
+    "wsGateway/utils/rabbit_mq.js": "3f82741a6e8ae78cc095594e2e5f540922e383b40509a3672a8cfb120160c702"
+  },
+  "subsystem_integration_files": [
+    "projects/utils/video.js",
+    "projects/utils/project_msg.js",
+    "projects/utils/rabbit_mq.js",
+    "projects/utils/imageStorage.js",
+    "projects/utils/frameResults.js",
+    "projects/utils/processBatch.js",
+    "projects/routes/projects.js",
+    "apiGateway/routes/projects.js",
+    "wsGateway/index.js",
+    "wsGateway/utils/rabbit_mq.js",
+    "imageStorageService/server.js",
+    "rabbitMQ/definitions.json",
+    "docker-compose.yaml"
+  ],
+  "video_directories": [
+    "Tools/video"
+  ]
+}

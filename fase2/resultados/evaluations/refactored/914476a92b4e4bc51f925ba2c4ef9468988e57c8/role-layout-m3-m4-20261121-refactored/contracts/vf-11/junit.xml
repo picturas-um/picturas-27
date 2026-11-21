@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.055" timestamp="2026-11-21T19:06:43.361887+00:00" hostname="67d2297e256f"><testcase classname="test_contracts" name="test_vf11_verify_persisted_results" time="0.001" /></testsuite></testsuites>

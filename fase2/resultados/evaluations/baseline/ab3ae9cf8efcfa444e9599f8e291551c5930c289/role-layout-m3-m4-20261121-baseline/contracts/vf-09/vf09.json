@@ -1,0 +1,5 @@
+{
+  "error_type": "InvalidVideo",
+  "error": "Unreadable video file: [mov,mp4,m4a,3gp,3g2,mj2 @ 0x55953f75bf40] moov atom not found\n/inputs/corrupted.mp4: Invalid data found when processing input",
+  "input_sha256": "d2ac1ad31b409ab1bf9a94a222a55e6bb036861da13ccc0064ef30f17dbe2864"
+}

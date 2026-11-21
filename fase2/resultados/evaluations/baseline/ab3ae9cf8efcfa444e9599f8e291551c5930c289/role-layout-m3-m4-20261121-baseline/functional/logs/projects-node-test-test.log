@@ -1,0 +1,21 @@
+v26.10.0
+11.19.1
+EVALUATION_TEST_START
+✔ extraction is project-wide and terminal, with ordinary effects inserted before it (1.374145ms)
+✔ extraction validates active mode parameters and disallows targeted/potentially unbounded inputs (0.23415ms)
+✔ manifest validation rejects escaped, duplicate and oversized frame output before upload (1.935937ms)
+✔ all extracted images retain the source ID and run token; upload failure rolls back only this batch (1.003097ms)
+✔ a fast first worker cannot commit while later sources are still being scheduled (1.050811ms)
+✔ registration failure starts no workers and rolls back only newly registered jobs (0.445525ms)
+✔ a cancelled run cannot overwrite the committed results with a delayed commit (0.862971ms)
+✔ captions apply to all videos, while images skip them and trim stays targeted (2.130063ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.659974
+ Container picturas-eval-2ab8f7237ade-projects-run-a0d2d337b99d Creating 
+ Container picturas-eval-2ab8f7237ade-projects-run-a0d2d337b99d Created 

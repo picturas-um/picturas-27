@@ -1,0 +1,51 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.08kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 272B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:latest
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/5] FROM docker.io/library/node:latest@sha256:a723b54c35a76e947095a20a67d39585bb09c862e6b1adeb8a9f518f95e34fb0
+#5 resolve docker.io/library/node:latest@sha256:a723b54c35a76e947095a20a67d39585bb09c862e6b1adeb8a9f518f95e34fb0 0.0s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 1.96kB done
+#6 DONE 0.0s
+
+#7 [4/5] COPY . .
+#7 CACHED
+
+#8 [2/5] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [3/5] WORKDIR /app
+#9 CACHED
+
+#10 [5/5] RUN npm install
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:2b1fa746eba9292503bd5b7b541e56959095388189e0460b73d0d99d538ec5ef 0.0s done
+#11 exporting config sha256:6bb38e442816f5025b518c00951b2dd1746f2796f5b3b2218ca2d700d161fc19 0.0s done
+#11 exporting attestation manifest sha256:6b091cc6aa5ea517df9e5df2742c528d13db90aa4f5aaedad57b4be44c4e71d5 0.0s done
+#11 exporting manifest list sha256:58839ae6ccdf2f6812c1b283ac1e06737a52d812ec654fea60248aa17a836a62
+#11 exporting manifest list sha256:58839ae6ccdf2f6812c1b283ac1e06737a52d812ec654fea60248aa17a836a62 0.0s done
+#11 naming to docker.io/library/picturas-eval-e363b2f135cd-projects:latest done
+#11 unpacking to docker.io/library/picturas-eval-e363b2f135cd-projects:latest
+#11 unpacking to docker.io/library/picturas-eval-e363b2f135cd-projects:latest 0.7s done
+#11 DONE 0.8s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image picturas-eval-e363b2f135cd-projects Building 
+ Image picturas-eval-e363b2f135cd-projects Built 

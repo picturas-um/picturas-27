@@ -1,0 +1,61 @@
+Python 3.11.16
+pytest 9.2.0
+ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
+ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers
+EVALUATION_TEST_START
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________________________ test_vf07_composed_extraction _________________________
+
+    def test_vf07_composed_extraction():
+        source = media("sample_6s.mov")
+        output = EVIDENCE / "vf07.mp4"
+        tools = [{"procedure": "trim", "params": {"start": 1, "end": 3}},
+                 {"procedure": "brightness", "params": {"brightness": 0.3}},
+                 {"procedure": "resize", "params": {"width": 80, "height": 60}},
+                 {"procedure": "extract_frames", "params": {"count": 2, "format": "png"}}]
+        result = selected_adapter().execute(source, output, tools)
+        save("vf07", result=result, pipeline=tools, input_sha256=_hash(source))
+        assert result["output_type"] == "frames"
+>       assert result["duration"] == pytest.approx(2, abs=0.20)
+E       assert 6.0 == 2 ± 0.2
+E         
+E         comparison failed
+E         Obtained: 6.0
+E         Expected: 2 ± 0.2
+
+/contracts/test_contracts.py:233: AssertionError
+______________________ test_vf07_effect_before_extraction ______________________
+
+    def test_vf07_effect_before_extraction():
+        source = media("sample_6s.mov")
+        tools = [{"procedure": "trim", "params": {"start": 1, "end": 3}},
+                 {"procedure": "brightness", "params": {"brightness": 0.3}},
+                 {"procedure": "resize", "params": {"width": 80, "height": 60}},
+                 {"procedure": "extract_frames", "params": {"count": 2, "format": "png"}}]
+        result = selected_adapter().execute(source, EVIDENCE / "vf07-effect.mp4", tools)
+        with Image.open(result["frames"][0]["file"]) as image:
+            mean = sum(ImageStat.Stat(image.convert("RGB")).mean) / 3
+        save("vf07-effect", result=result, mean_brightness=mean, input_sha256=_hash(source))
+>       assert mean < 85
+E       assert 95.55187825520834 < 85
+
+/contracts/test_contracts.py:252: AssertionError
+=============================== warnings summary ===============================
+../usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:487
+  /usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:487: PytestCacheWarning: could not create cache path /contracts/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/contracts/pytest-cache-files-6ll67cfk'
+    config.cache.set("cache/nodeids", sorted(str(n) for n in self.cached_nodeids))
+
+../usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:439
+  /usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:439: PytestCacheWarning: could not create cache path /contracts/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/contracts/pytest-cache-files-uht1wv55'
+    config.cache.set("cache/lastfailed", current_lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../contracts/test_contracts.py::test_vf07_composed_extraction - assert...
+FAILED ../contracts/test_contracts.py::test_vf07_effect_before_extraction - a...
+2 failed, 14 deselected, 2 warnings in 0.58s
+ Container picturas-eval-e363b2f135cd-video_frames_tool-run-99cbeb129beb Creating 
+ Container picturas-eval-e363b2f135cd-video_frames_tool-run-99cbeb129beb Created 
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+

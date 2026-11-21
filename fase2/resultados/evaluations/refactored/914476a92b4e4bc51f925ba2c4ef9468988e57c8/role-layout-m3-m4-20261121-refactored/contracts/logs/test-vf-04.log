@@ -1,0 +1,16 @@
+Python 3.11.16
+pytest 9.2.0
+ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
+ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers
+EVALUATION_TEST_START
+.                                                                        [100%]
+=============================== warnings summary ===============================
+../usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:487
+  /usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:487: PytestCacheWarning: could not create cache path /contracts/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/contracts/pytest-cache-files-t78sq0_3'
+    config.cache.set("cache/nodeids", sorted(str(n) for n in self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 15 deselected, 1 warning in 0.55s
+ Container picturas-eval-e363b2f135cd-video_effects_tool-run-54c8df561df8 Creating 
+ Container picturas-eval-e363b2f135cd-video_effects_tool-run-54c8df561df8 Created 
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv

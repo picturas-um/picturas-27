@@ -1,0 +1,61 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 482B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.11-slim
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [1/7] FROM docker.io/library/python:3.11-slim@sha256:da047cb8f9d1d98e5c070f5300ba9f7274e33b8fc0e5be5ed88740aed1b95ba9
+#6 resolve docker.io/library/python:3.11-slim@sha256:da047cb8f9d1d98e5c070f5300ba9f7274e33b8fc0e5be5ed88740aed1b95ba9
+#6 resolve docker.io/library/python:3.11-slim@sha256:da047cb8f9d1d98e5c070f5300ba9f7274e33b8fc0e5be5ed88740aed1b95ba9 0.1s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 34.00kB done
+#5 DONE 0.0s
+
+#7 [3/7] WORKDIR /app
+#7 CACHED
+
+#8 [6/7] RUN pip install --no-cache-dir -r ./utils/requirements.txt
+#8 CACHED
+
+#9 [2/7] RUN apt-get update     && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-noto-core fonts-noto-cjk     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [4/7] COPY ./video_effects .
+#10 CACHED
+
+#11 [5/7] COPY ./utils ./utils
+#11 CACHED
+
+#12 [7/7] RUN pip install --no-cache-dir -r requirements.txt
+#12 CACHED
+
+#13 exporting to image
+#13 exporting layers done
+#13 exporting manifest sha256:1c8fec13776331635c9289abf231f3368c0471f816909826309b49bb938764a0 0.0s done
+#13 exporting config sha256:10dfcf6e3e309fffe21ab76105e66dff5bf048323ef26ac5c9a788a9591eda55 0.0s done
+#13 exporting attestation manifest sha256:d4b344aa426e09d69cb4d089e093f5d34fece82abb1aa1b095a7668b98b07fe8 0.0s done
+#13 exporting manifest list sha256:53031b2599e972a73909a18e77b63f50ffdba4ab0ad30ee78707a594864f2371
+#13 exporting manifest list sha256:53031b2599e972a73909a18e77b63f50ffdba4ab0ad30ee78707a594864f2371 0.0s done
+#13 naming to docker.io/library/picturas-eval-6b6293b9a78a-video_effects_tool:latest done
+#13 unpacking to docker.io/library/picturas-eval-6b6293b9a78a-video_effects_tool:latest
+#13 unpacking to docker.io/library/picturas-eval-6b6293b9a78a-video_effects_tool:latest 0.4s done
+#13 DONE 0.5s
+
+#14 resolving provenance for metadata file
+#14 DONE 0.0s
+ Image picturas-eval-6b6293b9a78a-video_effects_tool Building 
+ Image picturas-eval-6b6293b9a78a-video_effects_tool Built 

@@ -1,0 +1,35 @@
+{
+  "result": {
+    "duration": 6.0,
+    "width": 640,
+    "height": 480,
+    "fps": 25.0,
+    "fps_str": "25/1",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "has_audio": true,
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "size_bytes": 63600,
+    "output_type": "frames",
+    "output_path": "/evidence/vf06-frames-2f9cc45e6d2d41629db20206d8ffcb99",
+    "frames": [
+      {
+        "file": "/evidence/vf06-frames-2f9cc45e6d2d41629db20206d8ffcb99/frame-0001-000000000ms.png",
+        "time": 0.0
+      },
+      {
+        "file": "/evidence/vf06-frames-2f9cc45e6d2d41629db20206d8ffcb99/frame-0002-000001500ms.png",
+        "time": 1.5
+      },
+      {
+        "file": "/evidence/vf06-frames-2f9cc45e6d2d41629db20206d8ffcb99/frame-0003-000003000ms.png",
+        "time": 3.0
+      },
+      {
+        "file": "/evidence/vf06-frames-2f9cc45e6d2d41629db20206d8ffcb99/frame-0004-000004500ms.png",
+        "time": 4.5
+      }
+    ]
+  },
+  "input_sha256": "dfae0d1fe6387c792c8e94700927deb8e282a15c449f4f6fabdcedd72940c4be"
+}

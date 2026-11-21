@@ -1,0 +1,32 @@
+{
+  "duplicates": [],
+  "statistics": {
+    "detectionDate": "2026-11-21T18:56:14.437Z",
+    "formats": {
+      "python": {
+        "clones": 0,
+        "duplicatedLines": 0,
+        "duplicatedTokens": 0,
+        "lines": 807,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.0,
+        "percentageTokens": 0.0,
+        "sources": 5,
+        "tokens": 5560
+      }
+    },
+    "total": {
+      "clones": 0,
+      "duplicatedLines": 0,
+      "duplicatedTokens": 0,
+      "lines": 807,
+      "newClones": 0,
+      "newDuplicatedLines": 0,
+      "percentage": 0.0,
+      "percentageTokens": 0.0,
+      "sources": 5,
+      "tokens": 5560
+    }
+  }
+}

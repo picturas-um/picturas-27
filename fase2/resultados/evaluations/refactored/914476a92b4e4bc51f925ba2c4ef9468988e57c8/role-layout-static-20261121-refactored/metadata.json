@@ -1,0 +1,30 @@
+{
+  "categories": {
+    "static": {
+      "collection_status": "complete",
+      "summary": "static/summary.json",
+      "verification_status": "skipped"
+    }
+  },
+  "collection_status": "complete",
+  "finished_at_utc": "2026-11-21T18:56:15.392964+00:00",
+  "framework": {
+    "code_sha256": "fdd178db3a70f78367658fabf465a51126e73b0748788a0b058b8c35a70078e9",
+    "repository_head": "914476a92b4e4bc51f925ba2c4ef9468988e57c8",
+    "working_tree_status": "?? fase2/evaluation/"
+  },
+  "requested_categories": [
+    "static"
+  ],
+  "requested_revision": "914476a92b4e4bc51f925ba2c4ef9468988e57c8",
+  "resolved_commit": "914476a92b4e4bc51f925ba2c4ef9468988e57c8",
+  "results_directory": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS/fase2/resultados/evaluations/refactored/914476a92b4e4bc51f925ba2c4ef9468988e57c8/role-layout-static-20261121-refactored",
+  "role": "refactored",
+  "run_id": "role-layout-static-20261121-refactored",
+  "schema_version": 1,
+  "source_kind": "commit",
+  "source_repository": "/home/carlos/Documents/MEI/SEM1-2627/RAS/projetos/RAS",
+  "started_at_utc": "2026-11-21T18:56:14.727568+00:00",
+  "verification_status": "skipped",
+  "worktree_head": "914476a92b4e4bc51f925ba2c4ef9468988e57c8"
+}

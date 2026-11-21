@@ -1,0 +1,11 @@
+{"hashes":{"/app/tests/frame-extraction.test.js":"f532d9f91c8213f9d1d6fac2135beec910fb7cfb27a8f6f5bc0a2bf94514585c","/app/tests/process-batch.test.js":"600105d8197f9e4b646029544f3baffaa17836ff925bc5349a9365607f331818","/app/tests/video-pipeline.test.js":"859271cd27c3d53fa079d1569a4122b2786e93d538e3e9cca5a2f487de819e2b","/app/utils/video.js":"1713a7c3a0299c260ea488ce1a769e5103cf1783a87c68c0d5c2b0f5f43b4ebe","/app/utils/project_msg.js":"3197330bc7281cfd5a1219e6f43a5955af791db0d44f38c1e532b9b34447658c","/app/utils/frameResults.js":"a1af92d73d114e4a2cfa43b41386f3ad12738dfb4165876b928a79e68515b37e","/app/utils/processBatch.js":"055f1e1781ca0d6e6830b7ee915cf71e67e1837420cbc7c409192dd45aef4634","/app/routes/projects.js":"51afe2603e9fdc1aa788c6b4cf460841a149920f7475f1837f184c9bd7e8336c"},"node":"v26.10.0","npm":"11.19.1","ffmpeg":"ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers","ffprobe":"ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers"}
+ Network picturas-eval-d1a2edd54303_elk Creating 
+ Volume picturas-eval-d1a2edd54303_image_data Creating 
+ Volume picturas-eval-d1a2edd54303_rabbitmq_data Creating 
+ Volume picturas-eval-d1a2edd54303_project_data Creating 
+ Volume picturas-eval-d1a2edd54303_image_data Created 
+ Volume picturas-eval-d1a2edd54303_project_data Created 
+ Volume picturas-eval-d1a2edd54303_rabbitmq_data Created 
+ Network picturas-eval-d1a2edd54303_elk Created 
+ Container picturas-eval-d1a2edd54303-projects-run-cab71be76875 Creating 
+ Container picturas-eval-d1a2edd54303-projects-run-cab71be76875 Created 

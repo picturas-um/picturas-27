@@ -534,6 +534,64 @@ The orchestration tests for the video pipeline and frame extraction run inside `
 docker compose run --rm --no-deps projects sh -c "node --test tests/*.test.js"
 ```
 
+## Phase 2 Evaluation (M1–M4)
+
+Run the Python evaluation framework from the repository root. It evaluates locally available
+commits in disposable Git worktrees; static metrics run on the host, while application tests
+and shared contracts run in isolated Docker containers. Install the host tools once:
+
+```bash
+python3 -m venv /tmp/picturas-evaluation-venv
+/tmp/picturas-evaluation-venv/bin/python -m pip install radon==6.0.1 pytest==9.2.0
+npm install --prefix /tmp/picturas-evaluation-jscpd jscpd@5.4.3
+```
+
+Docker Engine and `docker compose` are needed for M3 and M4; they are not needed for the
+framework tests or M2. The Docker images build from the selected revision. The framework
+installs pytest only inside disposable test containers.
+
+```bash
+# Framework tests (no Docker daemon required)
+/tmp/picturas-evaluation-venv/bin/python -m pytest -q fase2/tests/evaluation
+
+# M2: static metrics on the host
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation run ab3ae9cf8efcfa444e9599f8e291551c5930c289 --static --python /tmp/picturas-evaluation-venv/bin/python --jscpd /tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd --results-root fase2/resultados/evaluations
+
+# M3: revision-specific Python and Node.js suites in Docker
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation run ab3ae9cf8efcfa444e9599f8e291551c5930c289 --functional --results-root fase2/resultados/evaluations
+
+# M4: shared behavioral contracts in Docker
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation run ab3ae9cf8efcfa444e9599f8e291551c5930c289 --contracts --results-root fase2/resultados/evaluations
+
+# M2 + M3 + M4 in one isolated worktree and one result directory
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation run ab3ae9cf8efcfa444e9599f8e291551c5930c289 --all --python /tmp/picturas-evaluation-venv/bin/python --jscpd /tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd --results-root fase2/resultados/evaluations
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation run 914476a92b4e4bc51f925ba2c4ef9468988e57c8 --all --python /tmp/picturas-evaluation-venv/bin/python --jscpd /tmp/picturas-evaluation-jscpd/node_modules/.bin/jscpd --results-root fase2/resultados/evaluations
+
+# Regenerate the readable index from recorded metadata
+/tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation index --results-root fase2/resultados/evaluations
+```
+
+New commit results are stored under `evaluations/<role>/<full-commit>/<run-id>/`.
+The two reference commits are classified automatically: `ab3ae9c` as `baseline` and
+`914476a` as `refactored`. For each later refactoring commit, pass `--role refactored`;
+the option classifies the result and never changes the selected Git revision. An
+unknown commit without `--role` is stored under `unclassified/`. Historical runs
+under the earlier `evaluations/<commit>/<run-id>/` layout remain in place and are
+still included by `index`.
+
+`--all` means exactly `--static --functional --contracts` (M2–M4); it does not run
+performance benchmarks or maintenance scenarios. M3 suite counts differ by revision and are
+not functional-equivalence evidence. The M4 suite uses the same behavioral assertions for both
+revisions. A failing contract returns a nonzero exit code while retaining all collected
+measurements and logs. Each run gets a unique ID automatically; `--run-id ID` is optional and
+refuses an existing result directory. [Evaluation details](fase2/evaluation/README.md) and the
+[evaluation index](fase2/resultados/evaluations/INDEX.md) describe the evidence.
+
+For a new refactoring commit, fetch it explicitly if it is not already local, resolve its
+full hash, and run `--all --role refactored` with that hash. Keep the baseline commit above unchanged. Results
+for successive commits and repeated runs remain in separate directories. `run --working-tree`
+can assess uncommitted changes, with a snapshot identity distinct from a commit.
+
 For manual tests, `samples/video/` has a valid 10 s 720p MP4, a MOV, a 90 s video that the free
 plan must reject and a corrupted file — see its `README.md` for the expected result of each.
 

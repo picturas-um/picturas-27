@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.584" timestamp="2026-11-21T19:06:22.004519+00:00" hostname="c1d5adb598ec"><testcase classname="test_contracts" name="test_vf07_composed_extraction" time="0.232"><failure message="assert 6.0 == 2 ± 0.2&#10;  &#10;  comparison failed&#10;  Obtained: 6.0&#10;  Expected: 2 ± 0.2">def test_vf07_composed_extraction():
+        source = media("sample_6s.mov")
+        output = EVIDENCE / "vf07.mp4"
+        tools = [{"procedure": "trim", "params": {"start": 1, "end": 3}},
+                 {"procedure": "brightness", "params": {"brightness": 0.3}},
+                 {"procedure": "resize", "params": {"width": 80, "height": 60}},
+                 {"procedure": "extract_frames", "params": {"count": 2, "format": "png"}}]
+        result = selected_adapter().execute(source, output, tools)
+        save("vf07", result=result, pipeline=tools, input_sha256=_hash(source))
+        assert result["output_type"] == "frames"
+&gt;       assert result["duration"] == pytest.approx(2, abs=0.20)
+E       assert 6.0 == 2 ± 0.2
+E         
+E         comparison failed
+E         Obtained: 6.0
+E         Expected: 2 ± 0.2
+
+/contracts/test_contracts.py:233: AssertionError</failure></testcase><testcase classname="test_contracts" name="test_vf07_effect_before_extraction" time="0.258"><failure message="assert 95.55187825520834 &lt; 85">def test_vf07_effect_before_extraction():
+        source = media("sample_6s.mov")
+        tools = [{"procedure": "trim", "params": {"start": 1, "end": 3}},
+                 {"procedure": "brightness", "params": {"brightness": 0.3}},
+                 {"procedure": "resize", "params": {"width": 80, "height": 60}},
+                 {"procedure": "extract_frames", "params": {"count": 2, "format": "png"}}]
+        result = selected_adapter().execute(source, EVIDENCE / "vf07-effect.mp4", tools)
+        with Image.open(result["frames"][0]["file"]) as image:
+            mean = sum(ImageStat.Stat(image.convert("RGB")).mean) / 3
+        save("vf07-effect", result=result, mean_brightness=mean, input_sha256=_hash(source))
+&gt;       assert mean &lt; 85
+E       assert 95.55187825520834 &lt; 85
+
+/contracts/test_contracts.py:252: AssertionError</failure></testcase></testsuite></testsuites>

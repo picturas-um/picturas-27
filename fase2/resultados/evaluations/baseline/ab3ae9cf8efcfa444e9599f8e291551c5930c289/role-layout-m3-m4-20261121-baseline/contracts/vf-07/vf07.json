@@ -1,0 +1,56 @@
+{
+  "result": {
+    "duration": 2.0,
+    "width": 80,
+    "height": 60,
+    "fps": 25.0,
+    "fps_str": "25/1",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "has_audio": true,
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "size_bytes": 35918,
+    "frames": [
+      {
+        "file": "/evidence/vf07-frames-55b25d268df9487686d4de3ef1a52a12/frame-0001-000000000ms.png",
+        "time": 0.0
+      },
+      {
+        "file": "/evidence/vf07-frames-55b25d268df9487686d4de3ef1a52a12/frame-0002-000001000ms.png",
+        "time": 1.0
+      }
+    ],
+    "output_type": "frames",
+    "output_path": "/evidence/vf07-frames-55b25d268df9487686d4de3ef1a52a12"
+  },
+  "pipeline": [
+    {
+      "procedure": "trim",
+      "params": {
+        "start": 1,
+        "end": 3
+      }
+    },
+    {
+      "procedure": "brightness",
+      "params": {
+        "brightness": 0.3
+      }
+    },
+    {
+      "procedure": "resize",
+      "params": {
+        "width": 80,
+        "height": 60
+      }
+    },
+    {
+      "procedure": "extract_frames",
+      "params": {
+        "count": 2,
+        "format": "png"
+      }
+    }
+  ],
+  "input_sha256": "dfae0d1fe6387c792c8e94700927deb8e282a15c449f4f6fabdcedd72940c4be"
+}
