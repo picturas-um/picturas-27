@@ -1,10 +1,12 @@
 """Add timestamp probes to copies of the baseline sources for bind mounting."""
+import os
 import pathlib
 import re
 import sys
 
 source, target = map(pathlib.Path, sys.argv[1:])
 target.mkdir(parents=True, exist_ok=True)
+worker_queue = os.environ.get("PERF_WORKER_QUEUE", "video_effects_queue")
 
 
 def probe(relative, pattern, replacement):
@@ -19,12 +21,13 @@ probe(
     "projects/utils/rabbit_mq.js",
     r"(?m)^ +channel.publish\(exchange, queue, Buffer.from\(JSON.stringify\(msg\)\)\);",
     lambda line: (
-        '            if (queue === "video_queue") '
+        f'            if (queue === "{worker_queue}") '
         'console.log("PERF_PUBLISH", msg.messageId, Date.now());\n' + line
     ),
 )
 
-worker = source / "Tools/video/video.py"
+current_worker = source / "Tools/video_effects/video_effects.py"
+worker = current_worker if current_worker.exists() else source / "Tools/video/video.py"
 data = worker.read_text()
 start_anchor = '            msg_id = info["messageId"]'
 end_anchor = '                self._reply_success(msg_id, started, output_uri, result)'

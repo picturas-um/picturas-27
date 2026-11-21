@@ -98,7 +98,10 @@ class VideoSubtitlesWorker:
     def _progress(self, progress, preview, percent):
         if not progress or not progress.get("user"):
             return
-        self._publish(WS_QUEUE, {
+        base = float(progress.get("base", 0))
+        span = float(progress.get("span", 100))
+        overall = max(0, min(100, round(base + percent * span / 100)))
+        event = {
             "messageId": f"update-client-video-progress-{uuid.uuid4()}",
             "timestamp": now().isoformat(),
             "status": "success",
@@ -106,8 +109,13 @@ class VideoSubtitlesWorker:
             "projectId": progress.get("projectId"),
             "imgId": progress.get("imgId"),
             "preview": bool(preview),
-            "percent": percent,
-        })
+            "percent": overall,
+        }
+        if "stage" in progress:
+            event["stage"] = progress["stage"]
+        if "stages" in progress:
+            event["stages"] = progress["stages"]
+        self._publish(WS_QUEUE, event)
 
     def callback(self, ch, method, properties, body):
         started = now()

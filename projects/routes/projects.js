@@ -60,12 +60,11 @@ const {
   probeVideoBuffer,
   validateVideo,
   imageTools,
-  videoPipeline,
+  videoStages,
   unsupportedVideoTools,
   videoOps,
   validateFrameExtraction,
   insertPipelineTool,
-  resolveVideoWorkerTool,
 } = require("../utils/video");
 const { persistFrameResults } = require("../utils/frameResults");
 const { dispatchProcessBatch } = require("../utils/processBatch");
@@ -246,13 +245,12 @@ function process_msg() {
 
       const next_pos = process.cur_pos + 1;
 
-      // Images only go through the image tools (trim is video-only);
-      // a video is processed in one go by the video worker, so its reply is
-      // always the last one of the chain.
+      // Images only go through the image tools (trim is video-only).
       const imgTools = imageTools(project);
-      // A video worker also returns an image for extraction previews, or frames
-      // for full extraction. Neither should enter the image-effect chain.
-      const chainEnd = sourceIsVideo || type === "video" || type === "frames" || next_pos >= imgTools.length;
+      const stages = sourceIsVideo ? videoStages(project, img_id) : null;
+      const chainEnd = sourceIsVideo
+        ? next_pos >= stages.length
+        : (type === "video" || type === "frames" || next_pos >= imgTools.length);
       const isLast = type == "text" || chainEnd;
 
 if (/preview/.test(msg_id) && isLast) {
@@ -488,13 +486,36 @@ if (/preview/.test(msg_id) && isLast) {
         ? `preview-${uuidv4()}`
         : `request-${uuidv4()}`;
 
-      const tool = imgTools[next_pos];
-
-      const tool_name = tool.procedure;
-      const params = tool.params;
+      let tool_name;
+      let params;
+      if (sourceIsVideo) {
+        const stage = stages[next_pos];
+        tool_name = stage.tool;
+        params = {
+          tools: stage.tools,
+          preview: /preview/.test(msg_id),
+          progress: {
+            user: runnerId,
+            projectId: project._id,
+            imgId: String(img_id),
+            base: Math.round((100 * next_pos) / stages.length),
+            span: 100 / stages.length,
+            stage: next_pos + 1,
+            stages: stages.length,
+          },
+        };
+      } else {
+        const tool = imgTools[next_pos];
+        tool_name = tool.procedure;
+        params = tool.params;
+      }
 
       const read_img = type == "text" ? prev_process_input_img : output_file_uri;
-      const output_img = type == "text" ? prev_process_output_img : output_file_uri;
+      const output_img = type == "text"
+        ? prev_process_output_img
+        : sourceIsVideo
+          ? process.new_img_uri
+          : output_file_uri;
 
       // o token de cancelamento que vai ser propagado para o successor
       const processToken = process.cancelToken || 0;
@@ -1108,9 +1129,11 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
         }
       }
 
-      // video: routed to the specialized video worker (effects, subtitles, frames)
-      const vtools = previewIsVideo ? videoPipeline(project, req.params.img) : null;
-      const tool = previewIsVideo ? { procedure: resolveVideoWorkerTool(vtools) } : imageTools(project)[0];
+      // video: start the first stage; subsequent stages are dispatched from project_queue
+      const stages = previewIsVideo ? videoStages(project, req.params.img) : null;
+      const tool = previewIsVideo
+        ? { procedure: stages[0]?.tool || "video_effects" }
+        : imageTools(project)[0];
       if (!tool) {
         return res.status(400).jsonp("No tools selected");
       }
@@ -1118,9 +1141,17 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       const tool_name = tool.procedure;
       const params = previewIsVideo
         ? {
-            tools: vtools,
+            tools: stages[0]?.tools || [],
             preview: true,
-            progress: { user: runnerUserId, projectId: req.params.project, imgId: req.params.img },
+            progress: {
+              user: runnerUserId,
+              projectId: req.params.project,
+              imgId: req.params.img,
+              base: 0,
+              span: 100 / Math.max(stages.length, 1),
+              stage: 1,
+              stages: Math.max(stages.length, 1),
+            },
           }
         : tool.params;
 
@@ -1634,12 +1665,20 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
           let params;
           if (isVideoMedia(img)) {
             // video: routed to specialized video worker (effects, subtitles, frames)
-            const vtools = videoPipeline(project, img._id);
-            tool_name = resolveVideoWorkerTool(vtools);
+            const stages = videoStages(project, img._id);
+            tool_name = stages[0]?.tool || "video_effects";
             params = {
-              tools: vtools,
+              tools: stages[0]?.tools || [],
               preview: false,
-              progress: { user: runnerUserId, projectId: req.params.project, imgId: String(img._id) },
+              progress: {
+                user: runnerUserId,
+                projectId: req.params.project,
+                imgId: String(img._id),
+                base: 0,
+                span: 100 / Math.max(stages.length, 1),
+                stage: 1,
+                stages: Math.max(stages.length, 1),
+              },
             };
           } else {
             const tool = imageTools(project)[0];

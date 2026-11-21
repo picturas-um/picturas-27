@@ -10,8 +10,10 @@ import urllib.request
 
 project, rabbit_port, destination = sys.argv[1:]
 headers = {"Authorization": "Basic " + base64.b64encode(b"user:password").decode()}
+worker_queue = os.environ.get("PERF_WORKER_QUEUE", "video_effects_queue")
+worker_service = os.environ.get("PERF_WORKER_SERVICE", "video_effects_tool")
 queue = urllib.request.Request(
-    f"http://127.0.0.1:{rabbit_port}/api/queues/%2F/video_queue", headers=headers
+    f"http://127.0.0.1:{rabbit_port}/api/queues/%2F/{worker_queue}", headers=headers
 )
 
 
@@ -31,7 +33,7 @@ def rabbit(out):
 
 
 def stats(out):
-    names = [f"{project}-{service}-1" for service in ("video_tool", "api_gateway", "projects")]
+    names = [f"{project}-{service}-1" for service in (worker_service, "api_gateway", "projects")]
     while True:
         try:
             result = subprocess.run(

@@ -165,6 +165,31 @@ function videoPipeline(project, imgId) {
     .map((t) => ({ procedure: t.procedure, params: t.params }));
 }
 
+// Groups the ordered pipeline of one video into worker stages.
+function videoStages(project, imgId) {
+  const stages = [];
+  for (const tool of videoPipeline(project, imgId)) {
+    const worker = tool.procedure === "subtitles"
+      ? "video_subtitles"
+      : tool.procedure === "extract_frames"
+        ? "video_frames"
+        : "video_effects";
+    const last = stages[stages.length - 1];
+    if (last && last.tool === worker && worker === "video_effects") {
+      last.tools.push(tool);
+    } else {
+      stages.push({ tool: worker, tools: [tool] });
+    }
+  }
+  return stages.map((stage) => ({
+    tool: stage.tool,
+    tools: stage.tools.map((tool) => ({
+      procedure: tool.procedure,
+      params: tool.params,
+    })),
+  }));
+}
+
 // Pipeline effects that make no sense for video
 function unsupportedVideoTools(project) {
   return (project.tools || [])
@@ -237,5 +262,6 @@ module.exports = {
   videoOps,
   validateFrameExtraction,
   insertPipelineTool,
+  videoStages,
   resolveVideoWorkerTool,
 };

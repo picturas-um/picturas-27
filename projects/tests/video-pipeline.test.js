@@ -1,6 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { imageTools, videoPipeline, videoOps, unsupportedVideoTools, resolveVideoWorkerTool } = require('../utils/video');
+const {
+  imageTools,
+  videoPipeline,
+  videoStages,
+  videoOps,
+  unsupportedVideoTools,
+  resolveVideoWorkerTool,
+} = require('../utils/video');
 
 test('captions apply to all videos, while images skip them and trim stays targeted', () => {
   const project = {
@@ -21,7 +28,46 @@ test('captions apply to all videos, while images skip them and trim stays target
   assert.equal(videoOps(project), 2);
 });
 
-test('routes video tools to specialized workers (effects, subtitles, frames)', () => {
+test('splits mixed video pipelines into ordered worker stages', () => {
+  const project = {
+    tools: [
+      { position: 0, procedure: 'brightness', params: { brightness: 0.5 } },
+      { position: 1, procedure: 'subtitles', params: {} },
+      { position: 2, procedure: 'extract_frames', params: { mode: 'count', count: 5, format: 'png' } },
+    ],
+  };
+  assert.deepEqual(videoStages(project, 'video').map((stage) => stage.tool), [
+    'video_effects',
+    'video_subtitles',
+    'video_frames',
+  ]);
+
+  project.tools = [
+    { position: 0, procedure: 'brightness', params: {} },
+    { position: 1, procedure: 'contrast', params: {} },
+  ];
+  assert.deepEqual(videoStages(project, 'video'), [{
+    tool: 'video_effects',
+    tools: [
+      { procedure: 'brightness', params: {} },
+      { procedure: 'contrast', params: {} },
+    ],
+  }]);
+
+  project.tools = [
+    { position: 0, procedure: 'subtitles', params: {} },
+    { position: 1, procedure: 'brightness', params: {} },
+    { position: 2, procedure: 'subtitles', params: {} },
+  ];
+  assert.deepEqual(videoStages(project, 'video').map((stage) => stage.tool), [
+    'video_subtitles',
+    'video_effects',
+    'video_subtitles',
+  ]);
+  assert.deepEqual(videoStages({ tools: [] }, 'video'), []);
+});
+
+test('keeps the legacy worker resolver compatible for existing callers', () => {
   assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'trim' }]), 'video_effects');
   assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'subtitles' }]), 'video_subtitles');
   assert.equal(resolveVideoWorkerTool([{ procedure: 'brightness' }, { procedure: 'extract_frames' }]), 'video_frames');

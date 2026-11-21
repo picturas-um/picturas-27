@@ -300,23 +300,6 @@ services:
     volumes:
       - image_data:/app/images
 
-  # Backward compatibility worker for legacy video_queue
-  video_tool:
-    build:
-      context: ./Tools
-      dockerfile: video_effects/Dockerfile
-    restart: on-failure
-    environment:
-      VIDEO_QUEUE: video_queue
-      VIDEO_PREVIEW_SECONDS: 3
-    networks:
-      - elk
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    volumes:
-      - image_data:/app/images
-
   border_tool:
     build:
       context: ./Tools

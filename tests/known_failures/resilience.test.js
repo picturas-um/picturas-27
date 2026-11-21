@@ -39,7 +39,7 @@ test('[RUN-03] isolated video worker resumes processing after broker restart', {
   const auth = { Authorization: 'Basic ' + Buffer.from('user:password').toString('base64') };
   const api = (method, route, body) => request(method, base + route, { headers: auth, body });
   await until(async () => { try { return (await api('GET', '/overview')).status === 200; } catch { return false; } }, 90000);
-  isolated.run('worker', image('video_tool'), ['--restart', 'on-failure', '-e', 'RABBITMQ_HOST=broker', '-v', `${fixtures}:/fixtures:ro`, '-v', `${dir}:/out`]);
+  isolated.run('worker', image('video_effects_tool'), ['--restart', 'on-failure', '-e', 'RABBITMQ_HOST=broker', '-e', 'VIDEO_QUEUE=video_queue', '-v', `${fixtures}:/fixtures:ro`, '-v', `${dir}:/out`]);
   const consumersReady = async () => (await api('GET', '/queues/%2F/video_queue')).data.consumers > 0;
   await until(consumersReady, 60000);
   async function job(name) {

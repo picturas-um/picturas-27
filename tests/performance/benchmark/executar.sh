@@ -12,6 +12,16 @@ export TZ=Europe/Lisbon
 stack=picturas-perf-$$
 worktree=$(mktemp -d)
 git worktree add --detach "$worktree" "$commit"
+if [[ -f "$worktree/Tools/video_effects/video_effects.py" ]]; then
+  worker_service=video_effects_tool
+  worker_file=video_effects.py
+  worker_queue=video_effects_queue
+else
+  worker_service=video_tool
+  worker_file=video.py
+  worker_queue=video_queue
+fi
+export PERF_WORKER_SERVICE=$worker_service PERF_WORKER_QUEUE=$worker_queue
 scratch=$(mktemp -d)
 base=(docker compose -p "$stack" -f "$worktree/docker-compose.yaml" -f "$root/tests/performance/benchmark/compose-isolado.yaml")
 compose=("${base[@]}" -f "$scratch/probes.yaml")
@@ -31,15 +41,15 @@ services:
   projects:
     volumes:
       - "$scratch/rabbit_mq.js:/app/utils/rabbit_mq.js:ro"
-  video_tool:
+  $worker_service:
     volumes:
-      - "$scratch/video.py:/app/video.py:ro"
+      - "$scratch/$worker_file:/app/$worker_file:ro"
 PROBES
-services=(nginx frontend video_tool img_storage subscriptions)
+services=(nginx frontend "$worker_service" img_storage subscriptions)
 ready() {
   for ((attempt=0; attempt<120; attempt++)); do
     if curl -kfsS --max-time 3 "$TEST_BASE_URL" >/dev/null &&
-       curl -fsS -u user:password "http://127.0.0.1:$PERF_RABBIT_PORT/api/queues/%2F/video_queue" |
+       curl -fsS -u user:password "http://127.0.0.1:$PERF_RABBIT_PORT/api/queues/%2F/$worker_queue" |
          python3 -c 'import json,sys; assert json.load(sys.stdin)["consumers"] == 1' 2>/dev/null; then
       return
     fi
@@ -64,7 +74,7 @@ dbs=(projects_mongoDB:27018:project users_mongoDB:27019:user subscriptions_mongo
   sha256sum "$video"
 } > "$out/ambiente.txt"
 "${base[@]}" build --with-dependencies "${services[@]}" > "$out/arranque.log" 2>&1
-docker image inspect "$stack-video_tool" --format '{{.Id}} {{.Size}}' > "$out/imagem-worker.txt"
+docker image inspect "$stack-$worker_service" --format '{{.Id}} {{.Size}}' > "$out/imagem-worker.txt"
 for scenario in ${PERF_SCENARIOS:-low mixed peak}; do
   for rep in ${PERF_REPETITIONS:-1 2 3}; do
     run="$out/$scenario-$rep"
@@ -97,7 +107,7 @@ for scenario in ${PERF_SCENARIOS:-low mixed peak}; do
       IFS=: read -r svc port db <<< "$entry"
       mongo "$svc" "$port" "$db" 'db.setProfilingLevel(0); db.system.profile.find().forEach(x=>print(JSON.stringify({at:+x.ts,op:x.op,ns:x.ns,ms:x.millis,kind:Object.keys(x.command||{})[0],error:x.errCode||x.errName,lockWaitUs:x.locks,waiting:x.flowControl})))' > "$run/$db-mongo.jsonl"
     done
-    "${compose[@]}" logs --no-color projects video_tool | awk '/PERF_(PUBLISH|START|END)/' > "$run/worker.log"
+    "${compose[@]}" logs --no-color projects "$worker_service" | awk '/PERF_(PUBLISH|START|END)/' > "$run/worker.log"
   done
 done
 if [[ ${PERF_REGRESSION:-1} == 1 ]]; then

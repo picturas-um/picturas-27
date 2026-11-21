@@ -110,7 +110,7 @@ are **not** published to the host unless noted otherwise — they talk to each o
    └────────┘ └────────┘ │     └────────┘   │
                          │                  │
                     ┌────▼──────────────────┴────┐
-                    │      RabbitMQ  :5672       │◄─── 16 image tools + video_tool
+                    │      RabbitMQ  :5672       │◄─── 16 image tools + 3 video workers
                     │    exchange "picturas"     │     (one queue per tool)
                     └────────────────────────────┘
 ```
@@ -151,14 +151,15 @@ exchange:
 > (`prcsousa/picturas-watermark-tool-ms`) instead of being built from this repository — it is a
 > deliberate example of integrating a third-party service.
 
-**Videos** are handled by a single worker, `video_tool` (`Tools/video/`), instead of the image
-tools. For each video, `projects` sends **one** message with the whole pipeline to
-`video_queue`; the worker probes the file with `ffprobe`, decodes it once, applies the frame
-effects (`Tools/video/effects.py`, the same PIL operations as the image tools), encodes once to
-MP4/H.264 + AAC and reports progress as `video-progress` events on `ws_queue`. It acknowledges
-the message only at the end and leaves no partial output on failure. `ffmpeg` is installed only
-inside this container. Automatic subtitles and frame extraction run as ordered stages of the
-same worker (`Tools/video/subtitles.py`, `Tools/video/frame_extraction.py`).
+**Videos** are handled by three workers instead of the image tools:
+`video_effects_tool` (`Tools/video_effects/`), `video_subtitles_tool`
+(`Tools/video_subtitles/`) and `video_frames_tool` (`Tools/video_frames/`). For each video,
+`projects` splits the ordered pipeline into stages and sends them to
+`video_effects_queue`, `video_subtitles_queue` or `video_frames_queue`; consecutive ordinary
+effects share one decode/encode pass and stage outputs are chained through `project_queue`.
+Workers report aggregated `video-progress` events on `ws_queue`, acknowledge messages only at
+the end and leave no partial output on failure. `ffmpeg` is installed only inside these
+containers.
 
 ### Infrastructure
 
@@ -373,10 +374,10 @@ All configuration currently lives as `environment:` entries in `docker-compose.y
 | `GEN_EXPAND_URL`                              | `http://generative-mock:7860` | expand_ai              | Generative image API endpoint                |
 | `VIDEO_FREE_MAX_DURATION_S` / `_MAX_SIZE_MB`  | `60` / `100`                  | projects               | Video upload limits for free accounts        |
 | `VIDEO_PREMIUM_MAX_DURATION_S` / `_SIZE_MB`   | `600` / `1024`                | projects               | Video upload limits for premium accounts     |
-| `VIDEO_PREVIEW_SECONDS`                       | `3`                           | video_tool             | Length of a video preview render             |
-| `WHISPER_MODEL`                               | `small`                       | video_tool             | Faster-Whisper model for automatic subtitles |
-| `WHISPER_CACHE_DIR`                           | `/models/whisper`             | video_tool             | Model cache (the `whisper_models` volume)    |
-| `WHISPER_CPU_THREADS`                         | `2`                           | video_tool             | CPU threads for speech recognition           |
+| `VIDEO_PREVIEW_SECONDS`                       | `3`                           | video workers          | Length of a video preview render             |
+| `WHISPER_MODEL`                               | `small`                       | video_subtitles_tool   | Faster-Whisper model for automatic subtitles |
+| `WHISPER_CACHE_DIR`                           | `/models/whisper`             | video_subtitles_tool   | Model cache (the `whisper_models` volume)    |
+| `WHISPER_CPU_THREADS`                         | `2`                           | video_subtitles_tool   | CPU threads for speech recognition           |
 
 ⚠️ If you change `JWT_SECRET_KEY`, change it in **all three** services (`users`, `api_gateway`,
 `ws_gateway`) or authentication silently breaks.
@@ -422,7 +423,9 @@ picturas-27/
 │   ├── models/               #   pre-downloaded ML weights (e.g. yolov5su.pt)
 │   ├── bg_remove_ai/  cut_ai/  expand_ai/  obj_ai/  people_ai/  text_ai/  upgrade_ai/
 │   ├── binarization/  border/  brightness/  contrast/  cut/  resize/  rotate/  saturation/
-│   └── video/                #   video_tool: ffmpeg worker for whole video pipelines
+│   ├── video_effects/        #   video_effects_tool: effects, trim and speed
+│   ├── video_subtitles/      #   video_subtitles_tool: automatic subtitles
+│   └── video_frames/         #   video_frames_tool: frame extraction
 ├── samples/video/            # Sample videos for manual tests (valid, MOV, too long, corrupted)
 ├── rabbitMQ/                 # Broker image with queue/exchange definitions
 ├── nginx/nginx.conf          # Reverse proxy, TLS, CORS, WebSocket routing
@@ -437,8 +440,9 @@ picturas-27/
 
 ## 🎬 Video Tools
 
-Besides `trim` and `speed`, projects with videos have two project-wide, video-only tools. Both
-run inside the existing `video_tool` worker; images in the same project skip them.
+Besides `trim` and `speed`, projects with videos have two project-wide, video-only tools. They
+run in the `video_subtitles_tool` and `video_frames_tool` workers; images in the same project
+skip them.
 
 ### Automatic subtitles
 
@@ -669,8 +673,9 @@ is a valid MP4, MOV or WebM. Videos must go to `POST /:user/:project/video`; the
 endpoint rejects them.
 
 **A video stays at 0% or never finishes**
-There is a single `video_tool` with no replicas, so videos are processed one at a time. Check
-`docker compose logs -f video_tool` and the depth of `video_queue` in RabbitMQ.
+Video stages are processed by `video_effects_tool`, `video_subtitles_tool` and
+`video_frames_tool`. Check the relevant container logs and the corresponding queue depth in
+RabbitMQ.
 
 **`expand_ai` fails**
 It depends on `generative-mock` being healthy. Check <http://localhost:7860> and
@@ -706,7 +711,7 @@ The latest contributions, from 2026/2027 (Phase 1), are:
 ### Video support — Group PL1-G4, 2026/2027
 
 Contributed video support as an MVP: video upload with validation and per-plan limits, the
-`video_tool` ffmpeg worker, the video-only `trim` and `speed` tools, and the frontend for video
+video ffmpeg workers, the video-only `trim` and `speed` tools, and the frontend for video
 upload, playback and editing:
 
 - **PG61468** — José Nuno Fernandes do Vale Taveira Campelo

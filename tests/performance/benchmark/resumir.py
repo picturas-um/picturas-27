@@ -2,6 +2,7 @@
 from collections import Counter, defaultdict
 import gzip
 import json
+import os
 from math import ceil
 from pathlib import Path
 import re
@@ -138,7 +139,8 @@ def measure(directory, scenario, phase_name=None):
         worker_end[key] - worker_start[key] for key in jobs & worker_end.keys()
     ], lambda data: percentile(data, 0.95))
     if scenario != "low":
-        for service in ("video_tool", "api_gateway", "projects"):
+        worker_service = os.environ.get("PERF_WORKER_SERVICE", "video_effects_tool")
+        for service in (worker_service, "api_gateway", "projects"):
             resources = [
                 row for row in read(directory / "stats.jsonl")
                 if row.get("Name", "").endswith(f"-{service}-1") and start <= row["at"] < end
