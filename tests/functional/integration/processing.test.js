@@ -192,3 +192,32 @@ test('[VID-04] real speech recognition burns visible captions into video', { tim
   }
   assert.ok(Math.max(...brightness) > 0.5, 'Captions should produce visible pixels on the black source video');
 });
+
+test('[VID-01,VID-04,PIPE-01] mixed border and subtitles preserve both effects', { timeout: 300000 }, async t => {
+  const dir = temp(t);
+  const borderParams = { borderWidth: 4, r: 255, g: 0, b: 0 };
+  const mixed = await project();
+  success(await mixed.upload(fixture('speech.mp4'), 'video'));
+  await mixed.tools([{ procedure: 'border', params: borderParams }, { procedure: 'subtitles', params: {} }]);
+  const mixedResults = await mixed.process(240000);
+  const mixedOut = path.join(dir, 'mixed.mp4');
+  await download(mixedResults.imgs[0].url, mixedOut);
+  assert.ok(probe(mixedOut).streams.some(x => x.codec_type === 'audio'));
+
+  const borderOnly = await project();
+  success(await borderOnly.upload(fixture('speech.mp4'), 'video'));
+  await borderOnly.tools([{ procedure: 'border', params: borderParams }]);
+  const borderResults = await borderOnly.process(240000);
+  const borderOut = path.join(dir, 'border.mp4');
+  await download(borderResults.imgs[0].url, borderOut);
+
+  const { execFileSync } = require('node:child_process');
+  const mixedFrame = path.join(dir, 'mixed-frame.png');
+  const borderFrame = path.join(dir, 'border-frame.png');
+  execFileSync('ffmpeg', ['-y', '-v', 'error', '-ss', '1', '-i', mixedOut, '-frames:v', '1', mixedFrame]);
+  execFileSync('ffmpeg', ['-y', '-v', 'error', '-ss', '1', '-i', borderOut, '-frames:v', '1', borderFrame]);
+  const mixedInfo = imageInfo(mixedFrame), borderInfo = imageInfo(borderFrame);
+  assert.deepEqual(mixedInfo.size, [328, 248], 'Border must expand the output frame');
+  assert.ok(mixedInfo.corner[0] > 200 && mixedInfo.corner[1] < 20 && mixedInfo.corner[2] < 20, 'Border colour preserved');
+  assert.ok(mixedInfo.mean[1] > borderInfo.mean[1] + 3, 'Captions still burned after the border stage');
+});
