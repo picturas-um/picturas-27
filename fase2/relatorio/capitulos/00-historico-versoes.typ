@@ -12,4 +12,4 @@
   [v2.0], [2026-11-27], [Versão entregue da Fase 2, com as caixas de orientação desligadas], [Equipa (CA, FB, LL, NS, SA)],
 )
 
-Marcos de código correspondentes: `0523102` (baseline comum a todos os capítulos), `9976985` (decomposição do processamento de vídeo), `cc53fac` (correção do encadeamento de pipelines mistos), `2ee32d7` (teste de integração do pipeline misto). A implementação e a medição do `CAND-2` são da responsabilidade do membro respetivo e são assinaladas como pendentes nos capítulos 8, 10 e 11.
+Marcos de código correspondentes: `0523102` (baseline comum a todos os capítulos), `9976985` (decomposição do processamento de vídeo), `cc53fac` (correção do encadeamento de pipelines mistos), `2ee32d7` (teste de integração do pipeline misto). 

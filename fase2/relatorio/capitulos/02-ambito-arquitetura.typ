@@ -35,9 +35,9 @@ S3. EV-01 e EV-02 identificam os componentes e EV-05 o despacho num único envio
     [`README.md`, `AGENTS.md`], [commit `0523102` / nova versão da equipa], [Arranque da stack, papéis dos serviços, regras de processamento e convenções de código],
     [`doc-ext-requisitos-2627.pdf`], [v27.1, novembro de 2026], [Requisitos funcionais e distinção entre tipos de _media_],
     [`doc-sol-arquitetural.pdf`], [v27.1, novembro de 2026], [Arquitetura de referência da Fase 1 e decisões já tomadas],
-    [`fase2/fase-2-guidelines.pdf`], [novembro de 2026], [Regras da Fase 2 e lista indicativa de RNF; origem do `CAND-1` e do `CAND-2`],
+    [`fase2/fase-2-guidelines.pdf`], [novembro de 2026], [Regras da Fase 2 e lista indicativa de RNF; origem do `CAND-1`],
     [Slides da aula 11 (_Arch. Styles_) e documento de apoio de padrões arquiteturais], [novembro de 2026], [Nomeação dos padrões e critérios da matriz do capítulo 4],
-    [Código e configuração do repositório], [commit `0523102` e revisão final], [Evidências EV-01 a EV-07; medições do capítulo 10],
+    [Código e configuração do repositório], [commit `0523102` e revisão final], [Evidências EV-01 a EV-06; medições do capítulo 10],
   ),
 )
 
@@ -54,7 +54,7 @@ vez de uma fila por ferramenta, entra numa fila única.
 
 *Ferramenta / notação:* PlantUML, diagrama de componentes UML (`docs/architecture/component-diagram-global.puml`),
 convertido para PNG com `rsvg-convert`. O mesmo ficheiro é reutilizado no capítulo 9 com as
-alterações das decisões DA-1 e DA-2.
+alterações da decisão DA-1.
 
 #tab([Legenda da vista da arquitetura],
   tabela(
@@ -102,8 +102,6 @@ commit `0523102`:
 - *EV-06:* `fase2/fase-2-guidelines.pdf`, secção "Ideias (indicativas)", p. 2 — sugestão da
   docência de dividir o processamento de vídeo em vários microserviços, à semelhança das
   ferramentas de imagem; origem do `CAND-1`.
-- *EV-07:* `fase2/fase-2-guidelines.pdf`, mesma secção — descrição da fragilidade de usabilidade
-  (ecrã bloqueante, progresso perdido com recarregamento); origem do `CAND-2`.
 
 Algumas afirmações não dispõem de evidência direta no código e são registadas como hipóteses:
 

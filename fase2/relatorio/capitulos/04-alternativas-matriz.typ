@@ -65,7 +65,6 @@ favorece fortemente o atributo na solução do PictuRAS. A referência é o padr
     [Fiabilidade: tolerância a falhas / recuperabilidade], [Médio — falha isolada por ferramenta, depende do broker (EV-04)], [Baixo — ponto único de falha para os três domínios (H-01)], [Baixo — inalterado], [Alto — falha confinada a um domínio; o consumidor mantém a religação ao broker],
     [Manutenibilidade: modularidade / modificabilidade], [Alto — uma ferramenta, um módulo, uma imagem (EV-04)], [Baixo — três domínios no mesmo serviço e dependências misturadas (EV-01, EV-03)], [Baixo — inalterado], [Alto — mudança confinada ao domínio e imagem própria],
     [Segurança], [Médio — fronteira única no gateway; segredos no Compose são problema conhecido], [Médio — herda a fronteira global], [Médio — inalterado], [Médio — não altera a fronteira nem os segredos; fora do âmbito desta fase],
-    [Usabilidade: operabilidade], [Médio — progresso no browser, ecrã bloqueante (EV-07)], [Médio — herda o comportamento global], [Médio — inalterado], [Médio — o CAND-2 trata esta fragilidade no capítulo 8],
   ),
 )
 ]

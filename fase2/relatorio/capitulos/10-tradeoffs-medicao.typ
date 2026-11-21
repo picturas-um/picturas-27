@@ -5,13 +5,12 @@
 == Matriz de efeitos
 
 #paisagem[
-#tab([Matriz de efeitos das decisões],
+#tab([Matriz de efeitos da decisão],
   tabela(
     colunas: (1.8cm, 2.6cm, 3.4cm, 2.4cm, 2.4cm, 3.6cm, 1fr),
     tamanho: 8.5pt,
-    [Decisão], [Desempenho], [Disponibilidade / Fiabilidade], [Segurança], [Usabilidade], [Manutenibilidade / Testabilidade], [Justificação],
-    [DA-1], [↑ no caminho de efeitos; ↓ em espaço total de disco], [↑], [=], [↑ indireta], [↑↑], [Imagem de efeitos de 1,70 GB para 1,09 GB e falha confinada a um domínio; o total de imagens sobe para 3,92 GB. O progresso agregado por estágio dá continuidade à experiência do utilizador],
-    [DA-2], [\= / ↓ ligeiro], [↑], [=], [↑↑], [↑], [A execução assíncrona e a persistência do estado não alteram o processamento; o bloqueio da interface desaparece e a execução passa a ser observável e testável depois de recarregar],
+    [Decisão], [Desempenho], [Disponibilidade / Fiabilidade], [Segurança], [Manutenibilidade / Testabilidade], [Progresso], [Justificação],
+    [DA-1], [↑ no caminho de efeitos; ↓ em espaço total de disco], [↑], [=], [↑↑], [\= / ↑], [Imagem de efeitos de 1,70 GB para 1,09 GB e falha confinada a um domínio; o total de imagens sobe para 3,92 GB. O progresso agregado por estágio preserva a continuidade da informação que o worker monolítico emitia],
   ),
 )
 ]
@@ -19,22 +18,12 @@
 A degradação identificada — espaço total em disco — é gerida explicitamente: aceita-se o aumento
 de 1,70 GB para 3,92 GB porque o custo incide no armazenamento de imagens, que não é partilhado
 entre domínios, e é compensado por builds menores e por falhas que não se propagam. Não há
-degradação de segurança: as decisões não alteram a fronteira de autenticação nem a configuração de
+degradação de segurança: a decisão não altera a fronteira de autenticação nem a configuração de
 segredos, que permanecem como problema conhecido e fora do âmbito desta fase.
-
-== Interação entre DA-1 e DA-2
-
-#tab([Interação entre as decisões],
-  tabela(
-    colunas: (2.2cm, 2.2cm, 4.4cm, 1fr),
-    [Decisão A], [Decisão B], [Efeito (pré-requisito, sinergia ou conflito)], [Razão / evidência],
-    [DA-1], [DA-2], [Pré-requisito parcial + sinergia], [A decomposição multiplica os produtores de progresso (três workers em vez de um); sem o `base`/`span` por estágio introduzido no DA-1, o DA-2 não conseguiria reconstruir um progresso global coerente. Em contrapartida, o DA-1 deixa o processamento assíncrono de ponta a ponta, condição para o DA-2],
-  ),
-)
 
 == Plano de medição
 
-As escalas e os métodos foram fixados no capítulo 6, antes da alteração. A medição foi repetida
+A escala e o método foram fixados no capítulo 6, antes da alteração. A medição foi repetida
 nas duas variantes no mesmo host, com o mesmo vídeo de entrada e o mesmo comando, e os resultados
 foram registados em `docs/REGRESSION_CHECKLIST.md`.
 
@@ -44,7 +33,6 @@ foram registados em `docs/REGRESSION_CHECKLIST.md`.
     tamanho: 8pt,
     [Cenário], [Cenário de teste e carga], [Ambiente (máquina, recursos, versões)], [O que se regista], [Repetições e agregação], [Onde ficam os _scripts_ e os dados],
     [QS-01 — CAND-1], [Mudança de efeito: adicionar/alterar um efeito leve no caminho de efeitos; observação do âmbito da alteração, do tamanho da imagem reconstruída e das dependências carregadas; ensaio de isolamento com falha no worker de legendagem], [Linux x86_64, 8 núcleos, 13 GiB RAM; Docker 29.10.0, Compose 5.8.0; revisões `0523102` e final], [Serviços e filas envolvidos; ficheiros e importações no worker; tamanho da imagem (GB); Radon MI; domínios parados após falha; sequência de eventos `video-progress`], [Uma medição por variante para tamanhos e estrutura; ensaio de isolamento e de progresso repetidos no stack em execução], [`git worktree`, `git diff --stat`, `docker images`, `radon mi`; `fase2/plano_membro_a_modularidade_video.md`; registos na checklist],
-    [QS-02 — CAND-2], [Iniciar o processamento de um projeto com vídeo e tentar interagir com a aplicação e recarregar a página], [Mesmo host e stack, antes e depois da alteração], [Bloqueio da interface (s); progresso e cancelamento recuperáveis após recarregamento], [A registar pelo membro responsável pelo CAND-2], [Checklist de regressão e commits do membro responsável],
   ),
 )
 
@@ -59,7 +47,7 @@ pedido de um pipeline misto (`border` seguido de `subtitles`) e a recolha dos ev
 verificada com as suites Node, Python e de integração referidas na secção de preservação
 funcional, com os comandos e identificadores de execução registados na checklist.
 
-*Tratamento das medições.* Para o QS-01, a métrica principal é o tamanho da imagem que tem de ser
+*Tratamento das medições.* A métrica principal é o tamanho da imagem que tem de ser
 reconstruída quando se altera o caminho de efeitos: é um valor verificável, comparável entre
 variantes e diretamente ligado ao custo de manutenção. As contagens de serviços, filas e módulos
 com responsabilidades misturadas são medidas de apoio. O Radon MI foi calculado mas não é usado
@@ -77,7 +65,7 @@ variante (`Tools/video/video.py` + `video_queue` na base; `Tools/video_effects/`
 `video_effects_queue` na final) e ajusta a prontidão e a instrumentação à fila e ao contentor que
 recebem `trim`, preservando a semântica dos _timestamps_ e a correlação dos eventos. Os dados
 dessa medição de regressão system-wide são descritos na secção seguinte e não são usados como
-prova do QS-01 ou do QS-02.
+prova do QS-01.
 
 == Resultados das medições
 
@@ -113,10 +101,6 @@ trade-off no capítulo 5 e mantido visível na matriz de efeitos. O Radon MI nã
 variantes — todos os módulos, antes e depois, são classificados como `A` — e por isso não é
 apresentado como evidência da melhoria.
 
-A medição do QS-02 é da responsabilidade do membro que implementou o `CAND-2`; os eventos de
-progresso agregados do QS-01 são uma das entradas necessárias para essa medição, mas não a
-substituem.
-
 === Evidência de desempenho system-wide (regressão)
 
 A referência experimental de desempenho foi recolhida em 20 de novembro de 2026 sobre a revisão
@@ -124,8 +108,8 @@ A referência experimental de desempenho foi recolhida em 20 de novembro de 2026
 `tests/performance/resultados-desempenho-inicial/`. O ensaio variou a entrada com um vídeo de
 10 s a 720p sobre a mesma revisão (`comparacao-videos/README.md`). Estes dados medem o
 comportamento global da aplicação sob carga — latências, débito, recuperação e integridade — e
-são usados apenas como evidência de suporte da preservação funcional; não são o QS-01 nem o QS-02
-e não devem ser lidos como medição dos RNF escolhidos.
+são usados apenas como evidência de suporte da preservação funcional; não são o QS-01 e não devem
+ser lidos como medição do requisito escolhido.
 
 #tab([Ensaio de desempenho system-wide — desenho],
   tabela(
@@ -143,7 +127,7 @@ Docker 29.10.0, Compose 5.5.1, Node.js 22.22.1 e MongoDB 4.4 com profiling de n�
 repetição usou volumes recriados e o SHA-256 da entrada, os IDs das imagens e os limites foram
 registados. As versões e os registos por repetição estão em
 `tests/performance/resultados-desempenho-inicial/`. Algumas condições têm de ficar explícitas na
-comparação: a carga baixa ficou sem amostras de recursos por formato da saída do coletor; na
+comparações: a carga baixa ficou sem amostras de recursos por formato da saída do coletor; na
 variante de 75 s, a primeira tentativa da segunda repetição teve 14 cortes aceites com estado
 indeterminado no prazo da auditoria e a série publicada usa a repetição com prazo de 180 s.
 
@@ -176,7 +160,6 @@ indeterminado no prazo da auditoria e a série publicada usa a repetição com p
     tamanho: 8.5pt,
     [Zona alterada], [Testes de regressão existentes], [Lacunas de teste], [Testes acrescentados], [Resultado (imagem e vídeo)],
     [Despacho e encadeamento de etapas de vídeo em `projects/` e workers especializados — DA-1], [`video-pipeline.test.js`, `process-batch.test.js` e integração de processamento, incluindo projetos mistos e extração após edição], [Isolamento entre filas com indisponibilidade de um worker; fluxo completo de vídeo no navegador], [Caso de encaminhamento para os três workers; caso de integração de pipeline misto `border` + `subtitles`; verificação do progresso agregado], [20/20 Node, 53/53 Python e 31/31 integração; vídeo conserva áudio, moldura e legendas; progresso monotónico com 100 apenas no fim],
-    [Interface de processamento e estado da execução — DA-2], [Suites de API, integração e E2E da checklist], [Medição do bloqueio e da recuperação após recarregamento], [A registar pelo membro responsável], [A registar pelo membro responsável],
   ),
 )
 

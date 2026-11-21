@@ -40,7 +40,7 @@ As duas vistas usam o mesmo tipo de diagrama de componentes UML, a mesma orienta
     [Fila de despacho de vídeo], [`video_queue`, única para os três domínios], [`video_effects_queue`, `video_subtitles_queue`, `video_frames_queue`], [DA-1 / TAT-01, TAT-02],
     [Contentores de processamento], [`video_tool`, um processo com Pillow, FFmpeg, Faster-Whisper e `torch`], [Três serviços com `requirements.txt` próprio; `torch`/Whisper só no de legendas], [DA-1 / TAT-02],
     [Composição do pipeline], [`projects` enviava a pipeline inteira num único envio], [`projects` calcula `videoStages()` e encadeia a resposta de cada estágio em `project_queue`], [DA-1 / TAT-03],
-    [Progresso], [Publicado pelo worker monolítico, sem separação por estágio], [Publicado pelos três workers com `base`/`span`, agregado pelo orquestrador], [DA-1 / TAT-05; entrada para o DA-2],
+    [Progresso], [Publicado pelo worker monolítico, sem separação por estágio], [Publicado pelos três workers com `base`/`span`, agregado pelo orquestrador], [DA-1 / TAT-05],
     [Isolamento de falhas], [Uma falha na legendagem parava o único worker], [Falha confinada ao worker de legendas; os outros dois continuam], [DA-1 / TAT-02],
   ),
 )

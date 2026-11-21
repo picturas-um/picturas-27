@@ -16,7 +16,7 @@
     [Comunicação assíncrona por filas duráveis no exchange `picturas`], [EV-04], [O vídeo já usava mensageria, mas concentrada numa fila própria em vez de uma por domínio],
     [Volume partilhado `image_data` e estágios S3 (`src`, `out`, `preview`, `preview_cache`)], [EV-01, EV-02], [O worker de vídeo lê e escreve diretamente no mesmo armazenamento que as ferramentas de imagem, com a diferença de ser o único produtor de vídeo],
     [Orquestração centralizada do lote em `projects`, com registo prévio dos `Process`], [EV-05], [A ordem dos efeitos e a pertença ao item são decididas no orquestrador; o worker recebe o trabalho já planeado],
-    [Progresso publicado em `ws_queue` e entregue ao browser pelo wsGateway], [EV-05, EV-07], [O feedback existe, mas na base era apenas em memória do browser e não agregado por domínio],
+    [Progresso publicado em `ws_queue` e entregue ao browser pelo wsGateway], [EV-05], [O feedback existe, mas na base não era agregado por domínio],
   ),
 )
 
