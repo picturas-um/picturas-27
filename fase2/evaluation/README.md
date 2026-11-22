@@ -1,4 +1,4 @@
-# PictuRAS evaluation: M1–M4
+# PictuRAS evaluation: M1–M4 and M7 reporting
 
 This package evaluates **locally available Git commits** or a snapshot of the
 current checkout without changing the checkout or Git history. Commit runs
@@ -108,13 +108,50 @@ contracts independently in one worktree. The categories keep separate collection
 and verification statuses, so a contract failure preserves M2 and M3 evidence.
 `--static --functional` runs those two categories in one worktree.
 Use `--expect-commit FULL_HASH` when a branch may move. Remote reference
-lookup, performance benchmarks, maintenance scenarios, and `compare` are later
-milestones. Their CLI commands fail explicitly in this increment.
+lookup, performance benchmarks and maintenance scenarios are later milestones.
+Their CLI categories fail explicitly in this increment.
 
 `index` reads recorded identities and summaries and writes `INDEX.md` under
 `--results-root`. It classifies the two fixed commits, snapshots and framework
 test reports by metadata content, without moving any historical directory.
 Missing suite digests in older framework reports are shown as unrecorded.
+
+## M7 reporting
+
+Reporting reads existing results on the host and does not require Docker, Radon
+or jscpd. It leaves raw evidence and historical directories unchanged.
+
+```bash
+python -m fase2.evaluation list --results-root fase2/resultados/evaluations
+python -m fase2.evaluation list --role refactored --results-root fase2/resultados/evaluations
+python -m fase2.evaluation report role-layout-m3-m4-20261121-refactored \
+  --results-root fase2/resultados/evaluations
+python -m fase2.evaluation report role-layout-m3-m4-20261121-refactored \
+  --results-root fase2/resultados/evaluations --format html
+python -m fase2.evaluation compare role-layout-m3-m4-20261121-baseline \
+  role-layout-m3-m4-20261121-refactored \
+  --left-static role-layout-static-20261121-baseline \
+  --right-static role-layout-static-20261121-refactored \
+  --results-root fase2/resultados/evaluations --format html
+```
+
+`list` displays exact run IDs and paths. `report` and `compare` accept either;
+an ambiguous run ID fails with the matching paths. `--output FILE` chooses an
+HTML location and refuses to overwrite an existing file. Without it, HTML
+reports get unique names under `evaluations/reports/`. If both selected runs
+already contain M2, omit `--left-static` and `--right-static`. Otherwise,
+specify each M2 run explicitly; the supplementary run must have the same
+commit as its selected M3–M4 run. For successive refactoring commits, use the
+older one as the left run and the newer one as the right run. `--revision`
+filters `list` by commit prefix, never by a moving branch name.
+
+M2 comparisons require the same scope, Radon/jscpd versions, and jscpd
+thresholds. Relative differences are omitted for zero baselines. M3 suites
+remain separate because their tests differ. M4 comparisons require matching
+contract ID, suite digest, assertions, tolerances, inputs and test level;
+otherwise the contract is marked not comparable. HTML reports use inline CSS
+and relative links to existing local JSON and logs. Media are linked only
+when explicitly available and are never embedded.
 
 Results default to `$XDG_STATE_HOME/picturas-evaluation/evaluations` (or
 `~/.local/state/picturas-evaluation/evaluations`). Each run gets a new ID;

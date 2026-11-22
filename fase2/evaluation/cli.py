@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import subprocess
 import sys
+import uuid
 from contextlib import nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +14,8 @@ from .docker import collect_docker
 from .git import GitError, TemporaryWorktree, repository_root, resolve_commit
 from .index import BASELINE, INITIAL_REFACTORED, build_index
 from .results import create_run, create_snapshot_run, default_root, write_json
+from .reporting import compare as compare_runs, discover, load, select
+from .report_views import comparison_html, comparison_text, list_text, run_html, run_text
 from .snapshot import TemporarySnapshot
 from .static import collect_static
 
@@ -60,8 +63,23 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--jscpd", default="jscpd", help="host jscpd executable")
     run.add_argument("--docker-timeout", type=int, default=3600,
                      help="maximum seconds for each Docker build or suite (default: 3600)")
-    compare = subparsers.add_parser("compare", help="reserved for a later milestone")
-    compare.add_argument("runs", nargs="*")
+    listing = subparsers.add_parser("list", help="list recorded evaluations")
+    listing.add_argument("--results-root", type=Path, default=default_root())
+    listing.add_argument("--role", choices=("baseline", "refactored", "framework", "snapshot", "unclassified"))
+    listing.add_argument("--revision", help="filter by full commit or commit prefix")
+    report = subparsers.add_parser("report", help="show one recorded evaluation")
+    report.add_argument("run", help="exact run ID or path relative to results-root")
+    report.add_argument("--results-root", type=Path, default=default_root())
+    report.add_argument("--format", choices=("terminal", "html"), default="terminal")
+    report.add_argument("--output", type=Path, help="HTML output path; existing files are never replaced")
+    compare = subparsers.add_parser("compare", help="compare two explicitly selected evaluations")
+    compare.add_argument("left", help="baseline or earlier refactored run ID/path")
+    compare.add_argument("right", help="refactored run ID/path")
+    compare.add_argument("--left-static", help="explicit M2 run for the left commit")
+    compare.add_argument("--right-static", help="explicit M2 run for the right commit")
+    compare.add_argument("--results-root", type=Path, default=default_root())
+    compare.add_argument("--format", choices=("terminal", "html"), default="terminal")
+    compare.add_argument("--output", type=Path, help="HTML output path; existing files are never replaced")
     index = subparsers.add_parser("index", help="write an index from existing result metadata")
     index.add_argument("--results-root", type=Path, default=default_root())
     index.add_argument("--output", type=Path, help="default: INDEX.md under results-root")
@@ -79,8 +97,42 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(f"Index: {output}")
         return 0
-    if args.command == "compare":
-        parser.error("compare is not implemented in M1–M4")
+    if args.command in {"list", "report", "compare"}:
+        if args.command != "list" and args.output and args.format != "html":
+            parser.error("--output requires --format html")
+        try:
+            runs = discover(args.results_root)
+            if args.command == "list":
+                found = [run for run in runs if (not args.role or run["role"] == args.role)
+                         and (not args.revision or (run["commit"] or "").startswith(args.revision))]
+                print(list_text([load(run) for run in found]))
+                return 0
+            if args.command == "report":
+                run = load(select(runs, args.run))
+                if args.format == "terminal":
+                    print(run_text(run))
+                    return 0
+                output = args.output or args.results_root / "reports" / f"{run['run_id']}-{uuid.uuid4().hex[:8]}.html"
+                content = run_html(run, output.expanduser().resolve())
+            else:
+                left, right = load(select(runs, args.left)), load(select(runs, args.right))
+                ls = load(select(runs, args.left_static)) if args.left_static else None
+                rs = load(select(runs, args.right_static)) if args.right_static else None
+                result = compare_runs(left, right, ls, rs)
+                if args.format == "terminal":
+                    print(comparison_text(result))
+                    return 0
+                output = args.output or args.results_root / "reports" / f"compare-{uuid.uuid4().hex[:8]}.html"
+                content = comparison_html(result, output.expanduser().resolve())
+            output = output.expanduser().resolve()
+            output.parent.mkdir(parents=True, exist_ok=True)
+            with output.open("x", encoding="utf-8") as stream:
+                stream.write(content)
+            print(f"HTML report: {output}")
+            return 0
+        except (OSError, ValueError) as error:
+            print(f"Reporting failed: {error}", file=sys.stderr)
+            return 2
     unsupported = [name for name in ("performance", "maintenance") if getattr(args, name)]
     if unsupported:
         parser.error(f"categories not implemented in M1–M4: {', '.join(unsupported)}")
@@ -230,6 +282,12 @@ def main(argv: list[str] | None = None) -> int:
                 metadata["cleanup_error"] = str(error)
         metadata["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
         write_json(output / "metadata.json", metadata)
+
+    try:
+        relative = output.resolve().relative_to(args.results_root.expanduser().resolve()).as_posix()
+        print(run_text(load(select(discover(args.results_root), relative))))
+    except (OSError, ValueError) as error:
+        print(f"Could not display evaluation summary: {error}", file=sys.stderr)
 
     if metadata["verification_status"] == "failed":
         print(f"Application tests failed; see {output}", file=sys.stderr)

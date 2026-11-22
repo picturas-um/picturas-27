@@ -569,6 +569,14 @@ installs pytest only inside disposable test containers.
 
 # Regenerate the readable index from recorded metadata
 /tmp/picturas-evaluation-venv/bin/python -m fase2.evaluation index --results-root fase2/resultados/evaluations
+
+# M7: discover, inspect and compare existing runs (no Docker required)
+python3 -m fase2.evaluation list --results-root fase2/resultados/evaluations
+python3 -m fase2.evaluation report role-layout-m3-m4-20261121-refactored --results-root fase2/resultados/evaluations --format html
+python3 -m fase2.evaluation compare role-layout-m3-m4-20261121-baseline role-layout-m3-m4-20261121-refactored \
+  --left-static role-layout-static-20261121-baseline \
+  --right-static role-layout-static-20261121-refactored \
+  --results-root fase2/resultados/evaluations --format html
 ```
 
 New commit results are stored under `evaluations/<role>/<full-commit>/<run-id>/`.
@@ -586,6 +594,15 @@ revisions. A failing contract returns a nonzero exit code while retaining all co
 measurements and logs. Each run gets a unique ID automatically; `--run-id ID` is optional and
 refuses an existing result directory. [Evaluation details](fase2/evaluation/README.md) and the
 [evaluation index](fase2/resultados/evaluations/INDEX.md) describe the evidence.
+
+`list`, `report` and `compare` read recorded evidence only. `report` and `compare`
+print terminal output by default; `--format html` writes a new standalone HTML
+file under `evaluations/reports/`. Select exact run IDs or paths from `list`;
+ambiguous IDs are rejected. When M2 and M3–M4 were recorded in separate runs,
+pass both M2 runs explicitly as shown above. Missing or incompatible metrics
+are labelled instead of treated as zero. Comparison of revision-specific M3
+test counts is descriptive; only matching M4 contracts can establish a
+functional regression. M5 and M6 remain outside this reporting increment.
 
 For a new refactoring commit, fetch it explicitly if it is not already local, resolve its
 full hash, and run `--all --role refactored` with that hash. Keep the baseline commit above unchanged. Results

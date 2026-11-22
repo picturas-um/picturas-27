@@ -1,0 +1,19 @@
+{
+  "command": "/tmp/picturas-reporting-venv/bin/python -m pytest -q fase2/tests/evaluation --junitxml=/tmp/picturas-m7-framework-complete.xml",
+  "counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 75
+  },
+  "executed_at_utc": "2026-11-22T14:40:40.520809+00:00",
+  "failed": 0,
+  "framework": {
+    "code_sha256": "9e1e284938490079dc7065c3a7600c95bc6906bcd550ce09274e9701fc469076"
+  },
+  "junit": "junit.xml",
+  "passed": 75,
+  "run_id": "20261122-complete",
+  "source_head": "bd3052ee5864dbd01cfa0b0e4f1ee20d7c3179de",
+  "suite_sha256": "48f2a40b199a0d3f62418a044eb63df6fc2c6ed3478d66d2c302c7cb28857f95"
+}
