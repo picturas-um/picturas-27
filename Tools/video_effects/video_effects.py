@@ -2,8 +2,12 @@
 
 Receives video processing jobs for standard effects (trim, speed, PIL filters),
 processes them with effects in a single decode/encode pass, and replies
-to the projects orchestrator on project_queue. Progress is sent straight to the
-WebSocket gateway (ws_queue).
+to the projects orchestrator on project_queue. Progress, as a percentage, is
+sent to the orchestrator for persistence and to the WebSocket gateway
+(ws_queue).
+
+Unlike the image tools, the message is only acknowledged after the job ends:
+if the worker dies midway, RabbitMQ redelivers it.
 """
 import datetime
 import json
@@ -106,12 +110,16 @@ class VideoEffectsWorker:
             },
         })
 
-    def _progress(self, progress, preview, percent):
+    def _progress(self, progress, preview, percent, msg_id=None):
         if not progress or not progress.get("user"):
             return
         base = float(progress.get("base", 0))
         span = float(progress.get("span", 100))
         overall = max(0, min(100, round(base + percent * span / 100)))
+        if not preview and msg_id:
+            self._publish(PROJECT_QUEUE, {
+                "type": "video-progress", "correlationId": msg_id, "percent": percent,
+            })
         event = {
             "messageId": f"update-client-video-progress-{uuid.uuid4()}",
             "timestamp": now().isoformat(),
@@ -155,7 +163,7 @@ class VideoEffectsWorker:
             try:
                 result = process_video(
                     input_uri, output_uri, tools, preview=preview,
-                    progress_cb=lambda pct: self._progress(progress, preview, pct),
+                    progress_cb=lambda pct: self._progress(progress, preview, pct, msg_id),
                 )
                 self._reply_success(msg_id, started, output_uri, result)
                 print(f"[video_effects] msg={msg_id} ok frames={result['frames']} "

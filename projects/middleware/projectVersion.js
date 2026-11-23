@@ -10,6 +10,13 @@ async function requireProjectVersion(req, res, next) {
   const project = req.sharedProject || (await Project.getOne(req.params.user, req.params.project));
   if (!project) return res.status(404).jsonp("Project not found");
 
+  // These writes can remove jobs or change the pipeline an active run uses.
+  // Keep navigation/read access available while preserving a recoverable run.
+  const changesRun = /\/(img|video|tool)(\/|$)|\/(reorder|clear|assistant\/apply)$/.test(req.path);
+  if (changesRun && project.processingState?.status === "processing") {
+    return res.status(409).jsonp("Cancel the active processing run before changing media or tools");
+  }
+
   req.projectDoc = project;
   req.expectedVersion = expected;
 

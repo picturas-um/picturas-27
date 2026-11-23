@@ -69,14 +69,20 @@ module.exports.delete = (user_id, project_id) => {
 module.exports.getOneByShareId = (shareId) =>
   Project.findOne({ "sharedLinks.id": shareId }).exec();
 
-module.exports.updateIfVersion = async (user_id, project_id, project, expectedVersion) => {
+module.exports.updateIfVersion = async (user_id, project_id, project, expectedVersion, options = {}) => {
   const raw = project.toObject ? project.toObject() : project;
 
   // remove campos que não se quer "setar"
-  const { _id, user_id: _uid, version, __v, sharedLinks, ...rest } = raw;
+  const { _id, user_id: _uid, version, __v, sharedLinks, processingState, ...rest } = raw;
+
+  // Ordinary project edits must not overwrite progress written by a worker.
+  if (options.processingState) rest.processingState = options.processingState;
+  const filter = { user_id, _id: project_id, version: expectedVersion };
+  if (options.activeToken !== undefined) filter.activeToken = options.activeToken;
+  if (options.requireProcessing) filter["processingState.status"] = "processing";
 
   return await Project.findOneAndUpdate(
-    { user_id: user_id, _id: project_id, version: expectedVersion },
+    filter,
     { $set: rest, $inc: { version: 1 } },
     { new: true } // devolve documento já com versão incrementada
   ).exec();
@@ -91,10 +97,37 @@ module.exports.updateRaw = async (user_id, project_id, update) => {
 
 
 // Commit only if cancellation/new processing has not changed the active run.
-module.exports.commitRunIfActive = async (user_id, project_id, token, tools) => {
+module.exports.commitRunIfActive = async (user_id, project_id, token, tools, tracked = false) => {
+  const filter = { user_id, _id: project_id, activeToken: token };
+  if (tracked) {
+    filter["processingState.token"] = token;
+    filter["processingState.status"] = "processing";
+  }
+  const fields = { committedToken: token, resultsToken: token, committedTools: tools };
+  if (tracked) {
+    fields["processingState.status"] = "completed";
+    fields["processingState.updatedAt"] = new Date();
+  }
   return Project.findOneAndUpdate(
-    { user_id, _id: project_id, activeToken: token },
-    { $set: { committedToken: token, resultsToken: token, committedTools: tools } },
+    filter,
+    { $set: fields },
     { new: true }
   ).exec();
 };
+
+module.exports.recordProcessingProgress = (user_id, project_id, token, { messageId, videoId, percent } = {}) => {
+  const update = { $set: { "processingState.updatedAt": new Date() } };
+  if (messageId) update.$addToSet = { "processingState.completedMessages": messageId };
+  if (videoId && Number.isFinite(percent)) {
+    update.$max = { [`processingState.videoProgress.${videoId}`]: Math.max(0, Math.min(100, percent)) };
+  }
+  return Project.updateOne({ user_id, _id: project_id, activeToken: token,
+    "processingState.token": token, "processingState.status": "processing" }, update).exec();
+};
+
+module.exports.failProcessing = (user_id, project_id, token, error) =>
+  Project.updateOne({ user_id, _id: project_id, activeToken: token,
+    "processingState.token": token, "processingState.status": "processing" }, {
+    $set: { "processingState.status": "failed", "processingState.error": error,
+      "processingState.updatedAt": new Date() },
+  }).exec();
