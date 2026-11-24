@@ -9,6 +9,7 @@ import subprocess
 import pytest
 from PIL import Image, ImageStat
 
+import effects
 from effects import (
     UnsupportedEffect,
     InvalidSpeed,
@@ -108,6 +109,24 @@ def test_trim_cuts_video_and_audio(sample_video, tmp_path):
     info = process_video(sample_video, out, [{"procedure": "trim", "params": {"start": 1, "end": 2.5}}])
     assert info["duration"] == pytest.approx(1.5, abs=0.15)
     assert info["has_audio"]
+
+
+def test_trim_preview_preserves_silent_source_and_reports_progress(silent_video, tmp_path, monkeypatch):
+    out = str(tmp_path / "trim-preview.mp4")
+    original_hash = sha(silent_video)
+    progress = []
+    monkeypatch.setattr(effects, "PREVIEW_SECONDS", 0.75)
+    info = process_video(
+        silent_video, out, [{"procedure": "trim", "params": {"start": 0.5, "end": 1.75}}],
+        progress_cb=progress.append, preview=True,
+    )
+    assert info["duration"] == pytest.approx(0.75, abs=0.15)
+    assert info["video_codec"] == "h264"
+    assert not info["has_audio"]
+    assert info["frames"] > 0
+    assert progress == sorted(progress)
+    assert progress[-1] == 100
+    assert sha(silent_video) == original_hash
 
 
 # Successive trims compose into one window, each relative to the previous result

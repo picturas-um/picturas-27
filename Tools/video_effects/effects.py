@@ -215,6 +215,9 @@ def process_video(input_path: str, output_path: str, tools: list,
         end = min(end, start + PREVIEW_SECONDS * speed)
     duration = end - start
 
+    if tools and all(tool["procedure"] == "trim" for tool in tools):
+        return _trim_video(input_path, output_path, info, start, duration, progress_cb)
+
     w, h = info["width"], info["height"]
     frame_bytes = w * h * 3
     expected_frames = max(1, round(duration / speed * info["fps"]))
@@ -284,6 +287,55 @@ def process_video(input_path: str, output_path: str, tools: list,
         progress_cb(100)
 
     result = probe(output_path)
+    result["frames"] = frames
+    return result
+
+
+def _trim_video(input_path, output_path, info, start, duration, progress_cb):
+    """Keep frames inside FFmpeg when there are no pixel effects to apply."""
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    tmp_out = output_path + ".part.mp4"
+    command = [
+        "ffmpeg", "-y", "-v", "error", "-nostdin", "-nostats",
+        "-progress", "pipe:1", "-ss", f"{start:.3f}", "-t", f"{duration:.3f}",
+        "-i", input_path, "-map", "0:v:0",
+        "-vf", f"fps={info['fps_str']},pad=ceil(iw/2)*2:ceil(ih/2)*2,setsar=1",
+    ]
+    if info["has_audio"]:
+        command += ["-map", "0:a:0", "-c:a", "aac", "-b:a", "128k"]
+    command += [
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+        "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+        "-shortest", "-f", "mp4", tmp_out,
+    ]
+    frames = 0
+    last_reported_frames = 0
+    try:
+        with tempfile.TemporaryFile() as errors:
+            with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=errors, text=True) as ffmpeg:
+                try:
+                    for line in ffmpeg.stdout:
+                        key, _, value = line.strip().partition("=")
+                        if key == "frame":
+                            frames = int(value)
+                        elif key == "progress" and progress_cb and frames >= last_reported_frames + 10:
+                            last_reported_frames = frames
+                            progress_cb(min(99, int(frames * 100 / (duration * info["fps"]))))
+                except BaseException:
+                    ffmpeg.kill()
+                    raise
+                if ffmpeg.wait() != 0:
+                    raise ProcessingError(f"ffmpeg trim error: {_read(errors)}")
+        if frames == 0:
+            raise ProcessingError("No frames could be decoded from the requested window")
+        result = probe(tmp_out)
+        os.replace(tmp_out, output_path)
+    finally:
+        if os.path.exists(tmp_out):
+            os.remove(tmp_out)
+
+    if progress_cb:
+        progress_cb(100)
     result["frames"] = frames
     return result
 
