@@ -44,7 +44,7 @@ variantes. O isolamento de falhas e o progresso foram observados no stack em exe
 pedido de um pipeline misto (`border` seguido de `subtitles`) e a recolha dos eventos
 `video-progress` no socket. O vídeo de entrada é `tests/fixtures/videos/speech.mp4` (320×240,
 6 s, H.264/AAC, com fala); o de verificação de progresso é `clip.mp4`. A não-regressão foi
-verificada com as suites Node, Python e de integração referidas na secção de preservação
+avaliada com as suites referidas na secção de preservação
 funcional, com os comandos e identificadores de execução registados na checklist.
 
 *Tratamento das medições.* A métrica principal é o tamanho da imagem que tem de ser
@@ -58,14 +58,19 @@ fixou um valor-alvo numérico na ausência de uma medição prévia: o objetivo 
 inicial é confinar a mudança a um domínio e reduzir a imagem reconstruída, mantendo a preservação
 funcional.
 
-*Comparação antes/depois.* As duas variantes usam o mesmo host, os mesmos comandos e a mesma
-entrada; a revisão de base é `0523102` e a final é a árvore de trabalho com as alterações
-integradas. O executor de desempenho em `tests/performance/benchmark/` deteta o layout da
-variante (`Tools/video/video.py` + `video_queue` na base; `Tools/video_effects/` +
-`video_effects_queue` na final) e ajusta a prontidão e a instrumentação à fila e ao contentor que
-recebem `trim`, preservando a semântica dos _timestamps_ e a correlação dos eventos. Os dados
-dessa medição de regressão system-wide são descritos na secção seguinte e não são usados como
-prova do QS-01.
+*Comparação antes/depois.* A campanha de regressão comparou a aplicação `0523102` com
+`b8f44b3`. A referência funcional usa `25f4bd9`, que acrescenta os testes à aplicação
+inicial. O executor em `tests/performance/benchmark/` instrumenta a fila e o worker que recebem
+`trim` em cada variante. Os ensaios correram sequencialmente no mesmo host (Ryzen 7 5800HS,
+Docker 29.10.0, Compose 5.5.1, Node.js 22.22.1), em stacks isoladas, com volumes recriados
+e quatro fluxos de aquecimento por repetição.
+
+Foram feitas três repetições por perfil e por revisão. Cada fluxo carrega um MP4, corta
+de 0 a 2 s, consulta o resultado e descarrega-o. A carga baixa usa 0,5 fluxos/s durante 6 s,
+também ensaiada com vídeo a 720p. A carga mista usa 2 fluxos/s durante 12 s. O pico tem
+6 s a 2 fluxos/s, 6 s a 8 fluxos/s e uma recuperação a 2 fluxos/s durante 45 ou 75 s.
+Recolheram-se latências, débito, timeouts, descartes e integridade dos resultados aceites.
+Os percentis são calculados por repetição. A campanha de carga complementa a medição do QS-01.
 
 == Resultados das medições
 
@@ -107,85 +112,74 @@ apresentado como evidência da melhoria.
 #tab([Desempenho local — API e processamento de imagem],
   tabela(
     colunas: (1fr, 2.4cm, 2.4cm, 2.4cm),
-    [Medição], [Referência], [Atual], [Limite],
-    [Leitura de projeto, p95], [31,64 ms], [59,01 ms], [2 000 ms],
-    [Redimensionamento até ao resultado], [265,92 ms], [280,34 ms], [30 000 ms],
+    [Medição], [Referência], [Final], [Limite],
+    [Leitura de projeto, p95], [35,42 ms], [22,40 ms], [2 000 ms],
+    [Redimensionamento até ao resultado], [258,84 ms], [247,69 ms], [30 000 ms],
   ),
 )
 ]
 
-O teste local repetiu 20 leituras de projeto em lotes de quatro e o redimensionamento de um
-PNG de 160 × 120. Ambos os tempos observados aumentaram e ficaram dentro do orçamento de
-regressão. O teste forneceu uma medição por revisão. Os resultados dos ensaios de desempenho
-complementam a avaliação de modularidade do QS-01.
+O teste local ficou dentro dos dois limites nas duas revisões, com uma execução por revisão.
 
 #block(breakable: false)[
-#tab([Carga de vídeo — referência e revisão avaliada],
+#tab([Carga de vídeo — intervalo observado nas três repetições],
   tabela(
-    colunas: (1fr, 3cm, 3cm),
-    [Medição], [Referência], [Atual],
-    [Carga baixa · corte até ao resultado, p50], [0,45 s], [0,67–3,85 s],
-    [Carga mista · corte até ao resultado, p95], [0,67–0,68 s], [20,84–21,97 s],
-    [Carga mista · cortes disponíveis na janela], [115/min], [10–15/min],
-    [Pico · timeouts / pedidos aceites], [0/372], [167/216],
-    [Pico · chegadas descartadas pelo cliente], [78], [234],
-    [Pico · recuperação da fila, incluindo drenagem], [47–50 s], [147–153 s],
+    colunas: (1fr, 3.2cm, 3.2cm),
+    [Tempo até ao resultado], [Referência], [Final],
+    [Carga baixa, p50], [449–453 ms], [452–461 ms],
+    [Carga mista, p95], [670–674 ms], [460–678 ms],
+    [Pico de 45 s, p95], [15,64–17,27 s], [8,64–9,30 s],
+    [Pico de 75 s, p95], [13,42–13,68 s], [9,56–10,26 s],
+    [Carga baixa a 720p, p50], [1,108–1,118 s], [0,688–0,709 s],
   ),
 )
 ]
 
-A carga de vídeo usou o mesmo MP4, corte de 0 a 2 s e três repetições por perfil, com volumes
-recriados. A tabela apresenta o intervalo entre repetições. Na carga mista, concluíram 44 fluxos
-na versão atual, face a 72 na referência. O cliente descartou 28 chegadas na versão atual quando
-atingiu o limite de fluxos ativos, face a zero na referência. Na auditoria posterior ao pico, cada
-pedido aceite teve um resultado íntegro e único, incluindo os que excederam o prazo do cliente.
-Num controlo adicional de uma repetição em `0523102`, no dia da campanha atual, o p95 de
-carga mista foi de 11,10 s e o débito de 25 cortes/min. Ficou abaixo do desempenho histórico
-e acima do observado na revisão atual. Este controlo mostra a variação entre campanhas e
-mantém a diferença observada em carga mista. Os detalhes constam de `resultados-regressao-atual.md`.
+Na carga mista, as duas revisões concluíram 72 fluxos e mantiveram 115 cortes/min na janela.
+No pico de 45 s, os fluxos concluídos passaram de 381 para 423 e os descartes antes do início
+de 69 para 27. No pico de 75 s, os fluxos concluídos passaram de 576 para 597 e os descartes
+de 54 para 33. Em ambas as variantes de pico houve zero timeouts e a auditoria confirmou um
+resultado íntegro por pedido aceite. A comparação mede revisões completas. A reconstrução das
+imagens e a variação da carga do host limitam a atribuição dos ganhos a uma só alteração.
+Os valores por repetição constam de `resultados-desempenho-inicial.md` e `resultados-regressao-atual.md`.
 
 #block(breakable: false)[
 == Preservação funcional
 
-Os *158 casos comparáveis passaram nas duas versões*. A comparação cruza os nomes dos casos
-nos relatórios JUnit da referência (`0523102` com alterações locais, 6 de novembro de 2026)
-e da revisão avaliada (`252fbc1`, 24 de novembro de 2026). Os totais incluem quantidades
-diferentes de casos, sobretudo pela reorganização das suites Python.
+*Passaram nas duas versões 155 dos 158 casos emparelhados por nome no JUnit.*
+Os totais incluem os casos exclusivos de cada revisão.
 
 #tab([Regressão funcional — casos aprovados / executados],
   tabela(
     colunas: (1fr, 2.5cm, 2.5cm, 2.8cm),
-    [Suite], [Referência], [Atual], [Casos comuns],
-    [Unitários Node / Python], [101/101], [93/95], [76/76],
+    [Suite], [Referência], [Final], [Casos comuns],
+    [Unitários Node / Python], [101/101], [94/96], [76/76],
     [API], [36/36], [36/36], [36/36],
-    [Integração], [30/30], [31/31], [30/30],
-    [Browser (Playwright)], [11/11], [11/11], [11/11],
-    [Segurança, backup e orçamento local], [5/5], [5/5], [5/5],
-    [*Total*], [*183/183*], [*176/178*], [*158/158*],
+    [Integração], [30/30], [30/31], [29/30],
+    [Browser (Playwright)], [11/11], [9/11], [9/11],
+    [Segurança, restauro e orçamento local], [5/5], [5/5], [5/5],
+    [*Total*], [*183/183*], [*174/179*], [*155/158*],
   ),
 )
 ]
 
-A API e os testes no browser repetiram os percursos de autenticação, contas, projetos, partilha,
-carregamento e exportação de imagem. A integração repetiu verificação de quotas, armazenamento,
-concorrência e processamento de imagem e vídeo, incluindo áudio, pré-visualização, legendas e
-fotogramas. Também passou o caso acrescentado de moldura seguida de legendagem. O restauro das
-três bases voltou a passar no ensaio isolado.
+Na integração, o caso de remoção de fundo excedeu o prazo e passou numa repetição isolada.
+O total conserva o resultado da primeira passagem. No browser, o percurso de edição e descarga
+de imagem excedeu o prazo e o teste da partilha de leitura não encontrou o botão «Apply».
+Os resultados de preservação destes dois percursos ficam por confirmar.
 
-As duas falhas atuais ocorreram na preparação de novos testes Python de recuperação, que ainda
-referenciam o worker removido. A suite completa do Playwright ficou bloqueada na descoberta por
-uma importação incorreta no novo ficheiro de recuperação. Os onze casos existentes passaram
-numa execução seletiva dos cinco ficheiros da referência. Os campos de validação da recuperação
-afetados por estes bloqueios ficam por confirmar. Os 13 casos com falha conhecida voltaram a
-falhar e são contabilizados à parte. O historial, os procedimentos e a desagregação
-por suite constam de `resultados-regressao-atual.md` e `docs/REGRESSION_CHECKLIST.md`.
+Os dois casos Python de recuperação falharam na preparação ao procurar o worker antigo.
+A descoberta do Playwright completo ficou bloqueada por uma importação no ficheiro de recuperação.
+A tabela usa a execução separada dos cinco ficheiros existentes na referência. Os 13 casos de
+falha conhecida voltaram a falhar nas duas versões e são contabilizados à parte.
+Os registos constam de `resultados-regressao-atual.md` e `docs/REGRESSION_CHECKLIST.md`.
 
 #tab([Preservação funcional e testes de regressão],
   tabela(
     colunas: (2.4cm, 3.8cm, 2.8cm, 3.2cm, 1fr),
     tamanho: 8.5pt,
     [Zona alterada], [Testes de regressão existentes], [Lacunas de teste], [Testes acrescentados], [Resultado (imagem e vídeo)],
-    [Despacho e encadeamento de etapas de vídeo em `projects/` e workers especializados — DA-1], [`video-pipeline.test.js`, `process-batch.test.js` e integração de processamento, incluindo projetos mistos e extração após edição], [Isolamento entre filas com indisponibilidade de um worker; fluxo completo de vídeo no navegador], [Caso de encaminhamento para os três workers; caso de integração de pipeline misto `border` + `subtitles`; verificação do progresso agregado], [31/31 de integração na revisão avaliada. O caso de moldura seguida de legendagem conservou áudio, moldura e legendas.],
+    [Despacho e encadeamento de etapas de vídeo em `projects/` e workers especializados — DA-1], [`video-pipeline.test.js`, `process-batch.test.js` e integração de processamento, incluindo projetos mistos e extração após edição], [Isolamento entre filas com indisponibilidade de um worker; fluxo completo de vídeo no navegador], [Caso de encaminhamento para os três workers; caso de integração de pipeline misto `border` + `subtitles`; verificação do progresso agregado], [30/31 na suite de integração. O pipeline de moldura seguida de legendagem passou. A remoção de fundo passou na repetição isolada.],
   ),
 )
 

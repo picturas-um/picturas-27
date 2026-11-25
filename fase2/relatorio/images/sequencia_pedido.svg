@@ -1,73 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="900" viewBox="0 0 1240 900">
-<defs><marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#087F8C"/></marker></defs>
-<rect width="1240" height="900" fill="white"/>
-<text x="620" y="28" font-family="DejaVu Sans" font-size="16" font-weight="bold" fill="#1F2937" text-anchor="middle">Sequência do processamento em lote de vídeo — solução de base (0523102)</text>
-<rect x="10.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="75" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">Utilizador</text>
-<line x1="75" y1="88" x2="75" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="160.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="225" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">Frontend</text>
-<line x1="225" y1="88" x2="225" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="310.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="375" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">API Gateway</text>
-<line x1="375" y1="88" x2="375" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="460.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="525" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">projects</text>
-<line x1="525" y1="88" x2="525" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="610.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="675" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">RabbitMQ</text>
-<line x1="675" y1="88" x2="675" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="760.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="825" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">video_tool</text>
-<line x1="825" y1="88" x2="825" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="910.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="975" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">wsGateway</text>
-<line x1="975" y1="88" x2="975" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<rect x="1060.0" y="48" width="130" height="40" rx="4" fill="#DCEAF7" stroke="#7F8790"/><text x="1125" y="73" font-family="DejaVu Sans" font-size="10.5" font-weight="bold" fill="#1F2937" text-anchor="middle">S3</text>
-<line x1="1125" y1="88" x2="1125" y2="835" stroke="#BCC6D1" stroke-width="1" stroke-dasharray="4,4"/>
-<line x1="75" y1="120" x2="225" y2="120" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="94.4" y="106" width="111.2" height="16" fill="white"/>
-<text x="150.0" y="118" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">1. carrega vídeo</text>
-<line x1="225" y1="158" x2="375" y2="158" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="232.0" y="144" width="136.0" height="16" fill="white"/>
-<text x="300.0" y="156" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">2. POST /:u/:p/video</text>
-<line x1="375" y1="196" x2="525" y2="196" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="400.6" y="182" width="98.8" height="16" fill="white"/>
-<text x="450.0" y="194" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">3. reencaminha</text>
-<line x1="525" y1="234" x2="1125" y2="234" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="772.5" y="220" width="105.0" height="16" fill="white"/>
-<text x="825.0" y="232" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">4. grava em src</text>
-<line x1="75" y1="272" x2="225" y2="272" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="63.39999999999999" y="258" width="173.20000000000002" height="16" fill="white"/>
-<text x="150.0" y="270" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">5. define pipeline + Apply</text>
-<line x1="225" y1="310" x2="525" y2="310" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="319.4" y="296" width="111.2" height="16" fill="white"/>
-<text x="375.0" y="308" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">6. POST /process</text>
-<line x1="525" y1="348" x2="675" y2="348" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="491.7" y="334" width="216.6" height="16" fill="white"/>
-<text x="600.0" y="346" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">7. video_queue: pipeline completo</text>
-<line x1="675" y1="386" x2="825" y2="386" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="685.1" y="372" width="129.8" height="16" fill="white"/>
-<text x="750.0" y="384" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">8. consome mensagem</text>
-<line x1="825" y1="424" x2="1125" y2="424" stroke="#087F8C" stroke-width="1.5" marker-end="url(#arr)"/>
-<rect x="897.7" y="410" width="154.6" height="16" fill="white"/>
-<text x="975.0" y="422" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">9. lê src / escreve out</text>
-<line x1="825" y1="462" x2="675" y2="462" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="657.2" y="448" width="185.6" height="16" fill="white"/>
-<text x="750.0" y="460" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">10. project_queue: resultado</text>
-<line x1="675" y1="500" x2="525" y2="500" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="528.9" y="486" width="142.20000000000002" height="16" fill="white"/>
-<text x="600.0" y="498" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">11. entrega resultado</text>
-<line x1="825" y1="538" x2="675" y2="538" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="657.2" y="524" width="185.6" height="16" fill="white"/>
-<text x="750.0" y="536" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">12. ws_queue: video-progress</text>
-<line x1="675" y1="576" x2="975" y2="576" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="753.9" y="562" width="142.20000000000002" height="16" fill="white"/>
-<text x="825.0" y="574" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">13. publica progresso</text>
-<line x1="975" y1="614" x2="225" y2="614" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="553.7" y="600" width="92.60000000000001" height="16" fill="white"/>
-<text x="600.0" y="612" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">14. Socket.IO</text>
-<line x1="525" y1="652" x2="75" y2="652" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-<rect x="219.6" y="638" width="160.8" height="16" fill="white"/>
-<text x="300.0" y="650" font-family="DejaVu Sans" font-size="10" fill="#087F8C" text-anchor="middle">15. resultado disponível</text>
-<rect x="60" y="700" width="1120" height="120" rx="6" fill="#FAFBFC" stroke="#BCC6D1"/>
-<text x="75" y="722" font-family="DejaVu Sans" font-size="12" font-weight="bold" fill="#374151">Legenda e notas</text>
-<line x1="75" y1="740" x2="115" y2="740" stroke="#087F8C" stroke-width="1.5"/><text x="125" y="744" font-family="DejaVu Sans" font-size="10.5" fill="#1F2937">Pedido / mensagem AMQP</text>
-<line x1="370" y1="740" x2="410" y2="740" stroke="#087F8C" stroke-width="1.5" stroke-dasharray="5,4"/><text x="420" y="744" font-family="DejaVu Sans" font-size="10.5" fill="#1F2937">Resposta / evento assíncrono</text>
-<text x="75" y="768" font-family="DejaVu Sans" font-size="10.5" fill="#374151">O orquestrador regista todos os Process antes do passo 7 e envia a pipeline inteira numa única mensagem.</text>
-<text x="75" y="788" font-family="DejaVu Sans" font-size="10.5" fill="#374151">O worker decodifica uma vez, aplica os efeitos nos fotogramas e codifica uma só vez; uma falha interrompe todos os domínios.</text>
-<text x="75" y="808" font-family="DejaVu Sans" font-size="10.5" fill="#374151">Na variante final, os passos 7–10 passam por três filas e workers, com encadeamento em project_queue.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="633" viewBox="0 0 1060 633" font-family="DejaVu Sans, sans-serif">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#087F8C"/></marker></defs>
+<rect width="1060" height="633" fill="white"/>
+<rect x="11" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="80" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">Browser</text>
+<path d="M80 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="161" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="230" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">API Gateway</text>
+<path d="M230 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="311" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="380" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">projects</text>
+<path d="M380 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="461" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="530" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">RabbitMQ</text>
+<path d="M530 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="611" y="10" width="138" height="37" rx="4" fill="#BFE8E5" stroke="#657080"/>
+<text x="680" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">video_tool</text>
+<path d="M680 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="761" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="830" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">wsGateway</text>
+<path d="M830 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<rect x="911" y="10" width="138" height="37" rx="4" fill="#DCEAF7" stroke="#657080"/>
+<text x="980" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">S3 / volume</text>
+<path d="M980 47 V590" stroke="#A3ADB8" stroke-dasharray="4 5"/>
+<path d="M80 76 H230" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="155.0" y="71" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">POST vídeo</text>
+<path d="M230 109 H380" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="305.0" y="104" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Valida e encaminha</text>
+<path d="M380 142 H980" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="680.0" y="137" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Guarda original em src, via img_storage</text>
+<path d="M80 175 H380" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="230.0" y="170" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Gateway: POST reorder, depois POST process</text>
+<path d="M380 208 H980" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="680.0" y="203" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Prepara original em image_data e regista lote</text>
+<path d="M380 241 H530" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="455.0" y="236" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">video_queue</text>
+<path d="M530 274 H680" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="605.0" y="269" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Pipeline do vídeo</text>
+<path d="M680 307 H980" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="830.0" y="302" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Lê original e produz saída em image_data</text>
+<path d="M680 340 H530" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="605.0" y="335" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">video-progress</text>
+<path d="M530 373 H830" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="680.0" y="368" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">ws_queue</text>
+<path d="M830 406 H80" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="455.0" y="401" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Progresso por Socket.IO</text>
+<path d="M680 439 H530" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="605.0" y="434" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Resposta</text>
+<path d="M530 472 H380" stroke="#087F8C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="455.0" y="467" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">project_queue</text>
+<path d="M380 505 H980" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="680.0" y="500" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Publica em out, via img_storage</text>
+<path d="M80 538 H380" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="230.0" y="533" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Gateway: GET process/url</text>
+<path d="M380 571 H80" stroke="#087F8C" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="230.0" y="566" text-anchor="middle" font-size="16" fill="#1F2937" stroke="white" stroke-width="4" paint-order="stroke">Gateway: URLs do lote concluído</text>
+<text x="22" y="620" font-size="16" fill="#374151">Tracejado: AMQP. O progresso pode ser emitido várias vezes antes da resposta final.</text>
 </svg>
