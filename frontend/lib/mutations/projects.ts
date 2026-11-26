@@ -522,6 +522,7 @@ export const useClearProjectTools = (
       }),
     onSuccess: (newVersionHeader) => {
       bumpProjectVersion(qc, ["project", uid, pid, token, ownerId, shareId], newVersionHeader);
+      qc.invalidateQueries({ queryKey: ["project", uid, pid, token, ownerId, shareId], refetchType: "all" });
       qc.invalidateQueries({ queryKey: ["projectResults", uid, pid, token, ownerId, shareId], refetchType: "all" });
     },
   });

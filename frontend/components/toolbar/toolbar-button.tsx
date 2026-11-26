@@ -23,7 +23,12 @@ import {
   usePreviewProjectResult,
   useUpdateProjectTool,
 } from "@/lib/mutations/projects";
-import { ProjectTool, ProjectToolResponse } from "@/lib/projects";
+import { isVideo, ProjectTool, ProjectToolResponse } from "@/lib/projects";
+import {
+  getToolInfo,
+  getUnavailableReason,
+  getWorksOnText,
+} from "@/lib/tool-registry";
 import { useGetSocket } from "@/lib/queries/projects";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import { getErrorMessage } from "@/lib/error-messages";
@@ -114,6 +119,14 @@ export function ToolbarButton({
       : "outline";
 
   const currentImage = useCurrentImage();
+
+  // Why this tool cannot be used in this project right now (null = it can).
+  // The rules live in lib/tool-registry.ts and mirror the backend ones.
+  const hasVideos = project.imgs.some((i) => isVideo(i));
+  const unavailableReason = getUnavailableReason(tool.procedure, {
+    hasVideos,
+    selected: currentImage ? (isVideo(currentImage) ? "video" : "image") : null,
+  });
 
   const addTool = useAddProjectTool(
     session.user._id,
@@ -302,47 +315,79 @@ export function ToolbarButton({
   const uiDisabled =
     disabled ||
     locked ||
+    unavailableReason !== null ||
     (preview.waiting !== tool.procedure && preview.waiting !== "");
+
+  // Small corner label for tools that only work on one kind of media.
+  // Tools that work on both get no label (the tooltip says so).
+  const mediaInfo = getToolInfo(tool.procedure);
+  const cornerBadge =
+    mediaInfo && mediaInfo.media !== "both"
+      ? mediaInfo.media === "image"
+        ? "IMG"
+        : "VID"
+      : null;
+  const worksOnText = getWorksOnText(tool.procedure);
 
   const lockReason = "Read-only (não podes editar)";
 
   const TButton = () => (
     <Tooltip>
-      <Button
-        variant={variant}
-        className={`size-8 relative ${
-          isPremium && variant === "default" ? "bg-indigo-500 hover:bg-indigo-400" : ""
-        }`}
-        disabled={uiDisabled}
-        onClick={handleClick}
-      >
-        {waiting ? (
-          <LoaderCircle className="animate-spin" />
-        ) : (
-          <>
-            {isPremium ? (
-              <TooltipTrigger asChild>
-                <div
-                  className={
-                    isPremium && variant === "default" ? "text-white" : "text-indigo-500"
-                  }
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <Sparkle className="h-3 w-3 absolute -top-1 -right-1" />
-                  <span className="sr-only">{label}</span>
-                </div>
-              </TooltipTrigger>
+      {/* The span (not the button) receives the hover, so the tooltip also
+          works when the button is disabled. */}
+      <TooltipTrigger asChild>
+        <span
+          className="inline-block rounded-md"
+          tabIndex={unavailableReason ? 0 : undefined}
+        >
+          <Button
+            variant={variant}
+            className={`size-8 relative ${
+              isPremium && variant === "default" ? "bg-indigo-500 hover:bg-indigo-400" : ""
+            }`}
+            disabled={uiDisabled}
+            onClick={handleClick}
+          >
+            {waiting ? (
+              <LoaderCircle className="animate-spin" />
             ) : (
               <>
-                <Icon className="h-3.5 w-3.5" />
-                <span className="sr-only">{label}</span>
+                {isPremium ? (
+                  <div
+                    className={
+                      isPremium && variant === "default" ? "text-white" : "text-indigo-500"
+                    }
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <Sparkle className="h-3 w-3 absolute -top-1 -right-1" />
+                    <span className="sr-only">{label}</span>
+                  </div>
+                ) : (
+                  <>
+                    <Icon className="h-3.5 w-3.5" />
+                    <span className="sr-only">{label}</span>
+                  </>
+                )}
               </>
             )}
-          </>
+            {cornerBadge && (
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-1 -right-1 rounded border bg-background px-0.5 text-[8px] font-semibold leading-3 text-muted-foreground"
+              >
+                {cornerBadge}
+              </span>
+            )}
+          </Button>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="ml-2 max-w-52 bg-indigo-500" side="right">
+        <div className="font-medium">{label}</div>
+        {unavailableReason ? (
+          <div className="pt-0.5">{unavailableReason}</div>
+        ) : (
+          worksOnText && <div className="pt-0.5 opacity-90">{worksOnText}</div>
         )}
-      </Button>
-      <TooltipContent className="ml-2 bg-indigo-500" side="right">
-        {label}
       </TooltipContent>
     </Tooltip>
   );

@@ -45,6 +45,8 @@ import { useUpdateSession } from "@/lib/mutations/session";
 import { getErrorMessage } from "@/lib/error-messages";
 import { PresetsDialog } from "@/components/presets/presets-dialog";
 import { AiAssistantDialog } from "@/components/assistant/ai-assistant-dialog";
+import { validatePipeline } from "@/lib/pipeline-validation";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Project({
   params,
@@ -116,6 +118,10 @@ export default function Project({
   const totalProcessingSteps =
     imageToolCount * (projectImgs.length - projectVideos.length) + projectVideos.length;
   const hasVideos = projectVideos.length > 0;
+
+  // Why the pipeline cannot be applied (same rules as the backend). While it is
+  // invalid the Apply button stays disabled and explains what to fix.
+  const pipeline = validatePipeline(project.data?.tools ?? [], { hasVideos });
 
   // A single progress bar that combines the image steps with the real
   // progress of each video (a video only counts as one step when it finishes)
@@ -660,10 +666,18 @@ const handleCancel = () => {
                       <div className="flex items-center gap-2 flex-wrap justify-end xl:justify-normal w-full xl:w-auto">
               {mode !== "results" && (
                 <>
+                  <Tooltip>
+                    {/* The span receives the hover, so the tooltip also works on the disabled button */}
+                    <TooltipTrigger asChild>
+                      <span
+                        className="inline-flex"
+                        tabIndex={!pipeline.isValid ? 0 : undefined}
+                      >
                   <Button
                     disabled={
                       !canEdit ||
                       project.data.tools.length <= 0 ||
+                      !pipeline.isValid ||
                       waitingForPreview !== ""
                     }
                     className="inline-flex"
@@ -752,6 +766,19 @@ const handleCancel = () => {
                   >
                     <Play /> Apply
                   </Button>
+                      </span>
+                    </TooltipTrigger>
+                    {!pipeline.isValid && (
+                      <TooltipContent side="bottom" className="max-w-xs">
+                        <p className="font-medium">Fix this before applying:</p>
+                        <ul className="list-disc pl-4 pt-0.5">
+                          {pipeline.problems.map((problem) => (
+                            <li key={problem}>{problem}</li>
+                          ))}
+                        </ul>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
 
           {canEdit && (
             <>

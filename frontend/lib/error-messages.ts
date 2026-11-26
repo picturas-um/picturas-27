@@ -1,5 +1,6 @@
 // frontend/lib/error-messages.ts
 import axios from "axios";
+import { getToolLabel } from "@/lib/tool-registry";
 
 type ErrorContext =
   | "auth-login"
@@ -26,6 +27,54 @@ type ErrorInfo = {
   title: string;
   description: string;
 };
+
+// Pipeline problems that the backend reports as plain text (see validatePipeline
+// in projects/utils/video.js). Each one says what is wrong and what to do next.
+function pipelineErrorInfo(backendMsg?: string): ErrorInfo | undefined {
+  if (!backendMsg) return undefined;
+
+  const notForVideo = backendMsg.match(/^Effects not available for video: (.+)$/);
+  if (notForVideo) {
+    const names = notForVideo[1].split(", ").map((procedure) => getToolLabel(procedure));
+    const plural = names.length > 1;
+    const list = plural
+      ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`
+      : names[0];
+    return {
+      title: "Some effects don't work on videos",
+      description: `${list} only ${plural ? "work" : "works"} on images. Remove ${
+        plural ? "them" : "it"
+      } from the pipeline, or remove the videos from the project.`,
+    };
+  }
+
+  switch (backendMsg) {
+    case "Frame extraction must be the last tool in the pipeline":
+      return {
+        title: "Extract frames must be the last step",
+        description:
+          "Move Extract frames to the end of the pipeline, or remove it and add it again.",
+      };
+    case "Only one frame extraction tool is allowed":
+      return {
+        title: "Only one Extract frames step is allowed",
+        description: "Remove the extra Extract frames step from the pipeline.",
+      };
+    case "The pipeline only has video effects and the project has no videos":
+      return {
+        title: "These effects need a video",
+        description:
+          "Add a video to the project, or add an effect that works on images to the pipeline.",
+      };
+    case "No tools selected":
+      return {
+        title: "The pipeline is empty",
+        description: "Add at least one tool from the toolbar, then try again.",
+      };
+    default:
+      return undefined;
+  }
+}
 
 export function getErrorMessage(
   context: ErrorContext,
@@ -54,6 +103,10 @@ export function getErrorMessage(
         "Atingiste o limite diário de operações avançadas. Volta a tentar amanhã ou faz upgrade para Premium.",
     };
   }
+
+  // Pipeline problems: same clear message whatever the context
+  const pipelineInfo = pipelineErrorInfo(backendMsg);
+  if (pipelineInfo) return pipelineInfo;
 
   // Ir acrescentando aqui outros códigos específicos do backend
   // if (backendMsg === "Invalid credentials") { ... }

@@ -10,7 +10,7 @@ import {
   useUnsavedChanges,
 } from "@/providers/project-provider";
 import { TrimToolParams } from "@/lib/tool-types";
-import { isVideo, ProjectToolResponse } from "@/lib/projects";
+import { ProjectToolResponse } from "@/lib/projects";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -57,9 +57,8 @@ export default function TrimTool({ disabled }: { disabled: boolean }) {
 
   const isDefault = start === 0 && end === round(maxDuration);
 
-  // only shown while a video is selected
-  if (!currentImage || !isVideo(currentImage)) return null;
-
+  // Always rendered. ToolbarButton greys it out, with the reason, when no
+  // video is selected.
   return (
     <ToolbarButton
       open={open}

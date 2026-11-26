@@ -2,7 +2,10 @@
 
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { SortableToolItem } from "./sortable-tool-item";
+import { SortableToolItem, LockedToolItem } from "./sortable-tool-item";
+import { isVideo } from "@/lib/projects";
+import { getToolInfo } from "@/lib/tool-registry";
+import { validatePipeline } from "@/lib/pipeline-validation";
 import { useProjectInfo, useSetProjectTools, useCurrentImage } from "@/providers/project-provider";
 import { useSession } from "@/providers/session-provider";
 import {
@@ -65,6 +68,17 @@ export function AppliedToolsList() {
 
   const tools = project.tools;
 
+  // Steps that always stay at the end of the pipeline (extract frames) cannot be
+  // dragged and nothing can be dropped after them: the backend rejects that order.
+  const isLocked = (t: { procedure: string }) =>
+    getToolInfo(t.procedure)?.mustBeLast === true;
+  const movableTools = tools.filter((t) => !isLocked(t));
+  const lockedTools = tools.filter(isLocked);
+
+  // Steps the backend would refuse to run, with the reason (shown in red)
+  const hasVideos = project.imgs.some((i) => isVideo(i));
+  const { stepIssues } = validatePipeline(tools, { hasVideos });
+
   const currentImage = useCurrentImage();
   const imageId = currentImage?._id;
 
@@ -88,10 +102,12 @@ export function AppliedToolsList() {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = tools.findIndex((t) => t._id === active.id);
-    const newIndex = tools.findIndex((t) => t._id === over.id);
+    const oldIndex = movableTools.findIndex((t) => t._id === active.id);
+    const newIndex = movableTools.findIndex((t) => t._id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
 
-    const sorted = arrayMove(tools, oldIndex, newIndex);
+    // locked steps (extract frames) always stay at the end
+    const sorted = [...arrayMove(movableTools, oldIndex, newIndex), ...lockedTools];
 
     const withPositions = sorted.map((t, index) => ({
       ...t,
@@ -271,10 +287,23 @@ export function AppliedToolsList() {
       )}
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={tools.map((t) => t._id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={movableTools.map((t) => t._id)} strategy={verticalListSortingStrategy}>
           <div className="flex max-h-40 flex-col gap-1 overflow-y-auto">
-            {tools.map((tool) => (
-              <SortableToolItem key={tool._id} tool={tool} onRemove={handleRemove} />
+            {movableTools.map((tool) => (
+              <SortableToolItem
+                key={tool._id}
+                tool={tool}
+                onRemove={handleRemove}
+                issue={stepIssues[tool._id]}
+              />
+            ))}
+            {lockedTools.map((tool) => (
+              <LockedToolItem
+                key={tool._id}
+                tool={tool}
+                onRemove={handleRemove}
+                issue={stepIssues[tool._id]}
+              />
             ))}
           </div>
         </SortableContext>

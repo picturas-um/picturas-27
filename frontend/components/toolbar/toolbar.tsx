@@ -48,8 +48,9 @@ export function Toolbar() {
   const project = useProjectInfo();
   const session = useSession();
 
-  // Projects with videos only show the effects the video worker supports
-  // (AI tools and watermark are image-only) and only when a media item is selected
+  // Every tool is always listed. The ones that cannot be used in this project
+  // (e.g. AI tools and watermark when it has videos) are greyed out and explain
+  // why in their tooltip (see ToolbarButton and lib/tool-registry.ts).
   const hasVideos = project.imgs.some((i) => isVideo(i));
 
   const [open, setOpen] = useState<boolean>(false);
@@ -78,23 +79,18 @@ export function Toolbar() {
         <CropTool disabled={disabled} />
         <ResizeTool disabled={disabled} />
         <BorderTool disabled={disabled} />
-        {/* Only shown when the project has videos */}
         <TrimTool disabled={disabled} />
         <SpeedTool disabled={disabled} />
-        {hasVideos && <SubtitlesTool disabled={disabled} />}
-        {hasVideos && <ExtractFramesTool disabled={disabled} />}
-        {!hasVideos && (
-          <>
-            <WatermarkTool disabled={disabled} />
-            <BgRemovalAITool disabled={disabled} />
-            <CropAITool disabled={disabled} />
-            <ObjectAITool disabled={disabled} />
-            <PeopleAITool disabled={disabled} />
-            <TextAITool disabled={disabled} />
-            <ExpandAITool disabled={disabled} />
-            <UpgradeAITool disabled={disabled} />
-          </>
-        )}
+        <SubtitlesTool disabled={disabled} />
+        <ExtractFramesTool disabled={disabled} />
+        <WatermarkTool disabled={disabled} />
+        <BgRemovalAITool disabled={disabled} />
+        <CropAITool disabled={disabled} />
+        <ObjectAITool disabled={disabled} />
+        <PeopleAITool disabled={disabled} />
+        <TextAITool disabled={disabled} />
+        <ExpandAITool disabled={disabled} />
+        <UpgradeAITool disabled={disabled} />
         <AppliedToolsList />
       </div>
       <Dialog open={open} onOpenChange={setOpen}>

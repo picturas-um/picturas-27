@@ -9,7 +9,7 @@ import {
   useUnsavedChanges,
 } from "@/providers/project-provider";
 import { SpeedToolParams } from "@/lib/tool-types";
-import { isVideo, ProjectToolResponse } from "@/lib/projects";
+import { ProjectToolResponse } from "@/lib/projects";
 import { Slider } from "../ui/slider";
 
 const MIN_SPEED = 0.25;
@@ -39,9 +39,8 @@ export default function SpeedTool({ disabled }: { disabled: boolean }) {
     setFactor(speedTool ? (speedTool.params as SpeedToolParams).factor : DEFAULT_SPEED);
   }, [project.tools, open, matchTool]);
 
-  // only shown while a video is selected
-  if (!currentImage || !isVideo(currentImage)) return null;
-
+  // Always rendered. ToolbarButton greys it out, with the reason, when no
+  // video is selected.
   return (
     <ToolbarButton
       open={open}

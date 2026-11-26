@@ -57,11 +57,12 @@ const {
   isVideoFile,
   isVideoMedia,
   videoOutputName,
-  probeVideoBuffer,
+  probeVideoFile,
   validateVideo,
   imageTools,
   videoPipeline,
-  unsupportedVideoTools,
+  videoToolsError,
+  validatePipeline,
   videoOps,
   validateFrameExtraction,
   insertPipelineTool,
@@ -69,8 +70,18 @@ const {
 const { persistFrameResults } = require("../utils/frameResults");
 const { dispatchProcessBatch } = require("../utils/processBatch");
 
-const storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+const os = require("os");
+const crypto = require("crypto");
+
+// Store uploaded files on disk instead of RAM.
+const storage = multer.diskStorage({
+  destination: os.tmpdir(),
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${crypto.randomUUID()}`);
+  },
+});
+
+const upload = multer({ storage });
 
 const key = fs.readFileSync(__dirname + "/../certs/selfsigned.key");
 const cert = fs.readFileSync(__dirname + "/../certs/selfsigned.crt");
@@ -1099,12 +1110,8 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       const previewIsVideo = isVideoMedia(previewImg);
 
       if (previewIsVideo) {
-        const bad = unsupportedVideoTools(project);
-        if (bad.length > 0) {
-          return res
-            .status(400)
-            .jsonp(`Effects not available for video: ${[...new Set(bad)].join(", ")}`);
-        }
+        const videoError = videoToolsError(project);
+        if (videoError) return res.status(400).jsonp(videoError);
       }
 
       // video: the whole pipeline goes in one message to the video worker,
@@ -1263,123 +1270,205 @@ router.post("/:user/:project/preview/:img", checkSharePermission, requireEditPer
       res.status(501).jsonp(`Error acquiring user's project`);
     });
 });
+function hashFileSha256(filePath) {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash("sha256");
+    const stream = fs.createReadStream(filePath);
 
+    stream.on("data", (chunk) => hash.update(chunk));
+    stream.on("error", reject);
+    stream.on("end", () => resolve(hash.digest("hex")));
+  });
+}
 // Shared upload logic for project media (images and videos).
 // `kind` is "image" or "video"; each endpoint only accepts its own kind.
+
 function addProjectMedia(kind) {
   return async (req, res) => {
-    console.log(`PROJECTS-MS /:user/:project/${kind === "video" ? "video" : "img"} HIT, file =`, !!req.file);
+    console.log(
+      `PROJECTS-MS /:user/:project/${kind === "video" ? "video" : "img"} HIT, file =`,
+      !!req.file
+    );
+
     if (!req.file) {
-      res.status(400).jsonp("No file found");
-      return;
+      return res.status(400).jsonp("No file found");
     }
 
-    const fileIsVideo = isVideoFile(req.file.originalname, req.file.mimetype);
-    if (kind === "image" && fileIsVideo) {
-      return res.status(400).jsonp("Videos must be uploaded through the /video endpoint.");
-    }
-    if (kind === "video" && !fileIsVideo) {
-      return res.status(400).jsonp("Only video files (.mp4, .mov, .webm) can be uploaded here.");
-    }
+    const filePath = req.file.path;
 
-    Project.getOne(req.params.user, req.params.project)
-      .then(async (project) => {
-        const same_name_img = project.imgs.filter(
-          (i) => path.basename(i.og_uri) == req.file.originalname
+    try {
+      const fileIsVideo = isVideoFile(
+        req.file.originalname,
+        req.file.mimetype
+      );
+
+      if (kind === "image" && fileIsVideo) {
+        return res.status(400).jsonp(
+          "Videos must be uploaded through the /video endpoint."
         );
+      }
 
-        if (same_name_img.length > 0) {
-          res
-            .status(400)
-            .jsonp(`This project already has ${kind === "video" ? "a video" : "an image"} with that name.`);
-          return;
-        }
+      if (kind === "video" && !fileIsVideo) {
+        return res.status(400).jsonp(
+          "Only video files (.mp4, .mov, .webm) can be uploaded here."
+        );
+      }
 
-        // Validate the video before storing it
-        const isVideo = kind === "video";
-        let videoMeta = null;
-        if (isVideo) {
-          let userType = "anonymous";
-          try {
-            const r = await axios.get(users_ms + `${getCallerId(req)}/type`, { httpsAgent });
-            userType = r.data.type;
-          } catch (_) {}
+      let project;
 
-          try {
-            videoMeta = await probeVideoBuffer(req.file.buffer, req.file.originalname);
-          } catch (e) {
-            return res.status(400).jsonp(e.message);
-          }
+      try {
+        project = await Project.getOne(
+          req.params.user,
+          req.params.project
+        );
+      } catch (_) {
+        return res.status(501).jsonp(
+          "Error acquiring user's project"
+        );
+      }
 
-          const reason = validateVideo(videoMeta, req.file.originalname, req.file.mimetype, userType);
-          if (reason) {
-            return res.status(400).jsonp(reason);
-          }
-        }
+      const same_name_img = project.imgs.filter(
+        (i) => path.basename(i.og_uri) == req.file.originalname
+      );
+
+      if (same_name_img.length > 0) {
+        return res.status(400).jsonp(
+          `This project already has ${
+            kind === "video" ? "a video" : "an image"
+          } with that name.`
+        );
+      }
+
+      const isVideo = kind === "video";
+      let videoMeta = null;
+
+      if (isVideo) {
+        let userType = "anonymous";
 
         try {
-          const data = new FormData();
-          data.append("file", req.file.buffer, {
-            filename: req.file.originalname,
-            contentType: req.file.mimetype,
-          });
-          const resp = await post_image(
+          const r = await axios.get(
+            users_ms + `${getCallerId(req)}/type`,
+            { httpsAgent }
+          );
+          userType = r.data.type;
+        } catch (_) {}
+
+        try {
+          videoMeta = await probeVideoFile(
+            filePath,
+            req.file.originalname
+          );
+        } catch (e) {
+          return res.status(400).jsonp(e.message);
+        }
+
+        const reason = validateVideo(
+          videoMeta,
+          req.file.originalname,
+          req.file.mimetype,
+          userType
+        );
+
+        if (reason) {
+          return res.status(400).jsonp(reason);
+        }
+      }
+
+      let resp;
+
+      try {
+        const data = new FormData();
+
+        data.append("file", fs.createReadStream(filePath), {
+          filename: req.file.originalname,
+          contentType: req.file.mimetype,
+          knownLength: req.file.size,
+        });
+
+        resp = await post_image(
+          req.params.user,
+          req.params.project,
+          "src",
+          data
+        );
+      } catch (_) {
+        return res.status(501).jsonp("Error storing image");
+      }
+
+      try {
+        const og_key_tmp = resp.data.data.imageKey.split("/");
+        const og_key = og_key_tmp[og_key_tmp.length - 1];
+
+        const og_uri =
+          `./images/users/${req.params.user}/projects/` +
+          `${req.params.project}/src/${req.file.originalname}`;
+
+        const out_name = isVideo
+          ? videoOutputName(req.file.originalname)
+          : req.file.originalname;
+
+        const new_uri =
+          `./images/users/${req.params.user}/projects/` +
+          `${req.params.project}/out/${out_name}`;
+
+        const sha = await hashFileSha256(filePath);
+
+        project["imgs"].push({
+          og_uri: og_uri,
+          new_uri: new_uri,
+          og_img_key: og_key,
+          og_sha256: sha,
+          media_type: isVideo ? "video" : "image",
+          video: videoMeta || undefined,
+        });
+
+        const updated = await Project.updateIfVersion(
+          req.params.user,
+          req.params.project,
+          project,
+          req.expectedVersion
+        );
+
+        if (!updated) {
+          const fresh = await Project.getOne(
             req.params.user,
-            req.params.project,
-            "src",
-            data
+            req.params.project
           );
 
-          const og_key_tmp = resp.data.data.imageKey.split("/");
-          const og_key = og_key_tmp[og_key_tmp.length - 1];
-
-          try {
-            const og_uri = `./images/users/${req.params.user}/projects/${req.params.project}/src/${req.file.originalname}`;
-            // the edited video is always MP4
-            const out_name = isVideo ? videoOutputName(req.file.originalname) : req.file.originalname;
-            const new_uri = `./images/users/${req.params.user}/projects/${req.params.project}/out/${out_name}`;
-
-            const crypto = require("crypto");
-            const sha = crypto.createHash("sha256").update(req.file.buffer).digest("hex");
-
-            // Insert new image
-            project["imgs"].push({
-              og_uri: og_uri,
-              new_uri: new_uri,
-              og_img_key: og_key,
-              og_sha256: sha,
-              media_type: isVideo ? "video" : "image",
-              video: videoMeta || undefined,
-            });
-
-            const updated = await Project.updateIfVersion(
-              req.params.user,
-              req.params.project,
-              project,
-              req.expectedVersion
-            );
-
-            if (!updated) {
-              const fresh = await Project.getOne(req.params.user, req.params.project);
-              return res.status(409).jsonp({
-                message: "Project version conflict",
-                serverVersion: fresh?.version ?? null,
-              });
-            }
-
-            res.set("X-Project-Version", String(updated.version));
-            return res.sendStatus(204);
-
-          } catch (_) {
-            res.status(501).jsonp(`Updating project information`);
-          }
-        } catch (_) {
-          res.status(501).jsonp(`Error storing image`);
+          return res.status(409).jsonp({
+            message: "Project version conflict",
+            serverVersion: fresh?.version ?? null,
+          });
         }
-      })
-      .catch((_) => res.status(501).jsonp(`Error acquiring user's project`));
+
+        res.set(
+          "X-Project-Version",
+          String(updated.version)
+        );
+
+        return res.sendStatus(204);
+      } catch (_) {
+        return res.status(501).jsonp(
+          "Updating project information"
+        );
+      }
+    } catch (err) {
+      console.error("[PROJECTS-MS] Unexpected upload error:", err);
+
+      if (!res.headersSent) {
+        return res.status(500).jsonp("Unexpected upload error");
+      }
+    } finally {
+      await fs.promises.unlink(filePath).catch((err) => {
+        console.error(
+          "[PROJECTS-MS] Temporary file cleanup failed:",
+          err
+        );
+      });
+    }
   };
 }
+
 
 // Add new image to a project
 router.post(
@@ -1538,28 +1627,11 @@ router.post("/:user/:project/process", checkSharePermission, requireEditPermissi
         return;
       }
 
-      if (project.tools.length == 0) {
-        res.status(400).jsonp("No tools selected");
-        return;
-      }
-
-      const pipelineError = validateFrameExtraction(project.tools);
+      
+      const pipelineError = validatePipeline(project);
       if (pipelineError) return res.status(400).jsonp(pipelineError);
-
-      // Video
-      const hasVideos = project.imgs.some(isVideoMedia);
-      if (hasVideos) {
-        const bad = unsupportedVideoTools(project);
-        if (bad.length > 0) {
-          res
-            .status(400)
-            .jsonp(`Effects not available for video: ${[...new Set(bad)].join(", ")}`);
-          return;
-        }
-      } else if (imageTools(project).length === 0) {
-        res.status(400).jsonp("The pipeline only has video effects and the project has no videos");
-        return;
-      }
+      
+      
       // Each effect applied to a video counts as one operation
       const vid_ops = videoOps(project);
 

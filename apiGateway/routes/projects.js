@@ -5,6 +5,7 @@ const axios = require("axios");
 
 const https = require("https");
 const fs = require("fs");
+const os = require("os");
 
 const multer = require("multer");
 const FormData = require("form-data");
@@ -20,10 +21,93 @@ const httpsAgent = new https.Agent({
   key: key,
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+// Store incoming uploads on disk instead of buffering them in RAM.
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: os.tmpdir(),
+    filename: (req, file, cb) => {
+      const uniqueName =
+        `${Date.now()}-${require("crypto").randomUUID()}`;
+      cb(null, uniqueName);
+    },
+  }),
+});
 
 const projectsURL = "https://projects:9001/";
+
+async function forwardMediaUpload(req, res, kind) {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded");
+  }
+
+  const filePath = req.file.path;
+  const controller = new AbortController();
+
+  const onResponseClose = () => {
+    if (!res.writableEnded) {
+      controller.abort();
+    }
+  };
+
+  res.once("close", onResponseClose);
+
+  try {
+    const ownerId = req.query.owner || req.params.user;
+    const callerId = req.authUserId || req.params.user;
+
+    const data = new FormData();
+
+    data.append(
+      kind,
+      fs.createReadStream(filePath),
+      {
+        filename: req.file.originalname,
+        contentType: req.file.mimetype,
+        knownLength: req.file.size,
+      }
+    );
+
+    const response = await axios.post(
+      projectsURL + `${ownerId}/${req.params.project}/${kind === "image" ? "img" : "video"}`,
+      data,
+      {
+        headers: {
+          ...data.getHeaders(),
+          Authorization: req.headers["authorization"],
+          "X-Project-Version": req.headers["x-project-version"],
+          "X-Caller-Id": callerId,
+        },
+        httpsAgent,
+        params: req.query.share
+          ? { share: req.query.share }
+          : undefined,
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        signal: controller.signal,
+      }
+    );
+
+    if (response.headers?.["x-project-version"]) {
+      res.set(
+        "X-Project-Version",
+        response.headers["x-project-version"]
+      );
+    }
+
+    return res.sendStatus(204);
+  } catch (err) {
+    if (res.destroyed || res.writableEnded) {
+      return;
+    }
+
+    return forwardAxiosError(res, err, "mensagem fallback");
+  } finally {
+    res.off("close", onResponseClose);
+    await fs.promises.unlink(filePath).catch((err) => {
+      console.error("[API-GW] Temporary file cleanup failed:", err);
+    });
+  }
+}
 
 function forwardAxiosError(res, err, fallbackMsg) {
   const status = err.response?.status || 500;
@@ -406,48 +490,14 @@ router.post(
  * @file Image to be added
  * @returns Post answer structure in case of success
  */
+
 router.post(
   "/:user/:project/img",
-  upload.single("image"),
   auth.checkToken,
-  function (req, res, next) {
-    const ownerId = req.query.owner || req.params.user;
-    const callerId = req.authUserId || req.params.user;
-
-    const data = new FormData();
-    data.append("image", req.file.buffer, {
-      filename: req.file.originalname,
-      contentType: req.file.mimetype,
-    });
-
-    axios
-      .post(
-        projectsURL + `${ownerId}/${req.params.project}/img`,
-        data,
-        {
-          headers: {
-            ...data.getHeaders(),                     
-            Authorization: req.headers["authorization"], 
-            "X-Project-Version": req.headers["x-project-version"],
-            "X-Caller-Id": callerId,
-          },
-          httpsAgent: httpsAgent,
-          params: req.query.share ? { share: req.query.share } : undefined, 
-          // Videos can be hundreds of MB
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-        }
-      )
-      .then((resp) => {
-        if (resp.headers?.["x-project-version"]) {
-          res.set("X-Project-Version", resp.headers["x-project-version"]);
-        }
-        return res.sendStatus(204);
-      })
-    .catch((err) => forwardAxiosError(res, err, "mensagem fallback"))
-
-  }
+  upload.single("image"),
+  (req, res) => forwardMediaUpload(req, res, "image")
 );
+
 
 /**
  * Add video to project
@@ -455,48 +505,14 @@ router.post(
  * @file Video to be added (.mp4, .mov, .webm)
  * @returns Post answer structure in case of success
  */
+
 router.post(
   "/:user/:project/video",
-  upload.single("video"),
   auth.checkToken,
-  function (req, res, next) {
-    const ownerId = req.query.owner || req.params.user;
-    const callerId = req.authUserId || req.params.user;
-
-    const data = new FormData();
-    data.append("video", req.file.buffer, {
-      filename: req.file.originalname,
-      contentType: req.file.mimetype,
-    });
-
-    axios
-      .post(
-        projectsURL + `${ownerId}/${req.params.project}/video`,
-        data,
-        {
-          headers: {
-            ...data.getHeaders(),                     
-            Authorization: req.headers["authorization"], 
-            "X-Project-Version": req.headers["x-project-version"],
-            "X-Caller-Id": callerId,
-          },
-          httpsAgent: httpsAgent,
-          params: req.query.share ? { share: req.query.share } : undefined, 
-          // Videos can be hundreds of MB
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-        }
-      )
-      .then((resp) => {
-        if (resp.headers?.["x-project-version"]) {
-          res.set("X-Project-Version", resp.headers["x-project-version"]);
-        }
-        return res.sendStatus(204);
-      })
-    .catch((err) => forwardAxiosError(res, err, "mensagem fallback"))
-
-  }
+  upload.single("video"),
+  (req, res) => forwardMediaUpload(req, res, "video")
 );
+
 
 /**
  * Add tool to project
